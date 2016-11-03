@@ -7,6 +7,7 @@ from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException
 
 username = 'edwardf'
 with open('password', 'r') as f:
@@ -17,7 +18,7 @@ courses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 20, 22, 24
            'NS', '21A', '21G', '21H', '21L', '21M', '21W', 'CMS', 'CON', 'CSB', 'ESD', 'ESG', 'HST',
            'ISP', 'MAS', 'STS', 'WGS']
 
-term = '2016SP'
+terms = ['2014FA', '2014SP', '2014SU', '2015FA', '2015SP', '2015SU', '2016FA', '2016SP', '2016SU']
 
 class_dict = {}
 
@@ -31,29 +32,22 @@ def mit_duo_login():
     session = webdriver.Chrome()
     session.get(eval_url)
 
-    try:
-        # Fill in Kerberos login form
-        username_field = session.find_element_by_name('j_username')
-        password_field = session.find_element_by_name('j_password')
-        username_field.send_keys(username)
-        password_field.send_keys(password)
+    # Fill in Kerberos login form
+    username_field = session.find_element_by_name('j_username')
+    password_field = session.find_element_by_name('j_password')
+    username_field.send_keys(username)
+    password_field.send_keys(password)
 
-        session.find_element_by_name('Submit').click()
+    session.find_element_by_name('Submit').click()
 
-        # Send push Duo authentication
-        WebDriverWait(session, 10).until(EC.frame_to_be_available_and_switch_to_it('duo_iframe'))
-        duo_button = session.find_element_by_xpath('//*[contains(text(), "Send Me a Push")]')
-        duo_button.click()
-        
-        WebDriverWait(session, 30).until(EC.title_is('Subject Evaluation Report Search'))
+    # Send push Duo authentication
+    WebDriverWait(session, 10).until(EC.frame_to_be_available_and_switch_to_it('duo_iframe'))
+    duo_button = session.find_element_by_xpath('//*[contains(text(), "Send Me a Push")]')
+    duo_button.click()
 
-        return session
-    
-    except Exception as e:
-        print(e)
-        
-        # Likely already logged in.
-        return session
+    WebDriverWait(session, 30).until(EC.title_is('Subject Evaluation Report Search'))
+
+    return session
 
 def scrape_class_info(session, class_element):
     url = class_element.get_attribute('href')
@@ -85,18 +79,19 @@ def scrape_class_info(session, class_element):
 def main():
     session = mit_duo_login()
 
-    session.get(url_from_term(term))
+    for term in terms:
+        session.get(url_from_term(term))
 
-    for i in range(4, 1484):
-        try:
-            class_element = session.find_element_by_xpath("/html/body/div[@id='wrapper']/div[@id='rh-col']/p[{}]/a".format(i))
-            scrape_class_info(session, class_element)
-        except:
-            pass
+        for i in range(4, 5000):
+            try:
+                class_element = session.find_element_by_xpath("/html/body/div[@id='wrapper']/div[@id='rh-col']/p[{}]/a".format(i))
+                scrape_class_info(session, class_element)
+            except NoSuchElementException:
+                break
 
-    f = open('data/' + term, 'wb')
-    pickle.dump(class_dict, f)
-    f.close()
+        f = open('data/' + term, 'wb')
+        pickle.dump(class_dict, f)
+        f.close()
         
 if __name__ == '__main__':
     main()
