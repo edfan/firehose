@@ -6,7 +6,6 @@ import pickle
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 
 username = 'edwardf'
@@ -19,8 +18,6 @@ courses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 20, 22, 24
            'ISP', 'MAS', 'STS', 'WGS']
 
 terms = ['2014FA', '2014SP', '2014SU', '2015FA', '2015SP', '2015SU', '2016FA', '2016SP', '2016SU']
-
-class_dict = {}
 
 def url_from_course(course):
     return eval_url + '?departmentId={:+>4}&search=Search'.format(course)
@@ -56,8 +53,8 @@ def scrape_class_info(session, class_element):
     title_element = session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='header']/tbody/tr[1]/td[@class='subjectTitle']/h1")
     titles = title_element.text.split('\n')
 
-    course_numbers = [t.split(' ')[0] for t in titles]
-    course_name = ' '.join(titles[0].split(' ')[1:])
+    class_numbers = [t.split(' ')[0] for t in titles]
+    class_name = ' '.join(titles[0].split(' ')[1:])
 
     rating_element = session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='header']/tbody/tr[2]/td[@class='summaryContainer']/table[@class='summary']/tbody/tr/td[4]/p")
     rating = rating_element.text[27:30]
@@ -68,10 +65,10 @@ def scrape_class_info(session, class_element):
     oc_hours_element = session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='indivQuestions'][3]/tbody/tr[5]/td[@class='avg']")
     oc_hours = oc_hours_element.text
 
-    print(course_numbers[0], course_name, rating, ic_hours, oc_hours, url)
+    print('{:8} | {:65.65} | {} | {} | {}'.format(class_numbers[0], class_name, rating, ic_hours, oc_hours))
 
-    for n in course_numbers:
-        class_dict[n] = (course_name, rating, ic_hours, oc_hours, url)
+    for n in class_numbers:
+        class_dict[n] = (class_name, rating, ic_hours, oc_hours, url)
 
     session.execute_script("window.history.go(-1)")
     
@@ -80,6 +77,9 @@ def main():
     session = mit_duo_login()
 
     for term in terms:
+        class_dict = {}
+        
+        print('\n\n\n{}'.format(term))
         session.get(url_from_term(term))
 
         for i in range(4, 5000):
@@ -89,9 +89,9 @@ def main():
             except NoSuchElementException:
                 break
 
-        f = open('data/' + term, 'wb')
-        pickle.dump(class_dict, f)
-        f.close()
+        if class_dict != {}:
+            with open('data/' + term, 'wb') as f:
+                pickle.dump(class_dict, f)
         
 if __name__ == '__main__':
     main()
