@@ -1,6 +1,5 @@
 password
 chromedriver*
-data/*
-
+geckodriver*
 *~
 #*

@@ -17,7 +17,7 @@ courses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 20, 22, 24
            'NS', '21A', '21G', '21H', '21L', '21M', '21W', 'CMS', 'CON', 'CSB', 'ESD', 'ESG', 'HST',
            'ISP', 'MAS', 'STS', 'WGS']
 
-terms = ['2014FA', '2014SP', '2014SU', '2015FA', '2015SP', '2015SU', '2016FA', '2016SP', '2016SU']
+terms = ['2015FA', '2015SP', '2015SU', '2016FA', '2016SP', '2016SU']
 
 def url_from_course(course):
     return eval_url + '?departmentId={:+>4}&search=Search'.format(course)
@@ -42,13 +42,14 @@ def mit_duo_login():
     duo_button = session.find_element_by_xpath('//*[contains(text(), "Send Me a Push")]')
     duo_button.click()
 
-    WebDriverWait(session, 30).until(EC.title_is('Subject Evaluation Report Search'))
+    WebDriverWait(session, 60).until(EC.title_is('Subject Evaluation Report Search'))
 
     return session
 
-def scrape_class_info(session, class_element):
+def scrape_class_info(session, class_element, class_dict):
     url = class_element.get_attribute('href')
     class_element.click()
+    WebDriverWait(session, 60).until(EC.title_contains('Report for'))
 
     title_element = session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='header']/tbody/tr[1]/td[@class='subjectTitle']/h1")
     titles = title_element.text.split('\n')
@@ -65,14 +66,14 @@ def scrape_class_info(session, class_element):
     oc_hours_element = session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='indivQuestions'][3]/tbody/tr[5]/td[@class='avg']")
     oc_hours = oc_hours_element.text
 
-    print('{:8} | {:65.65} | {} | {} | {}'.format(class_numbers[0], class_name, rating, ic_hours, oc_hours))
+    print('{:8} | {:50.50} | {} | {} | {}'.format(class_numbers[0], class_name, rating, ic_hours, oc_hours))
 
     for n in class_numbers:
         class_dict[n] = (class_name, rating, ic_hours, oc_hours, url)
 
     session.execute_script("window.history.go(-1)")
+    WebDriverWait(session, 60).until(EC.title_is('Search Results'))
     
-
 def main():
     session = mit_duo_login()
 
@@ -85,9 +86,9 @@ def main():
         for i in range(4, 5000):
             try:
                 class_element = session.find_element_by_xpath("/html/body/div[@id='wrapper']/div[@id='rh-col']/p[{}]/a".format(i))
-                scrape_class_info(session, class_element)
+                scrape_class_info(session, class_element, class_dict)
             except NoSuchElementException:
-                break
+                continue
 
         if class_dict != {}:
             with open('data/' + term, 'wb') as f:
