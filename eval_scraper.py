@@ -71,12 +71,13 @@ def scrape_class_info(session, class_element, class_dict):
     oc_hours = oc_hours_element.text
 
     # Fits perfectly in a cmd window
-    print('{:8} | {:48.48} | {} | {} | {}'.format(class_numbers[0], class_name, rating, ic_hours, oc_hours))
+    print('{:8} | {:48.48} | {} | {} | {}'.format(class_numbers[0], class_names[0], rating, ic_hours, oc_hours))
 
     for i in range(len(titles)):
         class_num_split = class_numbers[i].split('.')
-        class_dict[n] = (class_num_split[0], class_num_split[1],
-                         class_names[i], rating, ic_hours, oc_hours, url)
+        class_dict[class_numbers[i]] = (class_num_split[0], class_num_split[1],
+                                        class_names[i], rating, ic_hours,
+                                        oc_hours, url)
         
     # Error-resistant back, then wait for search page
     session.execute_script("window.history.go(-1)")
