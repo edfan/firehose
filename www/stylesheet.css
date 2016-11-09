@@ -1,0 +1,96 @@
+tfoot input {
+    width: 100%;
+    padding: 3px;
+    box-sizing: border-box;
+}
+
+tfoot {
+    display: table-header-group;
+}
+
+#header-div {
+    display: block;
+    width: 100%;
+    height: 20px;
+}
+
+#info-div {
+    font-family: 'Open Sans', sans-serif;
+    width: 30%;
+    margin: auto;
+    text-align: center;
+}
+
+#info-div img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#terms-div {
+    font-family: 'Open Sans', sans-serif;
+    margin: 0 auto 0 auto;
+    left: 50%;
+    text-align: center;
+}
+
+#buttons-div {
+    margin: auto;
+    text-align: center;
+}
+
+#spacer-div {
+    height: 20px;
+}
+
+#spacer2-div {
+    height: 10px;
+}
+
+.btn-primary, .btn-primary.focus {
+    color: #ec5339;
+    background-color: #fff;
+    border-color: #ec5339;
+    background-image: none;
+    outline: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.btn-primary.active, .btn-primary.active.focus {
+    color: #fff;
+    background-color: #ec5339;
+    border-color: #ec5339;
+    background-image: none;
+    outline: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.btn-primary:hover, .btn-primary.active:hover {
+    color: #fff;
+    background-color: #3794dc;
+    border-color: #3794dc;
+}
+
+.btn-secondary, .btn-secondary.focus, 
+.btn-secondary.active, .btn-secondary.active.focus {
+    background-image: none;
+    outline: 0 !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+#eval-table-div {
+    font-family: 'PT Serif', serif;
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+#eval-loading {
+    font-family: 'Open Sans', sans-serif;
+    margin: 50px;
+    text-align: center;
+    font-size: 120%;
+}
