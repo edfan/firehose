@@ -1,49 +1,79 @@
 var table;
+var terms = ['2015FA', '2015JA', '2015SP', '2015SU',
+             '2016FA', '2016JA', '2016SP', '2016SU']
+var buttons = {};
 
 Number.prototype.format = function(n, x) {
     var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
     return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
 };
 
+function all_pressed(class_data) {
+    for (j = 1; j < class_data.length; j++) {
+	if (!(buttons[class_data[j].term])) {
+	    return false;
+	}
+    }
+    return true;
+}
+
 function fill_table() {
     table.clear();
+
+    for (var term in terms) {
+	buttons[term] = $("#" + term).attr("aria-pressed") === "true";
+    }
     
     for (i = 0; i < evals.length; i++) {
 	for (var class_number in evals[i]) {
-	    var class_data = {
-		number: class_number,
-		rating: 0,
-		total_hours: 0,
-		ic_hours: 0,
-		oc_hours: 0,
-		name: "",
-		term_count: 0
-	    };
-	    
-	    for (j = 0; j < evals[i][class_number].length; j++) {
-		var term_eval = evals[i][class_number][j];
-		if ($("#" + term_eval.term).attr("aria-pressed") === "true") {
-		    class_data.rating += Number(term_eval.rating);
-		    class_data.ic_hours += Number(term_eval.ic_hours);
-		    class_data.oc_hours += Number(term_eval.oc_hours);
-		    class_data.name = term_eval.class_name;
-		    class_data.term_count++;
-		}
+	    // Fast path- return precomputed average for all
+	    if (all_pressed(evals[i][class_number])) {
+		var avg_eval = evals[i][class_number][0];
+		table.rows.add([[class_number,
+				 avg_eval.rating.format(1),
+				 (avg_eval.ic_hours + avg_eval.oc_hours).format(1),
+				 avg_eval.class_name,
+				 avg_eval.ic_hours.format(1),
+				 avg_eval.oc_hours.format(1)]]);
+				 
 	    }
-	    
-	    if (class_data.term_count > 0) {
-		class_data.rating /= class_data.term_count;
-		class_data.ic_hours /= class_data.term_count;
-		class_data.oc_hours /= class_data.term_count;
-		class_data.total_hours = class_data.ic_hours + class_data.oc_hours;
+	    // Otherwise, sum up totals manually and calculate average
+	    else {	
+		var total_eval = {
+		    number: class_number,
+		    rating: 0,
+		    total_hours: 0,
+		    ic_hours: 0,
+		    oc_hours: 0,
+		    class_name: "",
+		    term_count: 0
+		};
+		
+		for (j = 1; j < evals[i][class_number].length; j++) {
+		    var term_eval = evals[i][class_number][j];
+		    if (buttons[term_eval.term]) {
+			total_eval.rating += Number(term_eval.rating);
+			total_eval.ic_hours += Number(term_eval.ic_hours);
+			total_eval.oc_hours += Number(term_eval.oc_hours);
+			total_eval.class_name = term_eval.class_name;
+			total_eval.term_count++;
+		    }
+		}
+		
+		if (total_eval.term_count > 0) {
+		    total_eval.rating /= total_eval.term_count;
+		    total_eval.ic_hours /= total_eval.term_count;
+		    total_eval.oc_hours /= total_eval.term_count;
+		    total_eval.total_hours = total_eval.ic_hours + total_eval.oc_hours;
 
-		table.rows.add([[class_data.number,
-				 class_data.rating.format(1),
-				 class_data.total_hours.format(1),
-				 class_data.name,
-				 class_data.ic_hours.format(1),
-				 class_data.oc_hours.format(1)]]);
-			     
+		    table.rows.add([[total_eval.number,
+				     total_eval.rating.format(1),
+				     total_eval.total_hours.format(1),
+				     total_eval.name,
+				     total_eval.ic_hours.format(1),
+				     total_eval.oc_hours.format(1)]]);
+		    
+		}
 	    }
 	}
     }
