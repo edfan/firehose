@@ -74,7 +74,7 @@ def scrape_class_info(session, class_element, class_dict, term):
 
     cd['resp'] = int(session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='header']/tbody/tr[2]/td[@class='summaryContainer']/table[@class='summary']/tbody/tr/td[2]").text.split()[4])
 
-    cd['rate'] = int(session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='header']/tbody/tr[2]/td[@class='summaryContainer']/table[@class='summary']/tbody/tr/td[3]").text.split()[2].rstrip('%'))
+    cd['rate'] = Decimal(session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='header']/tbody/tr[2]/td[@class='summaryContainer']/table[@class='summary']/tbody/tr/td[3]").text.split()[2].rstrip('%'))
 
     # Add professors to dict
     cd['professors'] = []

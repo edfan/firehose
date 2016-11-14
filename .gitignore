@@ -3,3 +3,4 @@ chromedriver*
 geckodriver*
 *~
 #*
+debug.log
