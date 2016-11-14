@@ -1,16 +1,10 @@
 #! /usr/bin/env python3
 
-import json
+import simplejson as json
 import pickle
 import os
 import re
 from decimal import *
-
-class DecimalEncoder(json.JSONEncoder):
-    def _iterencode(self, o, markers=None):
-        if isinstance(o, decimal.Decimal):
-            return (str(o) for o in [o])
-        return super(DecimalEncoder, self)._iterencode(o, markers)
 
 def atoi(text):
     return int(text) if text.isdigit() else text
@@ -56,7 +50,7 @@ def main():
             
     with open('www/evaluations.json', 'w') as f:
         f.write('var evals = ')
-        json.dump(classes, f, cls=DecimalEncoder)
+        json.dump(classes, f)
         f.write(';')
 
 if __name__ == '__main__':
