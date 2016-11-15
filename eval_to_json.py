@@ -15,6 +15,7 @@ def natural_keys(d):
 
 def main():
     classes = {}
+    professors = set()
 
     # Pull all terms into a single list for each class
     for term in os.listdir('data/'):
@@ -24,35 +25,19 @@ def main():
             if k not in classes:
                 classes[k] = []
             classes[k].append(v)
-
-    # Compute an average and stick it in index 0
-    for k, v in classes.items():
-        term_count = len(v)
-        average = { 'term': 'average',
-                    'rating': 0,
-                    'ic_hours': 0,
-                    'oc_hours': 0,
-                    'class_name': v[-1]['class_name'] }
-
-        for term in v:
-            average['rating'] += term['rating']
-            average['ic_hours'] += term['ic_hours']
-            average['oc_hours'] += term['oc_hours']
-
-        average['rating'] /= term_count
-        average['ic_hours'] /= term_count
-        average['oc_hours'] /= term_count
-
-        classes['k'] = [average] + v
-            
-    classes = sorted([{k: v} for k, v in classes.items()],
-                     key=natural_keys)
+            for prof in v['professors']:
+                professors.add(prof['name'])
             
     with open('www/evaluations.json', 'w') as f:
         f.write('var evals = ')
         json.dump(classes, f)
         f.write(';')
 
+    with open('www/professors.json', 'w') as f:
+        f.write('var professors = ')
+        json.dump(list(professors), f)
+        f.write(';')
+
 if __name__ == '__main__':
-    getcontext().prec = 1
+    getcontext().prec = 2
     main()

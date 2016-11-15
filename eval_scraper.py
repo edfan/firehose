@@ -87,7 +87,7 @@ def scrape_class_info(session, class_element, class_dict, term):
 
             prof['rating'] = Decimal(session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='grid']/tbody/tr[{}]/td[5]/span[@class='avg']".format(x)).text)
 
-            prof['role'] = session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='grid']/tbody/tr[{}]/td[1]".format(x)).text.replace(prof['name'], '').rstrip('(RLECAB)').strip(' ,')
+            prof['role'] = session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='grid']/tbody/tr[{}]/td[1]".format(x)).text.replace(prof['name'], '').rstrip('(RLECABDG)').strip(' ,')
 
             cd['professors'].append(prof)
                 

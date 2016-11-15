@@ -5,23 +5,24 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
   <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
-  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/plug-ins/1.10.12/sorting/natural.js"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>
 
   <link href="https://fonts.googleapis.com/css?family=Open+Sans|PT+Serif" rel="stylesheet">
 
   <link rel="stylesheet" type="text/css" href="stylesheet.css">
   <script src="evaluations.json"></script>
+  <script src="professors.json"></script>
   <script src="script.js"></script>
 
   <script>
     !function(f,i,r,e,h,o,s){f.GoogleAnalyticsObject=r;f[r]||(f[r]=function(){
     (f[r].q=f[r].q||[]).push(arguments)});f[r].l=+new Date;o=i.createElement(e);
     s=i.getElementsByTagName(e)[0];o.src=h;s.parentNode.insertBefore(o,s)}
-    (window,document,'ga','script','//www.google-analytics.com/analytics.js');
+    (window,document,'ga','script','https://www.google-analytics.com/analytics.js');
     
     ga('create', 'UA-87170606-1', 'auto');
     ga('send', 'pageview');
@@ -46,8 +47,10 @@
     <button type="button" class="btn btn-primary active" data-toggle="button" aria-pressed="true" autocomplete="off" id="2016FA">Fall 2015-2016</button>
     <button type="button" class="btn btn-primary active" data-toggle="button" aria-pressed="true" autocomplete="off" id="2016JA">IAP 2015-2016</button>
     <button type="button" class="btn btn-primary active" data-toggle="button" aria-pressed="true" autocomplete="off" id="2016SP">Spring 2015-2016</button>
-    <button type="button" class="btn btn-primary active" data-toggle="button" aria-pressed="true" autocomplete="off" id="2016SU">Summer 2015-2016</button>
+    <button type="button" class="btn btn-primary active" data-toggle="button" aria-pressed="true" autocomplete="off" id="2016SU">Summer 2015-2016</button><br><br>
+    <input type="text" id="prof-search" data-provide="typeahead" placeholder="Professor search...">
   </div>
+  
 
   <div id="spacer2-div"></div>
   
@@ -58,6 +61,7 @@
   <div id="eval-loading"><p>Loading...</p></div>
   
   <div id="eval-table-div" style="display: none;">
+    <p>Click on a class to expand term and instructor details.</p>
     <table id="eval-table" class="display">
       <thead>
 	<tr>
