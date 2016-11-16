@@ -94,3 +94,8 @@ tfoot {
     text-align: center;
     font-size: 120%;
 }
+
+.eval-subtable {
+    table-layout: fixed;
+    width: 100%;
+}
