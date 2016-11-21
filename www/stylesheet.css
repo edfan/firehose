@@ -32,6 +32,7 @@ tfoot {
     margin: 0 auto 0 auto;
     left: 50%;
     text-align: center;
+    line-height: 1;
 }
 
 #buttons-div {
