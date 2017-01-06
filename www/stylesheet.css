@@ -16,6 +16,7 @@ tfoot {
 
 #info-div {
     font-family: 'Open Sans', sans-serif;
+    font-size: 70%;
     width: 425px;
     margin: auto;
     text-align: center;
@@ -41,11 +42,15 @@ tfoot {
 }
 
 #spacer-div {
-    height: 20px;
+    height: 0px;
 }
 
 #spacer2-div {
     height: 10px;
+}
+
+#spacer3-div {
+    height: 8px;
 }
 
 .btn-primary, .btn-primary.focus {

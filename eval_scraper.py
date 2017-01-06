@@ -19,8 +19,7 @@ courses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 20, 22, 24
            'MS', 'NS', '21A', '21G', '21H', '21L', '21M', '21W', 'CMS', 'CON', 'CSB', 'ESD',
            'ESG', 'HST', 'ISP', 'MAS', 'STS', 'WGS']
 
-terms = ['2015FA', '2015JA', '2015SP', '2015SU',
-         '2016FA', '2016JA', '2016SP', '2016SU']
+terms = ['2017FA']
 
 def url_from_course(course):
     return eval_url + '?departmentId={:+>4}&search=Search'.format(course)
@@ -63,18 +62,27 @@ def scrape_class_info(session, class_element, class_dict, term):
     cd = {}
     cd['term'] = term
     cd['url'] = url
+
+    try:
     
-    cd['rating'] = Decimal(session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='header']/tbody/tr[2]/td[@class='summaryContainer']/table[@class='summary']/tbody/tr/td[4]/p").text[27:30])
+        cd['rating'] = Decimal(session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='header']/tbody/tr[2]/td[@class='summaryContainer']/table[@class='summary']/tbody/tr/td[4]/p").text[27:30])
 
-    cd['ic_hours'] = Decimal(session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='indivQuestions'][3]/tbody/tr[4]/td[@class='avg']").text)
+        cd['ic_hours'] = Decimal(session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='indivQuestions'][3]/tbody/tr[4]/td[@class='avg']").text)
 
-    cd['oc_hours'] = Decimal(session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='indivQuestions'][3]/tbody/tr[5]/td[@class='avg']").text)
+        cd['oc_hours'] = Decimal(session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='indivQuestions'][3]/tbody/tr[5]/td[@class='avg']").text)
 
-    cd['eligible'] = int(session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='header']/tbody/tr[2]/td[@class='summaryContainer']/table[@class='summary']/tbody/tr/td[1]").text.split()[3])
+        cd['eligible'] = int(session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='header']/tbody/tr[2]/td[@class='summaryContainer']/table[@class='summary']/tbody/tr/td[1]").text.split()[3])
 
-    cd['resp'] = int(session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='header']/tbody/tr[2]/td[@class='summaryContainer']/table[@class='summary']/tbody/tr/td[2]").text.split()[4])
+        cd['resp'] = int(session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='header']/tbody/tr[2]/td[@class='summaryContainer']/table[@class='summary']/tbody/tr/td[2]").text.split()[4])
 
-    cd['rate'] = Decimal(session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='header']/tbody/tr[2]/td[@class='summaryContainer']/table[@class='summary']/tbody/tr/td[3]").text.split()[2].rstrip('%'))
+        cd['rate'] = Decimal(session.find_element_by_xpath("/html/body/div[@id='contentsframe']/table[@class='header']/tbody/tr[2]/td[@class='summaryContainer']/table[@class='summary']/tbody/tr/td[3]").text.split()[2].rstrip('%'))
+
+    except:
+        # Something went super wrong.
+        print('{} had a major error.'.format(class_numbers[0]))
+        session.execute_script("window.history.go(-1)")
+        WebDriverWait(session, 60).until(EC.title_is('Search Results')) 
+        return
 
     # Add professors to dict
     cd['professors'] = []

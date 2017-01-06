@@ -20,7 +20,7 @@
   <script src="hass-h.json"></script>
   <script src="hass-s.json"></script>
   <script src="ci-h.json"></script>
-  <script src="ci-hw.json"></script>`
+  <script src="ci-hw.json"></script>
   <script src="next-term.json"></script>
   <script src="script.js"></script>
 
@@ -40,12 +40,15 @@
   
   <div id="info-div">
     <img src="logo.png" />
-    <p>The full release of Firehose (CourseRoad 2) will be coming in early 2017! If you're interested in participating in the alpha or contributing to the site, send an email to <a href="mailto:courseroad-two@mit.edu">courseroad-two@mit.edu</a>.</p>
+    <div id="spacer3-div"></div>
+    <p>Questions? Issues? Feedback? <a href="mailto:edwardf@mit.edu">Send me an email!</a></p>
   </div>
 
   <div id="spacer-div"></div>
 
   <div id="terms-div">
+     <button class="btn btn-secondary" id="all-terms">Select all terms</button>
+     <button class="btn btn-secondary" id="nall-terms">Deselect all terms</button><br><br>
     <button type="button" class="btn btn-primary active" data-toggle="button" aria-pressed="true" autocomplete="off" id="2015FA">Fall 2014</button>
     <button type="button" class="btn btn-primary active" data-toggle="button" aria-pressed="true" autocomplete="off" id="2015JA">IAP 2015</button>
     <button type="button" class="btn btn-primary active" data-toggle="button" aria-pressed="true" autocomplete="off" id="2015SP">Spring 2015</button>
@@ -53,14 +56,15 @@
     <button type="button" class="btn btn-primary active" data-toggle="button" aria-pressed="true" autocomplete="off" id="2016FA">Fall 2015</button>
     <button type="button" class="btn btn-primary active" data-toggle="button" aria-pressed="true" autocomplete="off" id="2016JA">IAP 2016</button>
     <button type="button" class="btn btn-primary active" data-toggle="button" aria-pressed="true" autocomplete="off" id="2016SP">Spring 2016</button>
-    <button type="button" class="btn btn-primary active" data-toggle="button" aria-pressed="true" autocomplete="off" id="2016SU">Summer 2016</button><br><br>
+    <button type="button" class="btn btn-primary active" data-toggle="button" aria-pressed="true" autocomplete="off" id="2016SU">Summer 2016</button><br>
+    <button type="button" class="btn btn-primary active" data-toggle="button" aria-pressed="true" autocomplete="off" id="2017FA">Fall 2016</button><br><br>
     <input type="text" id="prof-search" data-provide="typeahead" placeholder="Professor search..."><br><br>
     <label class="checkbox-inline"><input type="checkbox" id="hass-a"> HASS-A </label>
     <label class="checkbox-inline"><input type="checkbox" id="hass-h"> HASS-H </label>
     <label class="checkbox-inline"><input type="checkbox" id="hass-s"> HASS-S </label><br>
     <label class="checkbox-inline"><input type="checkbox" id="ci-h"> CI-H </label>
     <label class="checkbox-inline"><input type="checkbox" id="ci-hw"> CI-HW </label><br>
-    <label class="checkbox-inline"><input type="checkbox" id="next-term" checked> Classes offered Spring 2016 </label>
+    <label class="checkbox-inline"><input type="checkbox" id="next-term" checked> Classes offered Spring 2017 </label>
   </div>
 
   <div id="spacer2-div"></div>
@@ -80,8 +84,8 @@
 	  <th>Rating</th>
 	  <th>Hours (total)</th>
 	  <th>Name</th>
-	  <th>Hours (in-class)</th>
-	  <th>Hours (out-of-class)</th>
+	  <th># in class (cumulative)</th>
+	  <th># responses (cumulative)</th>
 	</tr>
       </thead>
       <tfoot>
@@ -90,8 +94,8 @@
 	  <th>Rating</th>
 	  <th>Hours (total)</th>
 	  <th>Name</th>
-	  <th>Hours (in-class)</th>
-	  <th>Hours (out-of-class)</th>
+	  <th># in class (cumulative)</th>
+	  <th># responses (cumulative)</th>
 	</tr>
       </tfoot>
       <tbody id="eval-tbody">
