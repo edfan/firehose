@@ -4,3 +4,4 @@ geckodriver*
 *~
 #*
 debug.log
+.DS_Store
