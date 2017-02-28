@@ -28,7 +28,23 @@ tfoot {
     margin-right: auto;
 }
 
+#terms-show-div {
+    font-family: 'Open Sans', sans-serif;
+    margin: 0 auto 0 auto;
+    left: 50%;
+    text-align: center;
+    line-height: 1;
+}
+
 #terms-div {
+    font-family: 'Open Sans', sans-serif;
+    margin: 0 auto 0 auto;
+    left: 50%;
+    text-align: center;
+    line-height: 1;
+}
+
+#selector-div {
     font-family: 'Open Sans', sans-serif;
     margin: 0 auto 0 auto;
     left: 50%;
@@ -79,7 +95,7 @@ tfoot {
     border-color: #3794dc;
 }
 
-.btn-secondary, .btn-secondary.focus, 
+.btn-secondary, .btn-secondary.focus,
 .btn-secondary.active, .btn-secondary.active.focus {
     background-image: none;
     outline: 0 !important;
