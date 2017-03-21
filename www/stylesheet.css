@@ -17,9 +17,10 @@ tfoot {
 #info-div {
     font-family: 'Open Sans', sans-serif;
     font-size: 70%;
-    width: 425px;
+    width: 450px;
     margin: auto;
     text-align: center;
+    line-height: 7px;
 }
 
 #info-div img {
