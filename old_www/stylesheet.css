@@ -8,25 +8,6 @@ tfoot {
     display: table-header-group;
 }
 
-#left-div {
-    float: left;
-    text-align: center;
-    width: 60%;
-}
-
-#left-int-div {
-  width: 54%;
-  position: absolute;
-  top: 50%;
-  margin: 15px;
-  transform: translate(3.7%, -50%);
-}
-
-#right-div {
-  float: right;
-  width: 40%;
-}
-
 #header-div {
     display: block;
     width: 100%;
@@ -47,6 +28,22 @@ tfoot {
     margin-right: auto;
 }
 
+#terms-show-div {
+    font-family: 'Open Sans', sans-serif;
+    margin: 0 auto 0 auto;
+    left: 50%;
+    text-align: center;
+    line-height: 1;
+}
+
+#terms-div {
+    font-family: 'Open Sans', sans-serif;
+    margin: 0 auto 0 auto;
+    left: 50%;
+    text-align: center;
+    line-height: 1;
+}
+
 #selector-div {
     font-family: 'Open Sans', sans-serif;
     margin: 0 auto 0 auto;
@@ -65,16 +62,11 @@ tfoot {
 }
 
 #spacer2-div {
-    height: 0px;
+    height: 10px;
 }
 
 #spacer3-div {
-    height: 4px;
-}
-
-#class-input-label {
-    font-size: 110%;
-    font-weight: semibold;
+    height: 8px;
 }
 
 .btn-primary, .btn-primary.focus {
@@ -128,26 +120,4 @@ tfoot {
 .eval-subtable {
     table-layout: fixed;
     width: 100%;
-}
-
-#desc-div {
-    line-height: 0;
-}
-
-#class-name {
-    font-weight: bold;
-    line-height: 1;
-}
-
-#class-units {
-    font-size: 70%;
-}
-
-#class-desc {
-    font-size: 70%;
-    line-height: 1.25;
-}
-
-.fc-time:not(.fc-axis) {
-    font-size: 70%;
 }
