@@ -56,6 +56,10 @@ tfoot {
     line-height: 1;
 }
 
+#selected-div {
+  text-align: left;
+}
+
 #buttons-div {
     margin: auto;
     text-align: center;
@@ -141,11 +145,11 @@ tfoot {
 }
 
 #class-units {
-    font-size: 70%;
+    font-size: 80%;
 }
 
 #class-desc {
-    font-size: 70%;
+    font-size: 80%;
     line-height: 1.25;
 }
 
@@ -153,7 +157,7 @@ tfoot {
     font-size: 70%;
 }
 
-@media only screen and (max-device-width: 480px) {
+@media (max-width: 480px),(max-height: 750px) {
   #left-int-div {
     width: 54%;
     top: 5%;
