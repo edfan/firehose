@@ -152,3 +152,14 @@ tfoot {
 .fc-time:not(.fc-axis) {
     font-size: 70%;
 }
+
+@media only screen and (max-device-width: 480px) {
+  #left-int-div {
+    width: 54%;
+    position: absolute;
+    top: 0%;
+    margin: 15px;
+    transform: translate(3.7%, -50%);
+  }
+
+}

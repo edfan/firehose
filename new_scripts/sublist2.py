@@ -3,7 +3,7 @@ import requests
 import re
 from bs4 import BeautifulSoup
 
-base_url = "http://student.mit.edu/catalog/archive/spring/search.cgi?search="
+base_url = "http://student.mit.edu/catalog/search.cgi?search="
 
 with open('all_classes') as f:
     class_list = json.load(f)
@@ -92,7 +92,12 @@ for c in class_list:
             classes[num]['units3'] = int(units[2])
             classes[num]['total_units'] = classes[num]['units1'] + classes[num]['units2'] + classes[num]['units3']
 
-        desc = others[-1].findNext("img").findNext().nextSibling
+        desc = others[-1].findNext("img")
+        while 'hr.gif' not in str(desc):
+            desc = desc.findNext("img")
+
+        desc = desc.findNext().nextSibling
+        
         if desc != None:
             classes[num]['desc'] = desc.strip()
 
