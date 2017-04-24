@@ -157,7 +157,7 @@ tfoot {
     font-size: 70%;
 }
 
-@media (max-width: 480px),(max-height: 750px) {
+@media (max-width: 750px),(max-height: 750px) {
   #left-int-div {
     width: 54%;
     top: 5%;
