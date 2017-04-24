@@ -157,7 +157,7 @@ tfoot {
   #left-int-div {
     width: 54%;
     position: absolute;
-    top: 0%;
+    top: 50%;
     margin: 15px;
     transform: translate(3.7%, -50%);
   }
