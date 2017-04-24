@@ -156,9 +156,10 @@ tfoot {
 @media only screen and (max-device-width: 480px) {
   #left-int-div {
     width: 54%;
+    top: 5%;
     position: absolute;
     margin: 15px;
-    transform: translate(3.7%, -5%);
+    transform: translate(3.7%, 0%);
   }
 
 }
