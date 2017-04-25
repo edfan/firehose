@@ -139,8 +139,8 @@ tfoot {
     width: 100%;
 }
 
-#desc-div {
-    line-height: 0;
+#desc-div p {
+    margin-bottom: 6px;
 }
 
 #class-name {
@@ -148,7 +148,7 @@ tfoot {
     line-height: 1;
 }
 
-#class-units {
+#class-type {
     font-size: 80%;
 }
 

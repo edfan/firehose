@@ -1,4 +1,5 @@
 import json
+import copy
 
 with open('csb') as f:
     times = json.load(f)
@@ -30,13 +31,16 @@ for c in times:
         classes[c]['he'] = descs[c]['HASS-E']
         classes[c]['ci'] = descs[c]['CI-H']
         classes[c]['cw'] = descs[c]['CI-HW']
+        classes[c]['rp'] = descs[c]['repeat']
         classes[c]['re'] = descs[c]['REST']
         classes[c]['la'] = descs[c]['LAB']
+        classes[c]['pl'] = descs[c]['pLAB']
         classes[c]['u1'] = descs[c]['units1']
         classes[c]['u2'] = descs[c]['units2']
         classes[c]['u3'] = descs[c]['units3']
         classes[c]['le'] = descs[c]['level']
         classes[c]['t'] = descs[c]['terms']
+        classes[c]['pr'] = descs[c]['prereq']
         classes[c]['d'] = descs[c]['desc']
         classes[c]['n'] = descs[c]['name']
     else:
@@ -46,15 +50,18 @@ for c in times:
         classes[c]['he'] = False
         classes[c]['ci'] = False
         classes[c]['cw'] = False
+        classes[c]['rp'] = False
         classes[c]['re'] = False
         classes[c]['la'] = False
+        classes[c]['pl'] = False
         classes[c]['u1'] = 0
         classes[c]['u2'] = 0
         classes[c]['u3'] = 0
         classes[c]['le'] = 'U'
         classes[c]['t'] = ['FA']
-        classes[c]['d'] = 'New class- manual fill required.'
-        classes[c]['n'] = 'New class'
+        classes[c]['pr'] = 'None'
+        classes[c]['d'] = "This class is in the registrar's schedule, but not the course catalog."
+        classes[c]['n'] = 'Special Subject'
 
     if c in evals:
         total_rating = 0
@@ -79,6 +86,18 @@ for c in times:
         classes[c]['ra'] = 0
         classes[c]['h'] = 0
         classes[c]['si'] = 0
+
+classes['14.01R'] = copy.deepcopy(classes['14.01'])
+classes['14.01']['r'] = classes['14.01']['r'][:5]
+classes['14.01R']['no'] = '14.01R'
+classes['14.01R']['s'] = ['R']
+classes['14.01R']['r'] = classes['14.01R']['r'][5:]
+
+classes['14.02R'] = copy.deepcopy(classes['14.02'])
+classes['14.02']['r'] = classes['14.02']['r'][:2]
+classes['14.02R']['no'] = '14.02R'
+classes['14.02R']['s'] = ['R']
+classes['14.02R']['r'] = classes['14.02R']['r'][2:]
 
 with open('full.json', 'w') as f:
     f.write('var classes = ')

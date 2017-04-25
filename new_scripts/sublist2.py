@@ -22,12 +22,16 @@ for c in class_list:
                         'level': 'U',
                         'terms': [],
                         'desc': '',
+                        'prereq': '',
+                        'times': '',
                         'units1': 0,
                         'units2': 0,
                         'units3': 0,
                         'total_units': 0,
+                        'repeat': False,
                         'REST': False,
                         'LAB': False,
+                        'pLAB': False,
                         'CI-H': False,
                         'CI-HW': False,
                         'HASS-H': False,
@@ -67,9 +71,13 @@ for c in class_list:
             others.append(next_other)
             
         for other in others:
+            if 'repeat.gif' in str(other):
+                classes[num]['repeat'] = True
             if 'rest.gif' in str(other):
                 classes[num]['REST'] = True
-            if 'Lab.gif' in str(other):
+            if 'PartLab.gif' in str(other):
+                classes[num]['pLAB'] = True
+            elif 'Lab.gif' in str(other):
                 classes[num]['LAB'] = True
             if 'cihw.gif' in str(other):
                 classes[num]['CI-HW'] = True
@@ -91,6 +99,12 @@ for c in class_list:
             classes[num]['units2'] = int(units[1])
             classes[num]['units3'] = int(units[2])
             classes[num]['total_units'] = classes[num]['units1'] + classes[num]['units2'] + classes[num]['units3']
+
+        prereq = soup.getText().split('Prereq:')
+        if len(prereq) > 1:
+            classes[num]['prereq'] = prereq[1].split('\n')[0].strip()
+        else:
+            classes[num]['prereq'] = 'None'
 
         desc = others[-1].findNext("img")
         while 'hr.gif' not in str(desc):
