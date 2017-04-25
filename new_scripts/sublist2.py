@@ -45,7 +45,7 @@ for c in class_list:
         terms = [level.findNext()]
         while True:
             next_term = terms[-1].findNext()
-            if str(next_term) == '<br/>':
+            if not any(x in str(next_term) for x in gterms):
                 break
             terms.append(next_term)
             
