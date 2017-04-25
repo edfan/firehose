@@ -45,7 +45,7 @@ for c in class_list:
         elif 'Graduate' in str(level):
             classes[num]['level'] = 'G'
 
-        gterms = ['Fall', 'IAP' 'Spring', 'Summer']
+        gterms = ['Fall', 'IAP', 'Spring', 'Summer']
         terms = [level.findNext()]
         while True:
             next_term = terms[-1].findNext()
