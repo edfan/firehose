@@ -60,7 +60,7 @@ tfoot {
   text-align: left;
 }
 
-#warning-div {
+#warning-div, #warning2-div {
   font-size: 70%;
 }
 

@@ -116,11 +116,8 @@ for line in f:
                          'r': [],
                          'b': [],
                          'final': False,
+                         'tba': False,
                          'all_slots': []}
-
-    # Throw out comments.
-    if c[1][0] == '0':
-        continue
 
     # Throw out MS/NS because their times are weird.
     if c[0][:2] in ['MS', 'NS']:
@@ -129,6 +126,15 @@ for line in f:
     # Check for finals.
     if c[1] == 'Q01':
         classes[c[0]]['final'] = True
+        continue
+
+    # Check for TBA.
+    if c[5] == '*TO BE ARRANGED\n':
+        classes[c[0]]['tba'] = True
+        continue
+
+    # Throw out comments.
+    if c[1][0] == '0':
         continue
     
     # Parse timeslot.

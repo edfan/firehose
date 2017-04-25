@@ -18,6 +18,7 @@ for c in times:
         'co': times[c]['course'],
         'cl': times[c]['class'],
         'f': times[c]['final'],
+        'tb': times[c]['tba'],
         
         's': times[c]['sections'],
         'l': times[c]['l'],
@@ -87,6 +88,8 @@ for c in times:
         classes[c]['h'] = 0
         classes[c]['si'] = 0
 
+
+# Special case 14.01/14.02 rec-only sections.
 classes['14.01R'] = copy.deepcopy(classes['14.01'])
 classes['14.01']['r'] = classes['14.01']['r'][:5]
 classes['14.01R']['no'] = '14.01R'
