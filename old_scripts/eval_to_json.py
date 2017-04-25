@@ -28,12 +28,12 @@ def main():
             for prof in v['professors']:
                 professors.add(prof['name'])
             
-    with open('www/evaluations.json', 'w') as f:
+    with open('evaluations.json', 'w') as f:
         f.write('var evals = ')
         json.dump(classes, f)
         f.write(';')
 
-    with open('www/professors.json', 'w') as f:
+    with open('professors.json', 'w') as f:
         f.write('var professors = ')
         json.dump(list(professors), f)
         f.write(';')
