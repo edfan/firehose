@@ -60,6 +60,10 @@ tfoot {
   text-align: left;
 }
 
+#warning-div {
+  font-size: 70%;
+}
+
 #buttons-div {
     margin: auto;
     text-align: center;
