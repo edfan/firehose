@@ -37,6 +37,17 @@ tfoot {
     font-family: 'Open Sans', sans-serif;
     font-size: 80%;
     width: 450px;
+    margin: 20 auto;
+    text-align: center;
+    line-height: 7px;
+    float: left;
+    width: 50%;
+}
+
+#info2-div {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 70%;
+    width: 450px;
     margin: auto;
     text-align: center;
     line-height: 7px;
@@ -65,8 +76,10 @@ tfoot {
 }
 
 #buttons-div {
-    margin: auto;
+    margin: 40 auto;
     text-align: center;
+    float: right;
+    width: 50%;
 }
 
 #spacer-div {
@@ -78,7 +91,7 @@ tfoot {
 }
 
 #spacer3-div {
-    height: 4px;
+    height: 40px;
 }
 
 #class-input-label {
@@ -165,7 +178,7 @@ tfoot {
     font-size: 70%;
 }
 
-@media screen and (max-aspect-ratio: 3/4),(max-width: 750px),(max-height: 750px) {
+@media screen and (max-aspect-ratio: 3/4),(max-width: 750px),(max-height: 950px) {
   #left-int-div {
     width: 54%;
     top: 5%;
