@@ -178,12 +178,12 @@ tfoot {
     font-size: 70%;
 }
 
-@media screen and (max-aspect-ratio: 3/4),(max-width: 750px),(max-height: 950px) {
+@media screen and (max-height: 1050px) {
   #left-int-div {
     width: 54%;
     top: 5%;
     position: absolute;
-    margin: 15px;
+    margin: 70px auto;
     transform: translate(3.7%, 0%);
   }
 
