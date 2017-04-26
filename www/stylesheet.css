@@ -18,7 +18,7 @@ tfoot {
     width: 54%;
     top: 5%;
     position: absolute;
-    margin: 68px auto;
+    margin: 25px auto;
     transform: translate(5%, 0%);
 }
 
@@ -35,13 +35,11 @@ tfoot {
 
 #info-div {
     font-family: 'Open Sans', sans-serif;
-    font-size: 80%;
+    font-size: 90%;
     width: 450px;
     margin: 20 auto;
     text-align: center;
     line-height: 7px;
-    float: left;
-    width: 50%;
 }
 
 #info2-div {
@@ -76,10 +74,8 @@ tfoot {
 }
 
 #buttons-div {
-    margin: 40 auto;
+    margin: 20 auto;
     text-align: center;
-    float: right;
-    width: 50%;
 }
 
 #spacer-div {
@@ -91,12 +87,11 @@ tfoot {
 }
 
 #spacer3-div {
-    height: 40px;
+    height: 4px;
 }
 
 #class-input-label {
     font-size: 110%;
-    font-weight: 500;
 }
 
 .btn-primary, .btn-primary.focus {
