@@ -15,11 +15,11 @@ tfoot {
 }
 
 #left-int-div {
-  width: 54%;
-  position: absolute;
-  top: 50%;
-  margin: 15px;
-  transform: translate(3.7%, -50%);
+    width: 54%;
+    top: 5%;
+    position: absolute;
+    margin: 68px auto;
+    transform: translate(5%, 0%);
 }
 
 #right-div {
@@ -96,7 +96,7 @@ tfoot {
 
 #class-input-label {
     font-size: 110%;
-    font-weight: semibold;
+    font-weight: 500;
 }
 
 .btn-primary, .btn-primary.focus {
@@ -178,13 +178,17 @@ tfoot {
     font-size: 70%;
 }
 
-@media screen and (max-height: 1050px) {
-  #left-int-div {
-    width: 54%;
-    top: 5%;
-    position: absolute;
-    margin: 70px auto;
-    transform: translate(3.7%, 0%);
-  }
-
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:   #909090;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    #909090;
+   opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    #909090;
+   opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color:    #909090;
 }
