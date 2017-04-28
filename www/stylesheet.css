@@ -11,11 +11,11 @@ tfoot {
 #left-div {
     float: left;
     text-align: center;
-    width: 60%;
+    width: 55%;
 }
 
 #left-int-div {
-    width: 54%;
+    width: 50%;
     top: 5%;
     position: absolute;
     margin: 25px auto;
@@ -24,7 +24,7 @@ tfoot {
 
 #right-div {
   float: right;
-  width: 40%;
+  width: 45%;
 }
 
 #header-div {
