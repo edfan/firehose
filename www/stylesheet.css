@@ -51,6 +51,12 @@ tfoot {
     line-height: 7px;
 }
 
+#info3-p {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 60%;
+    margin: 5 auto 0 auto;
+}
+
 #info-div img {
     display: block;
     margin-left: auto;
