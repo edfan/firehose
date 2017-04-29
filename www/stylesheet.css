@@ -53,8 +53,19 @@ tfoot {
 
 #info3-p {
     font-family: 'Open Sans', sans-serif;
-    font-size: 60%;
-    margin: 5 auto 0 auto;
+    font-size: 70%;
+    line-height: 7px;
+    margin: 7 auto 0 auto;
+}
+
+#footer-div {
+    margin: 735 auto 0 auto;
+    font-size: 65%;
+    color: #D0D0D0;
+}
+
+#footer-div a {
+    color: inherit;
 }
 
 #info-div img {
