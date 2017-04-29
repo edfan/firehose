@@ -28,6 +28,7 @@ for c in class_list:
                         'units2': 0,
                         'units3': 0,
                         'total_units': 0,
+                        'no_next': False,
                         'repeat': False,
                         'REST': False,
                         'LAB': False,
@@ -40,6 +41,11 @@ for c in class_list:
                         'HASS-E': False}
 
         level = start.findNext('img').findNext('img')
+
+        if 'nonext' in str(level):
+            classes[num]['no_next'] = True
+            level = level.findNext('img')
+        
         if 'Undergrad' in str(level):
             classes[num]['level'] = 'U'
         elif 'Graduate' in str(level):

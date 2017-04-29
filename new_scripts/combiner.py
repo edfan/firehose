@@ -32,6 +32,7 @@ for c in times:
         classes[c]['he'] = descs[c]['HASS-E']
         classes[c]['ci'] = descs[c]['CI-H']
         classes[c]['cw'] = descs[c]['CI-HW']
+        classes[c]['nx'] = descs[c]['no_next']
         classes[c]['rp'] = descs[c]['repeat']
         classes[c]['re'] = descs[c]['REST']
         classes[c]['la'] = descs[c]['LAB']
