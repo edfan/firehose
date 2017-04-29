@@ -186,6 +186,10 @@ tfoot {
     line-height: 1.25;
 }
 
+#class-buttons-div {
+    margin: 7 auto 7 auto;
+}
+
 .fc-time:not(.fc-axis) {
     font-size: 70%;
 }
