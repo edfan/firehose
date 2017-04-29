@@ -105,7 +105,7 @@ classes['14.02R']['r'] = classes['14.02R']['r'][2:]
 
 with open('full.json', 'w') as f:
     f.write('var classes = ')
-    json.dump(classes, f)
+    json.dump(classes, f, separators=(',', ':'))
     f.write(';')
 
         

@@ -156,16 +156,16 @@ for line in f:
     slots = (slots, c[3])
 
     if c[1][0] == 'L':
-        if 'L' not in classes[c[0]]['sections']:
-            classes[c[0]]['sections'].append('L')
+        if 'l' not in classes[c[0]]['sections']:
+            classes[c[0]]['sections'].append('l')
         classes[c[0]]['l'].append(slots)
     elif c[1][0] == 'R':
-        if 'R' not in classes[c[0]]['sections']:
-            classes[c[0]]['sections'].append('R')
+        if 'r' not in classes[c[0]]['sections']:
+            classes[c[0]]['sections'].append('r')
         classes[c[0]]['r'].append(slots)
     else:
-        if 'B' not in classes[c[0]]['sections']:
-            classes[c[0]]['sections'].append('B')
+        if 'b' not in classes[c[0]]['sections']:
+            classes[c[0]]['sections'].append('b')
         classes[c[0]]['b'].append(slots)
 
 with open('csb', 'w') as f:
