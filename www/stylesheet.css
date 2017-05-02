@@ -87,7 +87,8 @@ tfoot {
 }
 
 #warning-div, #warning2-div {
-  font-size: 70%;
+    margin: 0 auto 5 auto;
+    font-size: 70%;
 }
 
 #buttons-div {
@@ -109,6 +110,20 @@ tfoot {
 
 #class-input-label {
     font-size: 110%;
+}
+
+#units-div {
+    margin: 0 auto 10 auto;
+}
+
+#activity-button {
+    margin: 0 auto 5 auto;
+    font-size: 80%;
+    color: #0000EE;
+}
+
+#activity-button:hover {
+    text-decoration: underline;
 }
 
 .btn-primary, .btn-primary.focus {
