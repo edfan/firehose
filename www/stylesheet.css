@@ -120,9 +120,19 @@ tfoot {
     margin: 10 auto 5 auto;
     font-size: 70%;
     color: #0000EE;
+    cursor: pointer;
 }
 
 #activity-button:hover {
+    text-decoration: underline;
+}
+
+.prereq-span {
+    color: #0000EE;
+    cursor: pointer;
+}
+
+.prereq-span:hover {
     text-decoration: underline;
 }
 
