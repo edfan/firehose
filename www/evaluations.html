@@ -56,14 +56,7 @@
     <label id="class-input-label" for="class-input">Insert course number:&nbsp;</label>
     <input type="text" placeholder="8.01" style="width: 20% !important;" id="class-input" onfocus="this.placeholder = ''" onblur="this.placeholder = '8.01'" autofocus>
     <p id="info3-p">Tip: press Enter or double-click a row to quickly add a class.</p>
-    <hr>
 
-    <div id="selected-div"></div><br>
-
-    <p id="units-div" style="display: none;">Units: <span id="total-units"></span>&nbsp;&nbsp;&nbsp;Hours: <span id="total-hours"></span></p>
-    <p id="warning-div" style="display: none;">* Class does not have evaluations, so was set to 0 hours.</p>
-    <p id="warning2-div" style="display: none;">+ Class has at least one section that has yet to be scheduled- check course catalog.</p>
-    
     <p id="activity-button">+ Add non-class activity</p>
 
     <div id="activity-div" style="display: none;">
@@ -78,6 +71,13 @@
        <span id="time">10:00 - 13:00</span><br><br>
        <button type="button" class="btn btn-primary" id="add-activity-button">Add activity</button>
     </div>
+    <hr>
+
+    <div id="selected-div"></div><br>
+
+    <p id="units-div" style="display: none;">Units: <span id="total-units"></span>&nbsp;&nbsp;&nbsp;Hours: <span id="total-hours"></span></p>
+    <p id="warning-div" style="display: none;">* Class does not have evaluations, so was set to 0 hours.</p>
+    <p id="warning2-div" style="display: none;">+ Class has at least one section that has yet to be scheduled- check course catalog.</p>
 
     <hr>
     <label class="checkbox-inline"><input type="checkbox" id="hass-a"> HASS-A </label>&nbsp;
