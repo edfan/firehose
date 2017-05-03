@@ -58,8 +58,22 @@ tfoot {
     margin: 7 auto 0 auto;
 }
 
+#export-div {
+    margin: 735 auto 10 auto;
+    font-size: 90%;
+}
+
+#prereg-link {
+    color: #0000EE;
+    cursor: pointer;
+}
+
+#prereg-link:hover {
+    text-decoration: underline;
+}
+    
 #footer-div {
-    margin: 735 auto 350 auto;
+    margin: 0 auto 350 auto;
     font-size: 65%;
     color: #D0D0D0;
 }
