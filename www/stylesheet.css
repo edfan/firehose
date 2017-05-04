@@ -64,7 +64,7 @@ tfoot {
 }
 
 #prereg-link {
-    color: #0000EE;
+    color: #0275d8;
     cursor: pointer;
 }
 
@@ -73,7 +73,7 @@ tfoot {
 }
     
 #footer-div {
-    margin: 0 auto 350 auto;
+    margin: 0 auto 375 auto;
     font-size: 65%;
     color: #D0D0D0;
 }
@@ -133,7 +133,7 @@ tfoot {
 #activity-button {
     margin: 10 auto 5 auto;
     font-size: 70%;
-    color: #0000EE;
+    color: #0275d8;
     cursor: pointer;
 }
 
@@ -142,7 +142,7 @@ tfoot {
 }
 
 .prereq-span {
-    color: #0000EE;
+    color: #0275d8;
     cursor: pointer;
 }
 
@@ -232,6 +232,24 @@ tfoot {
 
 #class-buttons-div {
     margin: 7 auto 7 auto;
+}
+
+#manual-button {
+    font-size: 80%;
+    color: #0275d8;
+    cursor: pointer;
+}
+
+#manual-button:hover {
+    text-decoration: underline;
+}
+
+#manual-div {
+    display: flex;
+}
+
+#manual-div > div {
+    flex: 1;
 }
 
 .fc-time:not(.fc-axis) {

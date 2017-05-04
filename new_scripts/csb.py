@@ -115,6 +115,9 @@ for line in f:
                          'l': [],
                          'r': [],
                          'b': [],
+                         'l_raw': [],
+                         'r_raw': [],
+                         'b_raw': [],
                          'final': False,
                          'tba': False,
                          'all_slots': []}
@@ -159,14 +162,17 @@ for line in f:
         if 'l' not in classes[c[0]]['sections']:
             classes[c[0]]['sections'].append('l')
         classes[c[0]]['l'].append(slots)
+        classes[c[0]]['l_raw'].append(c[5].strip())
     elif c[1][0] == 'R':
         if 'r' not in classes[c[0]]['sections']:
             classes[c[0]]['sections'].append('r')
         classes[c[0]]['r'].append(slots)
+        classes[c[0]]['r_raw'].append(c[5].strip())
     else:
         if 'b' not in classes[c[0]]['sections']:
             classes[c[0]]['sections'].append('b')
         classes[c[0]]['b'].append(slots)
+        classes[c[0]]['b_raw'].append(c[5].strip())
 
 with open('csb', 'w') as f:
     json.dump(classes, f)

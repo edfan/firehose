@@ -23,7 +23,10 @@ for c in times:
         's': times[c]['sections'],
         'l': times[c]['l'],
         'r': times[c]['r'],
-        'b': times[c]['b']}
+        'b': times[c]['b'],
+        'lr': times[c]['l_raw'],
+        'rr': times[c]['r_raw'],
+        'br': times[c]['b_raw']}
 
     if c in descs:
         classes[c]['hh'] = descs[c]['HASS-H']
