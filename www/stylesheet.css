@@ -5,6 +5,7 @@
 }
 
 #left-int-div {
+    background-color: white;
     width: 50%;
     top: 5%;
     height: 700px;
@@ -54,6 +55,14 @@
     font-size: 90%;
 }
 
+#sbuttons-div {
+    margin: 0 auto 5 auto;
+}
+
+#adv-buttons-div {
+    margin: 10 auto 0 auto;
+}
+
 #prereg-link {
     color: #0275d8;
     cursor: pointer;
@@ -88,7 +97,19 @@
 }
 
 #selected-div {
-  text-align: left;
+    text-align: left;
+}
+
+#expand-button{
+    color: #0275d8;
+    cursor: pointer;
+    font-size: 70%;
+    position: relative;
+    top: 5px;
+}
+
+#expand-button:hover {
+    text-decoration: underline;
 }
 
 #warning-div, #warning2-div {
@@ -189,7 +210,7 @@
     font-family: 'PT Serif', serif;
     width: 100%;
     max-width: 1200px;
-    margin: auto;
+    margin: 5 auto 0 auto;
 }
 
 #eval-loading {

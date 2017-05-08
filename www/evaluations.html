@@ -22,7 +22,7 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha256-rByPlHULObEjJ6XQxW/flG2r+22R5dKiAoef+aXWfik=" crossorigin="anonymous" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha256-KM512VNnjElC30ehFwehXjx1YCHPiQkOPmqnrWtpccM=" crossorigin="anonymous"></script>
-
+  
   <link href="https://fonts.googleapis.com/css?family=Open+Sans|PT+Serif" rel="stylesheet">
 
   <link rel="stylesheet" type="text/css" href="stylesheet.css">
@@ -82,15 +82,46 @@
     <p id="warning2-div" style="display: none;">+ Class has at least one section that has yet to be scheduled- check course catalog.</p>
 
     <hr>
-    <label class="checkbox-inline"><input type="checkbox" id="hass-a"> HASS-A </label>&nbsp;
-    <label class="checkbox-inline"><input type="checkbox" id="hass-h"> HASS-H </label>&nbsp;
-    <label class="checkbox-inline"><input type="checkbox" id="hass-s"> HASS-S </label>&nbsp;
-    <label class="checkbox-inline"><input type="checkbox" id="ci-h"> CI-H </label>&nbsp;
-    <label class="checkbox-inline"><input type="checkbox" id="ci-hw"> CI-HW </label>&nbsp;
-    <label class="checkbox-inline"><input type="checkbox" id="conflicts"> No conflicts </label>&nbsp;&nbsp;
-    <button class="btn btn-sm btn-secondary" id="apply" onclick="fill_table()">Filter</button>
-  </div>
+    
+    <div id="sbuttons-div" class="btn-group" data-toggle="buttons">
+      <label class="btn btn-primary selector-button" id="hass">
+	<input type="checkbox" autocomplete="off">Any HASS
+      </label>
+      <label class="btn btn-primary selector-button" id="ci_h">
+	<input type="checkbox" autocomplete="off">CI-H
+      </label>
+      <label class="btn btn-primary selector-button" id="conflicts">
+	<input type="checkbox" autocomplete="off">No conflicts
+      </label>
+    </div>
+    
+    <br>
+    <span id="expand-button">+ Advanced filters</span>
 
+    <div id="adv-buttons-div" style="display:none;">
+      <div class="btn-group" data-toggle="buttons">
+	<label class="btn btn-primary selector-button" id="hass_a">
+	  <input type="checkbox" autocomplete="off">HASS-A
+	</label>
+	<label class="btn btn-primary selector-button" id="hass_h"> 
+	  <input type="checkbox" autocomplete="off">HASS-H
+	</label>
+	<label class="btn btn-primary selector-button" id="hass_s">
+	  <input type="checkbox" autocomplete="off">HASS-S
+	</label>
+	<label class="btn btn-primary selector-button" id="ci_hw">
+	  <input type="checkbox" autocomplete="off">CI-HW
+	</label>
+	<label class="btn btn-primary selector-button" id="rest">
+	  <input type="checkbox" autocomplete="off">REST
+	</label>
+	<label class="btn btn-primary selector-button" id="no_ci">
+	  <input type="checkbox" autocomplete="off">Not CI-H
+	</label>
+      </div>
+    </div>
+  </div>
+  
   <div id="eval-loading"><p>Loading...</p></div>
 
   <div id="eval-table-div" style="display: none;">
