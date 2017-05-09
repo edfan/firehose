@@ -63,12 +63,12 @@
     margin: 10 auto 0 auto;
 }
 
-#prereg-link {
+#prereg-link, #calendar-link {
     color: #0275d8;
     cursor: pointer;
 }
 
-#prereg-link:hover {
+#prereg-link:hover, #calendar-link:hover {
     text-decoration: underline;
 }
     
