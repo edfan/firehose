@@ -34,6 +34,10 @@
     line-height: 7px;
 }
 
+#info-line {
+    font-size: 80%;
+}
+
 #info2-div {
     font-family: 'Open Sans', sans-serif;
     font-size: 70%;
