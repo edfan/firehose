@@ -215,6 +215,7 @@
     width: 100%;
     max-width: 1200px;
     margin: 5 auto 0 auto;
+    cursor: pointer;
 }
 
 #eval-loading {
