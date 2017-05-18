@@ -38,7 +38,11 @@ for c in class_list:
                         'HASS-H': False,
                         'HASS-A': False,
                         'HASS-S': False,
-                        'HASS-E': False}
+                        'HASS-E': False,
+                        'prereq': 'None',
+                        'same_as': '',
+                        'meets_with': '',
+                        'url': ''}
 
         level = start.findNext('img').findNext('img')
 
@@ -109,8 +113,20 @@ for c in class_list:
         prereq = soup.getText().split('Prereq:')
         if len(prereq) > 1:
             classes[num]['prereq'] = prereq[1].split('\n')[0].strip()
-        else:
-            classes[num]['prereq'] = 'None'
+
+        same = soup.getText().split('Same subject as ')
+        if len(same) > 1:
+            same_as = same[1].split(')')[0].split(',')
+            classes[num]['same_as'] = ', '.join(x.strip(' ,[J]') for x in same_as)
+
+        meets = soup.getText().split('Subject meets with ')
+        if len(meets) > 1:
+            meets_with = meets[1].split(')')[0].split(',')
+            classes[num]['meets_with'] = ', '.join(x.strip(' ,[J]') for x in meets_with)
+            
+        url = soup.getText().split('URL: ')
+        if len(url) > 1:
+            classes[num]['url'] = url[1].split('\n')[0]
 
         desc = others[-1].findNext("img")
         while 'hr.gif' not in str(desc):
@@ -122,8 +138,9 @@ for c in class_list:
             classes[num]['desc'] = desc.strip()
 
         print(num)
-    except (AttributeError, TypeError):
+    except (AttributeError, TypeError) as e:
         print("Failed:", num)
+        print(e)
 
 with open("sublist", 'w') as f:
     json.dump(classes, f)

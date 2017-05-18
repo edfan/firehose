@@ -162,12 +162,12 @@
     text-decoration: underline;
 }
 
-.prereq-span {
+.link-span {
     color: #0275d8;
     cursor: pointer;
 }
 
-.prereq-span:hover {
+.link-span:hover {
     text-decoration: underline;
 }
 
