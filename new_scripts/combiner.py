@@ -100,14 +100,18 @@ for c in times:
 classes['14.01R'] = copy.deepcopy(classes['14.01'])
 classes['14.01']['r'] = classes['14.01']['r'][:5]
 classes['14.01R']['no'] = '14.01R'
-classes['14.01R']['s'] = ['R']
+classes['14.01R']['s'] = ['r']
 classes['14.01R']['r'] = classes['14.01R']['r'][5:]
+classes['14.01R']['n'] += " (recitation only)"
+del classes['14.01R']['l']
 
 classes['14.02R'] = copy.deepcopy(classes['14.02'])
 classes['14.02']['r'] = classes['14.02']['r'][:2]
 classes['14.02R']['no'] = '14.02R'
-classes['14.02R']['s'] = ['R']
+classes['14.02R']['s'] = ['r']
 classes['14.02R']['r'] = classes['14.02R']['r'][2:]
+classes['14.02R']['n'] += " (recitation only)"
+del classes['14.02R']['l']
 
 with open('full.json', 'w') as f:
     f.write('var classes = ')
