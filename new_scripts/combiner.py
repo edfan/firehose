@@ -65,6 +65,8 @@ for c in times:
         classes[c]['u1'] = 0
         classes[c]['u2'] = 0
         classes[c]['u3'] = 0
+        classes[c]['sa'] = ''
+        classes[c]['mw'] = ''
         classes[c]['le'] = 'U'
         classes[c]['t'] = ['FA']
         classes[c]['pr'] = 'None'
