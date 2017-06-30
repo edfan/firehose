@@ -98,12 +98,17 @@ f = open('csb_raw')
 current_class = ''
 classes = {}
 
+f.readline()
+
 for line in f:
     c = line.split('\t')
-    #print(c)
 
     # Check that this line is actually a class.
     if not line[0].isalnum() or len(c) < 3:
+        continue
+
+    # Check that the class hasn't been cancelled.
+    if "SUBJECT CANCELLED" in c[3]:
         continue
 
     # Initialize class object.
@@ -132,7 +137,7 @@ for line in f:
         continue
 
     # Check for TBA.
-    if c[5] == '*TO BE ARRANGED\n':
+    if c[3] == '*TO BE ARRANGED\n':
         classes[c[0]]['tba'] = True
         continue
 
@@ -143,7 +148,7 @@ for line in f:
     # Parse timeslot.
     # Format: 30 timeslots a day.
     slots = []
-    for s in c[5].strip().split(','):
+    for s in c[3].strip().split(','):
         slots.extend(tsp(s))
 
     # If no slots, ignore.
@@ -156,23 +161,23 @@ for line in f:
     else:
         classes[c[0]]['all_slots'].append(slots)
 
-    slots = (slots, c[3])
+    slots = (slots, c[2])
 
     if c[1][0] == 'L':
         if 'l' not in classes[c[0]]['sections']:
             classes[c[0]]['sections'].append('l')
         classes[c[0]]['l'].append(slots)
-        classes[c[0]]['l_raw'].append(c[5].strip())
+        classes[c[0]]['l_raw'].append(c[3].strip())
     elif c[1][0] == 'R':
         if 'r' not in classes[c[0]]['sections']:
             classes[c[0]]['sections'].append('r')
         classes[c[0]]['r'].append(slots)
-        classes[c[0]]['r_raw'].append(c[5].strip())
+        classes[c[0]]['r_raw'].append(c[3].strip())
     else:
         if 'b' not in classes[c[0]]['sections']:
             classes[c[0]]['sections'].append('b')
         classes[c[0]]['b'].append(slots)
-        classes[c[0]]['b_raw'].append(c[5].strip())
+        classes[c[0]]['b_raw'].append(c[3].strip())
 
 with open('csb', 'w') as f:
     json.dump(classes, f)
