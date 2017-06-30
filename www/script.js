@@ -1294,6 +1294,7 @@ $(document).ready(function () {
 				activities.push(tmp_activities[a]);
 			}
 		}
+		Cookies.set('activities', activities, { expires: 365 });
 	}
 
 	var tmp_locked_slots = Cookies.getJSON('locked_slots');
@@ -1303,6 +1304,7 @@ $(document).ready(function () {
 				locked_slots[l] = tmp_locked_slots[l];
 			}
 		}
+		Cookies.set('locked_slots', locked_slots, { expires: 365 });
 	}
 
 	var tmp_cur_option = parseInt(Cookies.get('cur_option'));
