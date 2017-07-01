@@ -35,8 +35,8 @@ def class_sort_internal2(a, b):
     return mult
 
 def class_sort(a, b):
-    a_s = a['number'].split('.')
-    b_s = b['number'].split('.')
+    a_s = a['u'].split('.')
+    b_s = b['u'].split('.')
 
     sort = class_sort_internal(a_s[0], b_s[0])
     if sort == 0:
@@ -53,19 +53,38 @@ with open('sublist') as f:
 with open('evaluations') as f:
     evals = json.load(f)
 
-classes = []
+classes_base = []
+classes_extended = []
+
+"""
+One-character mappings:
+
+Base:
+u: number
+n: name
+r: rating
+h: hours
+s: sort
+
+Extended:
+d: description
+"""
 
 for c in times:
     cl = {
-        'number': c,
+        'u': c,
+    }
+
+    cl_e = {
+        'u': c,
     }
 
     if c in descs:
-        cl['name'] = descs[c]['name']
-        cl['description'] = descs[c]['desc']
+        cl['n'] = descs[c]['name']
+        cl_e['d'] = descs[c]['desc']
     else:
-        cl['name'] = 'Special Subject'
-        cl['description'] = "This class is in the registrar's schedule, but not the course catalog."
+        cl['n'] = 'Special Subject'
+        cl['d'] = "This class is in the registrar's schedule, but not the course catalog."
 
     if c in evals:
         total_rating = 0
@@ -83,18 +102,33 @@ for c in times:
         if terms == 0:
             terms = 1
             
-        cl['rating'] = round(total_rating / terms, 1)
-        cl['hours'] = round(total_hours / terms, 1)
+        cl['r'] = round(total_rating / terms, 1)
+        cl['h'] = round(total_hours / terms, 1)
     else:
-        cl['rating'] = 0
-        cl['hours'] = 0
+        cl['r'] = 0
+        cl['h'] = 0
 
-    classes.append(cl)
+    classes_base.append(cl)
+    classes_extended.append(cl_e)
 
 # Calculate a sorting order.
-classes.sort(key=cmp_to_key(class_sort))
-for i in range(len(classes)):
-    classes[i]['sort'] = i
+classes_base.sort(key=cmp_to_key(class_sort))
+for i in range(len(classes_base)):
+    classes_base[i]['s'] = i
 
-with open('mongo_import.json', 'w') as f:
-    json.dump(classes, f)
+# Convert to dict.
+classes_base_d = {}
+classes_extended_d = {}
+
+for c in classes_base:
+    classes_base_d[c['u']] = c
+for c in classes_extended:
+    classes_extended_d[c['u']] = c
+
+with open('classes_base.json', 'w') as f:
+    f.write('var classes = ')
+    json.dump(classes_base_d, f, separators=(',', ':'))
+    f.write(';')
+
+with open('classes_extended.json', 'w') as f:
+    json.dump(classes_extended_d, f, separators=(',', ':'))
