@@ -1327,6 +1327,7 @@ $(document).ready(function () {
 				cur_classes.push(tmp_cur_classes[t]);
 			}
 		}
+		$("#units-div").show();
 		select_slots();
 		if (tmp_cur_option < options.length) {
 			set_option(tmp_cur_option);
