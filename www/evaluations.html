@@ -8,10 +8,8 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/jquery.dataTables.min.css" integrity="sha256-+Z1rYa3ys5OdZNUck5G7lBvb8A13OrYwvf+d8PfEaHQ=" crossorigin="anonymous" />
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js" integrity="sha256-TX6POJQ2u5/aJmHTJ/XUL5vWCbuOw0AQdgUEzk4vYMc=" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/yadcf/0.9.1/jquery.dataTables.yadcf.min.css" integrity="sha256-3V5jX6Qgax+heDDSElr4nP7EqNVjZ1B2drMgs3HW9KI="
-    crossorigin="anonymous" />
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/yadcf/0.9.1/jquery.dataTables.yadcf.min.js" integrity="sha256-SBW9SvmKpdywOdAQkVoz3rbEQv1bkgIazXGoaIRhlVo="
-    crossorigin="anonymous"></script>
+  <link rel="stylesheet" type="text/css" href="scroller.dataTables.min.css">
+  <script defer src="dataTables.scroller.min.js"></script>
 
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js" integrity="sha256-NjbogQqosWgor0UBdCURR5dzcvAgHnfUZMcZ8RCwkk8="
     crossorigin="anonymous"></script>
@@ -112,18 +110,18 @@
       </div>
 
       <br>
-      <span id="expand-button">+ Advanced filters</span>
+      <span id="expand-button">+ More filters</span>
 
       <div id="adv-buttons-div" style="display:none;">
         <div class="btn-group" data-toggle="buttons">
-          <label class="btn btn-primary selector-button" id="hass_a">
-	          <input type="checkbox" autocomplete="off"><img src="img/hassA.gif" title="HASS-A" style="padding-top: 2px; padding-bottom: 2px" />
+          <label class="btn btn-primary selector-button" id="hass_a" data-toggle="tooltip" data-placement="top" title="HASS-A" data-trigger="hover">
+	          <input type="checkbox" autocomplete="off"><img src="img/hassA.gif" style="padding-top: 2px; padding-bottom: 2px" />
 	        </label>
-          <label class="btn btn-primary selector-button" id="hass_h"> 
-	         <input type="checkbox" autocomplete="off"><img src="img/hassH.gif" title="HASS-H" style="padding-top: 2px; padding-bottom: 2px" />
+          <label class="btn btn-primary selector-button" id="hass_h" data-toggle="tooltip" data-placement="top" title="HASS-H" data-trigger="hover"> 
+	         <input type="checkbox" autocomplete="off"><img src="img/hassH.gif" style="padding-top: 2px; padding-bottom: 2px" />
 	        </label>
-          <label class="btn btn-primary selector-button" id="hass_s">
-            <input type="checkbox" autocomplete="off"><img src="img/hassS.gif" title="HASS-S" style="padding-top: 2px; padding-bottom: 2px" />
+          <label class="btn btn-primary selector-button" id="hass_s" data-toggle="tooltip" data-placement="top" title="HASS-S" data-trigger="hover">
+            <input type="checkbox" autocomplete="off"><img src="img/hassS.gif" style="padding-top: 2px; padding-bottom: 2px" />
           </label>
           <label class="btn btn-primary selector-button" id="ci_hw">
             <input type="checkbox" autocomplete="off">CI-HW
@@ -131,17 +129,17 @@
           <label class="btn btn-primary selector-button" id="no_ci">
             <input type="checkbox" autocomplete="off">Not CI-H
           </label>
-          <label class="btn btn-primary selector-button" id="rest">
-            <input type="checkbox" autocomplete="off"><img src="img/rest.gif" title="REST" style="padding-top: 2px; padding-bottom: 2px" />
+          <label class="btn btn-primary selector-button" id="rest" data-toggle="tooltip" data-placement="top" title="REST" data-trigger="hover">
+            <input type="checkbox" autocomplete="off"><img src="img/rest.gif" style="padding-top: 2px; padding-bottom: 2px" />
           </label>
-          <label class="btn btn-primary selector-button" id="lab">
-            <input type="checkbox" autocomplete="off"><img src="img/Lab.gif" title="Institute Lab" style="padding-top: 2px; padding-bottom: 2px" />
+          <label class="btn btn-primary selector-button" id="lab" data-toggle="tooltip" data-placement="top" title="Inst. Lab" data-trigger="hover">
+            <input type="checkbox" autocomplete="off"><img src="img/Lab.gif" style="padding-top: 2px; padding-bottom: 2px" />
           </label>
-          <label class="btn btn-primary selector-button" id="under">
-            <input type="checkbox" autocomplete="off"><img src="img/under.gif" title="Undergraduate classes only" style="padding-top: 2px; padding-bottom: 2px" />
+          <label class="btn btn-primary selector-button" id="under" data-toggle="tooltip" data-placement="top" title="Undergrad" data-trigger="hover">
+            <input type="checkbox" autocomplete="off"><img src="img/under.gif" style="padding-top: 2px; padding-bottom: 2px" />
           </label>
-          <label class="btn btn-primary selector-button" id="grad">
-            <input type="checkbox" autocomplete="off"><img src="img/grad.gif" title="Graduate classes only" style="padding-top: 2px; padding-bottom: 2px" />
+          <label class="btn btn-primary selector-button" id="grad" data-toggle="tooltip" data-placement="top" title="Graduate" data-trigger="hover">
+            <input type="checkbox" autocomplete="off"><img src="img/grad.gif" style="padding-top: 2px; padding-bottom: 2px" />
           </label>
         </div>
       </div>

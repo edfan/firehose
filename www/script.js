@@ -536,15 +536,6 @@ function fill_table() {
 		}
 	}
 
-	if ($('#class-input').val() != '' || hass_a_active || hass_h_active ||
-		hass_s_active || ci_h_active || ci_hw_active || conflicts_active ||
-		hass_active || no_ci_active || rest_active || lab_active || final_active ||
-		under_active || grad_active) {
-		table.page.len(2000);
-	} else {
-		table.page.len(150);
-	}
-
 	table.draw();
 
 	$('#apply').blur();
@@ -965,7 +956,7 @@ $(document).ready(function () {
 	});
 
 	table = $("#eval-table").DataTable({
-		iDisplayLength: 150,
+		iDisplayLength: 3000,
 		sDom: "t",
 		deferRender: true,
 		order: [[0, "asc"]],
@@ -986,7 +977,9 @@ $(document).ready(function () {
 				orderable: false
 			}
 		],
-		scrollY: "30vh"
+		scrollY: "30vh",
+		deferRender: true,
+		scroller: true
 	});
 
 	fill_table();
@@ -1118,13 +1111,17 @@ $(document).ready(function () {
 		fill_table();
 	});
 
+	$(function () {
+  		$('[data-toggle="tooltip"]').tooltip()
+	});
+
 	$("#expand-button").click(function () {
 		if ($("#adv-buttons-div").is(":visible")) {
 			$("#adv-buttons-div").hide();
-			$("#expand-button").text("+ Advanced filters");
+			$("#expand-button").text("+ More filters");
 		} else {
 			$("#adv-buttons-div").show();
-			$("#expand-button").text("- Hide advanced filters");
+			$("#expand-button").text("- Fewer filters");
 		}
 	});
 
