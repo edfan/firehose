@@ -547,8 +547,6 @@ function fill_table() {
 
 	table.draw();
 
-	search_setup();
-
 	$('#apply').blur();
 }
 
@@ -992,6 +990,7 @@ $(document).ready(function () {
 	});
 
 	fill_table();
+	search_setup();
 
 	$("#eval-loading").hide();
 	$("#eval-table-div").show();
