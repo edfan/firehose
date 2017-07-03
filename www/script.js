@@ -773,23 +773,22 @@ function add_activity() {
 	$("#act-wed").is(":checked"), $("#act-thu").is(":checked"),
 	$("#act-fri").is(":checked")];
 	var name = $("#activity-input").val();
-	var time0 = $("#time-slider").slider("values", 0);
-	var time1 = $("#time-slider").slider("values", 1);
+	var start_time = $("#time-slider").slider("values", 0);
+	var end_time = $("#time-slider").slider("values", 1);
 
 	var slots = [];
-	var flag = false;
 
 	for (var i = 0; i < 5; i++) {
 		if (days[i]) {
-			slots.push([i * 30 + time0, time1 - time0]);
-			flag = true;
+			slots.push([i * 30 + start_time, end_time - start_time]);
 		}
 	}
 
-	if (flag == false) {
-		return;
-	}
+	set_activity(name, slots);
+	add_class(name);
+}
 
+function set_activity(name, slots) {
 	var activity = {
 		'no': name,
 		'co': '',
@@ -825,8 +824,6 @@ function add_activity() {
 
 	activities.push(activity);
 	classes[name] = activity;
-	add_class(name);
-	select_slots();
 
 	Cookies.set('activities', activities, { expires: 365 });
 }
@@ -940,7 +937,7 @@ $(document).ready(function () {
 		defaultView: 'agendaWeek',
 		editable: false,
 		header: false,
-		height: 698,
+		height: "auto",
 		minTime: "08:00:00",
 		maxTime: "22:00:00",
 		weekends: false,
@@ -948,11 +945,6 @@ $(document).ready(function () {
 			var name = calEvent.title.split(' ')[0];
 			class_desc(name);
 		}
-	});
-
-	$('#eval-table tfoot th').each(function () {
-		var title = $(this).text();
-		$(this).html('<input type="text" placeholder="Search ' + title + '" />');
 	});
 
 	table = $("#eval-table").DataTable({
@@ -1286,8 +1278,7 @@ $(document).ready(function () {
 	if (tmp_activities != null) {
 		for (var a in tmp_activities) {
 			if (tmp_cur_classes != null && tmp_cur_classes.indexOf(tmp_activities[a]['no']) != -1) {
-				classes[tmp_activities[a]['no']] = tmp_activities[a];
-				activities.push(tmp_activities[a]);
+				set_activity(tmp_activities[a]['no'], tmp_activities[a]['a'][0][0])
 			}
 		}
 		Cookies.set('activities', activities, { expires: 365 });
