@@ -1107,6 +1107,10 @@ $(document).ready(function () {
   		$('[data-toggle="tooltip"]').tooltip()
 	});
 
+	$(".lazyload-img").each(function () {
+		$(this).attr('src', $(this).attr('data-src'));
+	});
+
 	$("#expand-button").click(function () {
 		if ($("#adv-buttons-div").is(":visible")) {
 			$("#adv-buttons-div").hide();
