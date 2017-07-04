@@ -1303,17 +1303,20 @@ $(document).ready(function () {
 	if (tmp_cur_classes != null) {
 		for (var t in tmp_cur_classes) {
 			if (tmp_cur_classes[t] in classes) {
-				var n_number = id_sanitize(tmp_cur_classes[t]);
+				(function () {
+					var number = tmp_cur_classes[t];
+					var n_number = id_sanitize(number);
 
-				$('#selected-div').append('<button type="button" class="btn btn-primary" id=' + n_number + '-button>' + tmp_cur_classes[t] + '</button>');
+					$('#selected-div').append('<button type="button" class="btn btn-primary" id=' + n_number + '-button>' + number + '</button>');
 
-				$('#' + n_number + '-button').click(function () {
-					class_desc(tmp_cur_classes[t]);
-				});
+					$('#' + n_number + '-button').click(function () {
+						class_desc(number);
+					});
 
-				$('#' + n_number + '-button').dblclick(function () {
-					remove_class(tmp_cur_classes[t]);
-				});
+					$('#' + n_number + '-button').dblclick(function () {
+						remove_class(number);
+					});
+				})();
 
 				cur_classes.push(tmp_cur_classes[t]);
 			}
