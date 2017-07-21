@@ -200,12 +200,12 @@ function select_helper(all_sections, chosen_slots, chosen_options, cur_conflicts
 	var section = all_sections[0];
 	var slots = classes[section[0]][section[1]];
 
-	for (var s in slots) {
+	for (var s = 0; s < slots.length; s++) {
 		slot = slots[s][0];
 		new_conflicts = 0;
 
-		for (var cs in chosen_slots) {
-			for (var ss in slot) {
+		for (var cs = 0; cs < chosen_slots.length; cs++) {
+			for (var ss = 0; ss < slot.length; ss++) {
 				if (conflict_check(slot[ss], chosen_slots[cs])) {
 					new_conflicts++;
 				}
@@ -238,8 +238,8 @@ function select_helper(all_sections, chosen_slots, chosen_options, cur_conflicts
 
 function select_slots() {
 	var tmp_sections = [];
-	for (var c in cur_classes) {
-		for (var s in classes[cur_classes[c]]['s']) {
+	for (var c = 0; c < cur_classes.length; c++) {
+		for (var s = 0; s < classes[cur_classes[c]]['s'].length; s++) {
 			tmp_sections.push([classes[cur_classes[c]]['no'],
 			classes[cur_classes[c]]['s'][s]])
 		}
@@ -253,7 +253,6 @@ function select_slots() {
 	var tmp_options = [];
 	var init_slots = [];
 	var tmp_tmp_sections = [];
-	var section;
 	for (var i = 0; i < tmp_sections.length; i++) {
 		if (tmp_sections[i] in locked_slots) {
 			if (locked_slots[tmp_sections[i]] != "none") {
@@ -291,7 +290,7 @@ function select_slots() {
 	var flag = false;
 	var flag2 = false;
 	var toappend;
-	for (var c in cur_classes) {
+	for (var c = 0; c < cur_classes.length; c++) {
 		toappend = '';
 		n_number = id_sanitize(cur_classes[c]);
 		units += classes[cur_classes[c]]['u1'] + classes[cur_classes[c]]['u2'] + classes[cur_classes[c]]['u3'];
@@ -358,15 +357,15 @@ function conflict_helper(new_sections, old_slots) {
 	var section;
 	var slots;
 
-	section_loop: for (var n in new_sections) {
+	section_loop: for (var n = 0; n < new_sections.length; n++) {
 		section = new_sections[n];
 		slots = classes[section[0]][section[1]];
 
-		slot_loop: for (var s in slots) {
+		slot_loop: for (var s = 0; s < slots.length; s++) {
 			slot = slots[s][0];
 
-			for (var os in old_slots) {
-				for (var ss in slot) {
+			for (var os = 0; os < old_slots.length; os++) {
+				for (var ss = 0; ss < slot.length; ss++) {
 					if (conflict_check(slot[ss], old_slots[os])) {
 						continue slot_loop;
 					}
@@ -491,11 +490,11 @@ function is_selected(number) {
 			calc_classes = cur_classes.slice();
 			calc_slots = [];
 
-			for (var op in options) {
+			for (var op = 0; op < options.length; op++) {
 				option = options[op];
 				slots = [];
 
-				for (var o in option) {
+				for (var o = 0; o < option.length; o++) {
 					slots.push.apply(slots, classes[all_sections[o][0]][all_sections[o][1]][option[o]][0]);
 				}
 
@@ -511,7 +510,7 @@ function is_selected(number) {
 
 		var class_slots = [];
 
-		for (var s in classes[number]['s']) {
+		for (var s = 0; s < classes[number]['s'].length; s++) {
 			class_slots.push([classes[number]['no'],
 			classes[number]['s'][s]]);
 		}
@@ -520,7 +519,7 @@ function is_selected(number) {
 			return false;
 		}
 
-		for (var c in calc_slots) {
+		for (var c = 0; c < calc_slots.length; c++) {
 			if (conflict_helper(class_slots, calc_slots[c])) {
 				return true;
 			}
@@ -958,14 +957,13 @@ function clipboard_export() {
 		return class_sort(a[0], b[0]);
 	});
 
-	var class_str = '';
+	var class_str = [];
 	for (var i = 0; i < class_strs.length; i++) {
-		class_str += class_strs[i][1] + '\r\n';
-		console.log(class_strs);
+		class_str.push(class_strs[i][1])
 	}
 
 	$("#modal-textarea").prop("rows", option.length);
-	$('#modal-textarea').val(class_str);
+	$('#modal-textarea').val(class_str.join('\r\n'));
 	$('#modal').modal('show');
 }
 
