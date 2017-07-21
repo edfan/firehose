@@ -51,7 +51,7 @@
     <div id="left-int-div">
       <div id='calendar'></div>
     </div>
-    <div id="export-div"><span id="prereg-link">Preregister these classes!</span> | <span id="calendar-link">Export to Google Calendar</span></div>
+    <div id="export-div"><span id="prereg-link">Preregister these classes!</span> | <span id="calendar-link">Export to Google Calendar</span> | <span id="clipboard-link">Text form</span></div>
     <div id="footer-div">&copy; 2017 <a href="mailto:edwardf@mit.edu">Edward Fan</a>. Subject descriptions and evaluations are &copy; 2014-2017
       Massachusetts Institute of Technology.</div>
   </div>
@@ -230,6 +230,20 @@
     </div>
 
   </div>
+
+  <div class="modal fade" id="modal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <textarea class="form-control" id="modal-textarea" readonly="true"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-secondary" id="clipboard-button" data-toggle="tooltip" data-placement="top" title="Copied!" data-trigger="manual">Copy to clipboard</button>
+          <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+  </div>
+</div>
 
   <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

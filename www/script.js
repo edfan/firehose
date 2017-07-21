@@ -1,6 +1,5 @@
 var table;
 var buttons = {};
-var rs, hs, elig, res;
 var hass_active = false;
 var hass_a_active = false;
 var hass_h_active = false;
@@ -37,6 +36,10 @@ Number.prototype.format = function (n, x) {
 
 String.prototype.paddingLeft = function (paddingValue) {
 	return String(paddingValue + this).slice(-paddingValue.length);
+};
+
+String.prototype.paddingRight = function (paddingValue) {
+	return String(this + paddingValue).slice(0, paddingValue.length);
 };
 
 function id_sanitize(str) {
@@ -128,6 +131,18 @@ function search_setup() {
 	});
 }
 
+function expand_type(type) {
+	if (type == 'l') {
+		return 'lec';
+	} else if (type == 'r') {
+		return 'rec';
+	} else if (type == 'b') {
+		return 'lab';
+	} else if (type == 'a') {
+		return 'activity';
+	}
+}
+
 function add_cal(number, type, room, slot, length) {
 	var day = Math.floor(slot / 30) + 1;
 	var hour = (Math.floor((slot % 30) / 2) + 8).toString().paddingLeft("00");
@@ -136,15 +151,7 @@ function add_cal(number, type, room, slot, length) {
 	var end_hour = (Math.floor(((slot + length) % 30) / 2) + 8).toString().paddingLeft("00");
 	var end_minute = (((slot + length) % 2) * 30).toString().paddingLeft("00");
 
-	var type_full = '';
-
-	if (type == 'l') {
-		type_full = 'lec';
-	} else if (type == 'r') {
-		type_full = 'rec';
-	} else if (type == 'b') {
-		type_full = 'lab';
-	}
+	var type_full = expand_type(type);
 
 	gcal_slots.push([day - 1, hour + ':' + minute, end_hour + ':' + end_minute,
 	number + ' ' + type_full, room]);
@@ -210,10 +217,10 @@ function select_helper(all_sections, chosen_slots, chosen_options, cur_conflicts
 		}
 
 		out = select_helper(new_all_sections,
-			chosen_slots.concat(slot),
-			chosen_options.concat(s),
-			cur_conflicts + new_conflicts,
-			min_conflicts);
+							chosen_slots.concat(slot),
+							chosen_options.concat(s),
+							cur_conflicts + new_conflicts,
+							min_conflicts);
 
 		if (out[1] < min_conflicts) {
 			chosen = [];
@@ -247,7 +254,7 @@ function select_slots() {
 	var init_slots = [];
 	var tmp_tmp_sections = [];
 	var section;
-	for (var i in tmp_sections) {
+	for (var i = 0; i < tmp_sections.length; i++) {
 		if (tmp_sections[i] in locked_slots) {
 			if (locked_slots[tmp_sections[i]] != "none") {
 				all_sections.push(tmp_sections[i]);
@@ -261,7 +268,7 @@ function select_slots() {
 	all_sections = all_sections.concat(tmp_tmp_sections);
 
 	var tmp = select_helper(tmp_tmp_sections, init_slots, [], 0, 1000);
-	for (var o in tmp[0]) {
+	for (var o = 0; o < tmp[0].length; o++) {
 		tmp[0][o] = tmp_options.concat(tmp[0][o]);
 	}
 	options = tmp[0];
@@ -330,11 +337,14 @@ function set_option(index) {
 
 	gcal_slots = [];
 
-	for (var o in option) {
-		slots = classes[all_sections[o][0]][all_sections[o][1]][option[o]];
-		for (var s in slots[0]) {
-			add_cal(all_sections[o][0], all_sections[o][1], slots[1],
-				slots[0][s][0], slots[0][s][1]);
+	for (var o = 0; o < option.length; o++) {
+		var number = all_sections[o][0];
+		var type = all_sections[o][1];
+		slots = classes[number][type][option[o]];
+		var room = slots[1];
+		for (var s = 0; s < slots[0].length; s++) {
+			add_cal(number, type, room,
+					slots[0][s][0], slots[0][s][1]);
 		}
 	}
 
@@ -929,6 +939,36 @@ function calendar_send(isSignedIn) {
 	}
 }
 
+function clipboard_export() {
+	var class_strs = [];
+	var option = options[cur_option];
+			
+	for (var o = 0; o < option.length; o++) {
+		var number = all_sections[o][0];
+		var type = all_sections[o][1];
+		if (type != 'a') {
+			slots = classes[number][type][option[o]];
+			var room = slots[1];
+			var csb_slot = classes[number][type + 'r'][option[o]]
+			class_strs.push([number, (number + ' ' + expand_type(type)).paddingRight('             ') + room.paddingRight('         ') + csb_slot]); 			
+		}
+	}
+
+	class_strs.sort(function(a, b) {
+		return class_sort(a[0], b[0]);
+	});
+
+	var class_str = '';
+	for (var i = 0; i < class_strs.length; i++) {
+		class_str += class_strs[i][1] + '\r\n';
+		console.log(class_strs);
+	}
+
+	$("#modal-textarea").prop("rows", option.length);
+	$('#modal-textarea').val(class_str);
+	$('#modal').modal('show');
+}
+
 $(document).ready(function () {
 	$('#calendar').fullCalendar({
 		allDaySlot: false,
@@ -1127,6 +1167,22 @@ $(document).ready(function () {
 
 	$("#calendar-link").click(function () {
 		calendar_export();
+	});
+
+	$("#clipboard-link").click(function () {
+		$('#clipboard-button').tooltip('hide');
+		clipboard_export();
+	});
+
+	$("#clipboard-button").click(function () {
+		$("#modal-textarea").select();
+		if (document.execCommand('copy')) {
+			$('#clipboard-button').tooltip('show');
+			setTimeout(function() {
+				$('#clipboard-button').tooltip('hide');
+			}, 1000);
+		}
+		$("#modal-textarea").prop("selected", false);
 	});
 
 	$("#manual-button").click(function () {

@@ -67,13 +67,18 @@
     margin: 10 auto 0 auto;
 }
 
-#prereg-link, #calendar-link {
+#prereg-link, #calendar-link, #clipboard-link {
     color: #0275d8;
     cursor: pointer;
 }
 
-#prereg-link:hover, #calendar-link:hover {
+#prereg-link:hover, #calendar-link:hover, #clipboard-link:hover {
     text-decoration: underline;
+}
+
+#modal-textarea {
+    font-family: monospace;
+    resize: none;
 }
     
 #footer-div {
