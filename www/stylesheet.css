@@ -239,6 +239,10 @@
     margin-bottom: 6px;
 }
 
+.lazyload-img {
+    margin-right: -1px;
+}
+
 #class-name {
     font-weight: bold;
     line-height: 1;

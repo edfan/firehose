@@ -134,7 +134,7 @@
           <label class="btn btn-primary selector-button" id="rest" data-toggle="tooltip" data-placement="top" title="REST" data-trigger="hover">
             <input type="checkbox" autocomplete="off"><img src="img/rest.gif" style="padding-top: 2px; padding-bottom: 2px" />
           </label>
-          <label class="btn btn-primary selector-button" id="lab" data-toggle="tooltip" data-placement="top" title="Inst. Lab" data-trigger="hover">
+          <label class="btn btn-primary selector-button" id="lab" data-toggle="tooltip" data-placement="top" title="Institute Lab" data-trigger="hover">
             <input type="checkbox" autocomplete="off"><img src="img/Lab.gif" style="padding-top: 2px; padding-bottom: 2px" />
           </label>
           <label class="btn btn-primary selector-button" id="under" data-toggle="tooltip" data-placement="top" title="Undergrad" data-trigger="hover">
@@ -171,24 +171,41 @@
     <div id="desc-div">
       <p id="class-name"></p>
       <p id="class-type">
-        <span class="type-span" id="nonext-span" style="display: none"><img data-src="img/nonext.gif" title="Not offered 2018-2019" class="lazyload-img"/></span><span 
-        class="type-span" id="under-span" style="display: none"><img data-src="img/under.gif" class="lazyload-img"/> (</span><span 
-        class="type-span" id="grad-span" style="display: none"><img data-src="img/grad.gif" class="lazyload-img"/> (</span><span 
-        class="type-span" id="fall-span" style="display: none"><img data-src="img/fall.gif" class="lazyload-img"/></span><span 
-        class="type-span" id="iap-span" style="display: none">,<img data-src="img/iap.gif" class="lazyload-img" /></span><span 
-        class="type-span" id="spring-span" style="display: none">,<img data-src="img/spring.gif" class="lazyload-img"/></span><span 
-        class="type-span" id="summer-span" style="display: none">,<img data-src="img/summer.gif" class="lazyload-img" /></span><span 
+        <span class="type-span" id="nonext-span" style="display: none" data-toggle="tooltip" data-placement="top" title="Not offered 2018-2019" 
+        data-trigger="hover"><img data-src="img/nonext.gif" class="lazyload-img"/></span><span 
+        class="type-span" id="under-span" style="display: none" data-toggle="tooltip" data-placement="top" title="Undergrad" 
+        data-trigger="hover"><img data-src="img/under.gif" class="lazyload-img"/> (</span><span 
+        class="type-span" id="grad-span" style="display: none" data-toggle="tooltip" data-placement="top" title="Graduate" 
+        data-trigger="hover"><img data-src="img/grad.gif" class="lazyload-img"/> (</span><span 
+        class="type-span" id="fall-span" style="display: none" data-toggle="tooltip" data-placement="top" title="Fall" 
+        data-trigger="hover"><img data-src="img/fall.gif" class="lazyload-img"/></span><span 
+        class="type-span" id="iap-span" style="display: none" data-toggle="tooltip" data-placement="top" title="IAP" 
+        data-trigger="hover">,<img data-src="img/iap.gif" class="lazyload-img" /></span><span 
+        class="type-span" id="spring-span" style="display: none" data-toggle="tooltip" data-placement="top" title="Spring" 
+        data-trigger="hover">,<img data-src="img/spring.gif" class="lazyload-img"/></span><span 
+        class="type-span" id="summer-span" style="display: none" data-toggle="tooltip" data-placement="top" title="Summer" 
+        data-trigger="hover">,<img data-src="img/summer.gif" class="lazyload-img" /></span><span 
         class="type-span" id="end-paren-span" style="display: none">) </span><span 
-        class="type-span" id="repeat-span" style="display: none"><img data-src="img/repeat.gif" class="lazyload-img" /></span><span 
-        class="type-span" id="rest-span" style="display: none"><img data-src="img/rest.gif" class="lazyload-img" /></span><span 
-        class="type-span" id="Lab-span" style="display: none"><img data-src="img/Lab.gif" class="lazyload-img" /></span><span 
-        class="type-span" id="PartLab-span" style="display: none"><img data-src="img/PartLab.gif" class="lazyload-img" /></span><span 
-        class="type-span" id="hassH-span" style="display: none"><img data-src="img/hassH.gif" class="lazyload-img" /></span><span 
-        class="type-span" id="hassA-span" style="display: none"><img data-src="img/hassA.gif" class="lazyload-img" /></span><span 
-        class="type-span" id="hassS-span" style="display: none"><img data-src="img/hassS.gif" class="lazyload-img" /></span><span 
-        class="type-span" id="hassE-span" style="display: none"><img data-src="img/hassE.gif" class="lazyload-img" /></span><span 
-        class="type-span" id="cih1-span" style="display: none"><img data-src="img/cih1.gif" class="lazyload-img" /></span><span 
-        class="type-span" id="cihw-span" style="display: none"><img data-src="img/cihw.gif" class="lazyload-img" /></span> &nbsp;&nbsp;
+        class="type-span" id="repeat-span" style="display: none" data-toggle="tooltip" data-placement="top" title="Can be repeated for credit" 
+        data-trigger="hover"><img data-src="img/repeat.gif" class="lazyload-img" /></span><span 
+        class="type-span" id="rest-span" style="display: none" data-toggle="tooltip" data-placement="top" title="REST" 
+        data-trigger="hover"><img data-src="img/rest.gif" class="lazyload-img" /></span><span 
+        class="type-span" id="Lab-span" style="display: none" data-toggle="tooltip" data-placement="top" title="Institute Lab" 
+        data-trigger="hover"><img data-src="img/Lab.gif" class="lazyload-img" /></span><span 
+        class="type-span" id="PartLab-span" style="display: none" data-toggle="tooltip" data-placement="top" title="Partial Institute Lab" 
+        data-trigger="hover"><img data-src="img/PartLab.gif" class="lazyload-img" /></span><span 
+        class="type-span" id="hassH-span" style="display: none" data-toggle="tooltip" data-placement="top" title="HASS-H" 
+        data-trigger="hover"><img data-src="img/hassH.gif" class="lazyload-img" /></span><span 
+        class="type-span" id="hassA-span" style="display: none" data-toggle="tooltip" data-placement="top" title="HASS-A" 
+        data-trigger="hover"><img data-src="img/hassA.gif" class="lazyload-img" /></span><span 
+        class="type-span" id="hassS-span" style="display: none" data-toggle="tooltip" data-placement="top" title="HASS-S" 
+        data-trigger="hover"><img data-src="img/hassS.gif" class="lazyload-img" /></span><span 
+        class="type-span" id="hassE-span" style="display: none" data-toggle="tooltip" data-placement="top" title="HASS-E" 
+        data-trigger="hover"><img data-src="img/hassE.gif" class="lazyload-img" /></span><span 
+        class="type-span" id="cih1-span" style="display: none" data-toggle="tooltip" data-placement="top" title="CI-H" 
+        data-trigger="hover"> <img data-src="img/cih1.gif" class="lazyload-img" /></span><span 
+        class="type-span" id="cihw-span" style="display: none" data-toggle="tooltip" data-placement="top" title="CI-HW" 
+        data-trigger="hover"> <img data-src="img/cihw.gif" class="lazyload-img" /></span> &nbsp;&nbsp;
         <span id="class-units"></span>
         <span class="type-span" id="final-span" style="display: none">&nbsp;&nbsp;&nbsp;Has final</span><br>
         <span id="class-prereq"></span>
