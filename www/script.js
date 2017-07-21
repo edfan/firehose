@@ -138,8 +138,8 @@ function expand_type(type) {
 		return 'rec';
 	} else if (type == 'b') {
 		return 'lab';
-	} else if (type == 'a') {
-		return 'activity';
+	} else {
+		return '';
 	}
 }
 
