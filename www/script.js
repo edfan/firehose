@@ -730,6 +730,13 @@ function class_desc(number) {
 		$("#manual-button").show();
 		$("#manual-div").hide();
 	}
+
+	if (classes[number]['s'].indexOf('a') != -1) {
+		$('#flags-div').hide();
+		$('#class-name').text(classes[number]['no']);
+	} else {
+		$('#flags-div').show();
+	}
 }
 
 function add_class(number) {
@@ -823,6 +830,7 @@ function set_activity(name, slots) {
 		't': ['FA'],
 		'sa': '',
 		'mw': '',
+		'u': '',
 		'pr': 'None',
 		'd': 'Your activity!',
 		'n': name,
