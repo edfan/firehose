@@ -61,6 +61,7 @@ classes_extended = []
 One-character mappings:
 
 Base:
+c: sections (dict(str->sec_array))
 h: hours (decimal)
 n: name (str)
 r: rating (decimal)
@@ -76,10 +77,9 @@ m: meets-with (str)
 n: units (int[3])
 p: prereqs (str)
 r: url (str)
-s: sections (str[3])
 t: terms (list)
 u: number (str)
-w: raw sections (str[3])
+w: raw sections (dict(str->sec_array))
 z: size (decimal)
 
 Flags:
@@ -100,18 +100,18 @@ w: CI-HW
 
 for c in times:
     cl = {
+        'c': {},
         'u': c,
     }
 
     cl_e = {
         'u': c,
         'f': {},
-        's': {},
         'w': {}
     }
 
     for s in times[c]['sections']:
-        cl_e['s'][s] = times[c][s]
+        cl['c'][s] = times[c][s]
         cl_e['w'][s] = times[c][s + '_raw']
 
     if times[c]['final']:
@@ -196,10 +196,10 @@ for c in times:
 index = next(index for (index, d) in enumerate(classes_base) if d['u'] == '14.01')
 temp_base = copy.deepcopy(classes_base[index])
 temp_extended = copy.deepcopy(classes_extended[index])
-classes_extended[index]['s']['r'] = temp_extended['s']['r'][:5]
+classes_base[index]['c']['r'] = temp_base['c']['r'][:5]
 temp_base['u'] = '14.01R'
 temp_extended['u'] = '14.01R'
-temp_extended['s'] = { 'r': temp_extended['s']['r'][5:] }
+temp_base['c'] = { 'r': temp_base['c']['r'][5:] }
 temp_base['n'] += " (recitation only)"
 classes_base.insert(index + 1, temp_base)
 classes_extended.insert(index + 1, temp_extended)
@@ -207,10 +207,10 @@ classes_extended.insert(index + 1, temp_extended)
 index = next(index for (index, d) in enumerate(classes_base) if d['u'] == '14.02')
 temp_base = copy.deepcopy(classes_base[index])
 temp_extended = copy.deepcopy(classes_extended[index])
-classes_extended[index]['s']['r'] = temp_extended['s']['r'][:2]
+classes_base[index]['c']['r'] = temp_base['c']['r'][:2]
 temp_base['u'] = '14.01R'
 temp_extended['u'] = '14.01R'
-temp_extended['s'] = { 'r': temp_extended['s']['r'][2:] }
+temp_base['c'] = { 'r': temp_base['c']['r'][2:] }
 temp_base['n'] += " (recitation only)"
 classes_base.insert(index + 1, temp_base)
 classes_extended.insert(index + 1, temp_extended)
@@ -235,4 +235,6 @@ with open('classes_base.json', 'w') as f:
     f.write(';')
 
 with open('classes_extended.json', 'w') as f:
+    f.write('var classes_ex = ')
     json.dump(classes_extended_d, f, separators=(',', ':'))
+    f.write(';')
