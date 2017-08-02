@@ -6,12 +6,9 @@
 
 #left-int-div {
     background-color: white;
-    width: 50%;
-    top: 5%;
+    width: 91%;
     height: 700px;
-    position: absolute;
-    margin: 30px auto;
-    transform: translate(5%, 0%);
+    margin: 0 auto;
 }
 
 #right-div {
@@ -55,7 +52,7 @@
 }
 
 #export-div {
-    margin: 735 auto 10 auto;
+    margin: 10 auto;
     font-size: 90%;
 }
 
