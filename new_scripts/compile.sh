@@ -1,0 +1,1 @@
+java -jar compiler.jar --js ../www/script.js --js_output_file ../www/script-compiled.js
