@@ -29,15 +29,15 @@
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.3.1/fullcalendar.min.js" integrity="sha256-KfusLKl7lF5lJzh3+hg6yiNE6i0NAFV8uNiWrVn79u4="
     crossorigin="anonymous"></script>
 
-  <link rel="stylesheet" href="jquery-ui.min.css" />
-  <script defer src="jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.min.css" integrity="sha256-zV9aQFg2u+n7xs0FTQEhY0zGHSFlwgIu7pivQiwJ38E=" crossorigin="anonymous" />
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.min.js" integrity="sha256-xoE/2szqaiaaZh7goVyF5p9C/qBu9dM3V5utrQaiJMc=" crossorigin="anonymous"></script>
 
   <link href="https://fonts.googleapis.com/css?family=Open+Sans|PT+Serif" rel="stylesheet">
   <script defer src="https://apis.google.com/js/client.js"></script>
 
   <link rel="stylesheet" type="text/css" href="stylesheet.css">
   <script defer src="full.js"></script>
-  <script defer src="script-compiled.js"></script>
+  <script defer src="script.js"></script>
 </head>
 
 <body>
@@ -81,9 +81,9 @@
         <label class="checkbox-inline"><input type="checkbox" class="act-day" id="act-tue"> Tue </label>&nbsp;
         <label class="checkbox-inline"><input type="checkbox" class="act-day" id="act-wed"> Wed </label>&nbsp;
         <label class="checkbox-inline"><input type="checkbox" class="act-day" id="act-thu"> Thu </label>&nbsp;
-        <label class="checkbox-inline"><input type="checkbox" class="act-day" id="act-fri"> Fri </label>&nbsp;
-        <div id="time-slider"></div>
-        <span id="time">10:00 AM - 01:00 PM</span><br><br>
+        <label class="checkbox-inline"><input type="checkbox" class="act-day" id="act-fri"> Fri </label><br>
+        <input id="start-time" type="text" class="time ui-timepicker-input" autocomplete="off" value="10:00am"> to 
+        <input id="end-time" type="text" class="time ui-timepicker-input" autocomplete="off" value="1:00pm"><br>
         <button type="button" class="btn btn-primary" id="add-activity-button" disabled>Add activity</button>
       </div>
       <hr>
@@ -166,8 +166,6 @@
       </table>
     </div>
 
-    <hr>
-
     <div id="desc-div">
       <p id="class-name"></p>
       <div id="flags-div">
@@ -187,8 +185,8 @@
         class="type-span" id="summer-span" style="display: none">,<img height="16" width="16" data-src="img/summer.gif" 
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Summer" data-trigger="hover"/></span><span 
         class="type-span" id="end-paren-span" style="display: none">) </span><span 
-        class="type-span" id="repeat-span" style="display: none"><img height="16" width="16" data-src="img/repeat.gif" 
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Can be repeated for credit" data-trigger="hover"/></span><span 
+        class="type-span" id="repeat-span" style="display: none"> <img height="16" width="16" data-src="img/repeat.gif" 
+        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Can be repeated for credit" data-trigger="hover"/> </span><span 
         class="type-span" id="rest-span" style="display: none"><img height="16" width="16" data-src="img/rest.gif" 
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="REST" data-trigger="hover"/></span><span 
         class="type-span" id="Lab-span" style="display: none"><img height="16" width="16" data-src="img/Lab.gif" 

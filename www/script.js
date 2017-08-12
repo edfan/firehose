@@ -742,25 +742,23 @@ function class_desc(number) {
 }
 
 function add_class(number) {
-	if (cur_classes.indexOf(number) == -1) {
-		var n_number = id_sanitize(number);
+	var n_number = id_sanitize(number);
 
-		$('#selected-div').append('<button type="button" class="btn btn-primary" id=' + n_number + '-button>' + number + '</button>');
+	$('#selected-div').append('<button type="button" class="btn btn-primary" id=' + n_number + '-button>' + number + '</button>');
 
-		$('#' + n_number + '-button').click(function () {
-			class_desc(number);
-		});
+	$('#' + n_number + '-button').click(function () {
+		class_desc(number);
+	});
 
-		$('#' + n_number + '-button').dblclick(function () {
-			remove_class(number);
-		});
+	$('#' + n_number + '-button').dblclick(function () {
+		remove_class(number);
+	});
 
-		cur_classes.push(number);
-		try { class_desc(number); }
-		catch (err) { }
-		select_slots();
-		$("#units-div").show();
-	}
+	cur_classes.push(number);
+	try { class_desc(number); }
+	catch (err) { }
+	select_slots();
+	$("#units-div").show();
 }
 
 function remove_class(number) {
@@ -791,8 +789,12 @@ function add_activity() {
 	$("#act-wed").is(":checked"), $("#act-thu").is(":checked"),
 	$("#act-fri").is(":checked")];
 	var name = $("#activity-input").val();
-	var start_time = $("#time-slider").slider("values", 0);
-	var end_time = $("#time-slider").slider("values", 1);
+	var start_time = $("#start-time").timepicker('getSecondsFromMidnight') / 1800 - 16;
+	var end_time = $("#end-time").timepicker('getSecondsFromMidnight') / 1800 - 16;
+
+	if (start_time >= end_time) {
+		return;
+	}
 
 	var slots = [];
 
@@ -803,7 +805,11 @@ function add_activity() {
 	}
 
 	set_activity(name, slots);
-	add_class(name);
+	if (cur_classes.indexOf(name) == -1) {
+		add_class(name);
+	} else {
+		select_slots();
+	}
 }
 
 function set_activity(name, slots) {
@@ -1082,42 +1088,17 @@ $(document).ready(function () {
 		}
 	});
 
-	$("#time-slider").slider({
-		range: true,
-		min: 0,
-		max: 28,
-		values: [4, 10],
-		slide: function (event, ui) {
-			if (ui.values[0] === ui.values[1]) return false;
-
-			var hour = (Math.floor((ui.values[0] % 30) / 2) + 8)
-			if (hour >= 12) {
-				var ampm = " PM";
-
-				if (hour > 12) {
-					hour -= 12;
-				}
-			} else {
-				var ampm = " AM";
-			}
-
-			var hour_str = hour.toString().paddingLeft("00");
-			var minute = ((ui.values[0] % 2) * 30).toString().paddingLeft("00");
-			var end_hour = (Math.floor((ui.values[1] % 30) / 2) + 8);
-
-			if (end_hour >= 12) {
-				var end_ampm = " PM";
-				if (end_hour > 12) {
-					end_hour -= 12;
-				}
-			} else {
-				var end_ampm = " AM";
-			}
-			var end_hour_str = end_hour.toString().paddingLeft("00");
-			var end_minute = ((ui.values[1] % 2) * 30).toString().paddingLeft("00");
-
-			$("#time").text(hour_str + ":" + minute + ampm + " - " + end_hour_str + ":" + end_minute + end_ampm);
-		}
+	$("#start-time").timepicker({
+		'forceRoundTime': true,
+		'disableTextInput': true,
+		'minTime': '08:00am',
+		'maxTime': '09:30pm'
+	});
+	$("#end-time").timepicker({
+		'forceRoundTime': true,
+		'disableTextInput': true,
+		'minTime': '08:30am',
+		'maxTime': '10:00pm'
 	});
 
 	$("#add-activity-button").click(function () {

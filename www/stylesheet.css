@@ -173,9 +173,9 @@
     text-decoration: underline;
 }
 
-#time-slider {
-    width: 50%;
-    margin: 10 auto;
+.time {
+    width: 80px;
+    margin: 0 auto 10;
 }
 
 .btn-primary, .btn-primary.focus {
@@ -216,7 +216,7 @@
     font-family: 'PT Serif', serif;
     width: 100%;
     max-width: 1200px;
-    margin: 5 auto 0 auto;
+    margin: 5 auto 15 auto;
     cursor: pointer;
 }
 

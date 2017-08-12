@@ -126,7 +126,7 @@ for c in class_list:
             
         url = soup.getText().split('URL: ')
         if len(url) > 1:
-            classes[num]['url'] = url[1].split('\n')[0]
+            classes[num]['url'] = url[1].split('\n')[0].strip('?')
 
         desc = others[-1].findNext("img")
         while 'hr.gif' not in str(desc):
