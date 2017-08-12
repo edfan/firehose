@@ -22,7 +22,6 @@ for c in class_list:
                         'level': 'U',
                         'terms': [],
                         'desc': '',
-                        'prereq': '',
                         'times': '',
                         'units1': 0,
                         'units2': 0,
