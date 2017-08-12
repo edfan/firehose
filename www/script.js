@@ -1091,12 +1091,14 @@ $(document).ready(function () {
 	$("#start-time").timepicker({
 		'forceRoundTime': true,
 		'disableTextInput': true,
+		'disableTouchKeyboard': true,
 		'minTime': '08:00am',
 		'maxTime': '09:30pm'
 	});
 	$("#end-time").timepicker({
 		'forceRoundTime': true,
 		'disableTextInput': true,
+		'disableTouchKeyboard': true,
 		'minTime': '08:30am',
 		'maxTime': '10:00pm'
 	});
