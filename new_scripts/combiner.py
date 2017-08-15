@@ -119,6 +119,9 @@ classes['14.02R']['rr'] = classes['14.02R']['rr'][2:]
 classes['14.02R']['n'] += " (recitation only)"
 del classes['14.02R']['l']
 
+# Special case 16.001/16.003 evals.
+classes['16.001']['h'] = 11.6
+
 with open('full.json', 'w') as f:
     f.write('var classes = ')
     json.dump(classes, f, separators=(',', ':'))
