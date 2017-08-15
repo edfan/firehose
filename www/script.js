@@ -328,6 +328,10 @@ function select_slots() {
 	}
 
 	Cookies.set('cur_classes', cur_classes, { expires: 365 });
+
+	if (conflicts_active) {
+		fill_table();
+	}
 }
 
 function set_option(index) {
@@ -548,8 +552,6 @@ function fill_table() {
 	}
 
 	table.draw();
-
-	$('#apply').blur();
 }
 
 function link_classes(text, type) {
