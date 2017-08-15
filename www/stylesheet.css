@@ -81,7 +81,7 @@
 #footer-div {
     margin: 0 auto 375 auto;
     font-size: 65%;
-    color: #D0D0D0;
+    color: #B0B0B0;
 }
 
 #footer-div a {
@@ -103,6 +103,7 @@
 }
 
 #selected-div {
+    margin: 12 auto 0 auto;
     text-align: left;
 }
 
