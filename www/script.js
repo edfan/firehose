@@ -1,5 +1,4 @@
 var table;
-var buttons = {};
 var hass_active = false;
 var hass_a_active = false;
 var hass_h_active = false;
@@ -986,6 +985,8 @@ function clipboard_export() {
 }
 
 $(document).ready(function () {
+	Cookies.set('school', 'MIT', { expires: 3650 });
+
 	$('#calendar').fullCalendar({
 		allDaySlot: false,
 		columnFormat: 'dddd',
