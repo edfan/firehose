@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException
 
+import os
 import time
 import pickle
 from decimal import *
@@ -120,6 +121,9 @@ def scrape_class_info(session, class_element, class_dict, term):
     
 def main():
     session = mit_duo_login()
+
+    if not os.path.exists('data'):
+        os.makedirs('data')
 
     for term in terms:
         class_dict = {}
