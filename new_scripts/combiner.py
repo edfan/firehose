@@ -122,6 +122,9 @@ del classes['14.02R']['l']
 # Special case 16.001/16.003 evals.
 classes['16.001']['h'] = 11.6
 
+# Special case 18.01A description.
+classes['18.01A']['d'] = "Six-week review of one-variable calculus, emphasizing material not on the high-school AB syllabus: integration techniques and applications, improper integrals, infinite series, applications to other topics, such as probability and statistics, as time permits. Prerequisites: one year of high-school calculus or the equivalent, with a score of 5 on the AB Calculus test (or the AB portion of the BC test, or an equivalent score on a standard international exam), or equivalent college transfer credit, or a passing grade on the first half of the 18.01 advanced standing exam. "
+
 with open('full.json', 'w') as f:
     f.write('var classes = ')
     json.dump(classes, f, separators=(',', ':'))
