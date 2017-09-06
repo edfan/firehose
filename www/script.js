@@ -300,6 +300,7 @@ function select_slots() {
 		if (classes[cur_classes[c]]['h'] === 0 && classes[cur_classes[c]]['s'][0] != 'a') {
 			toappend += '*';
 			flag = true;
+			hours += classes[cur_classes[c]]['u1'] + classes[cur_classes[c]]['u2'] + classes[cur_classes[c]]['u3'];
 		}
 
 		if (classes[cur_classes[c]]['tb']) {
