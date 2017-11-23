@@ -24,6 +24,7 @@ var conflicts_flag;
 var activities = [];
 var locked_slots = {};
 var gcal_slots = [];
+var cur_term;
 
 var colors = ["#16A085", "#2980B9", "#9B59B6", "#C0392B", "#D35400", "#7F8C8D", "#27AE60"];
 var colors_dark = ["#36C0A5", "#49A0D9", "#BB79D6", "#E0594B", "#F37420", "#9FACAD", "#47CE80"];
@@ -40,6 +41,13 @@ String.prototype.paddingLeft = function (paddingValue) {
 String.prototype.paddingRight = function (paddingValue) {
 	return String(this + paddingValue).slice(0, paddingValue.length);
 };
+
+Storage.prototype.setObj = function(key, obj) {
+    return this.setItem(key, JSON.stringify(obj))
+}
+Storage.prototype.getObj = function(key) {
+    return JSON.parse(this.getItem(key))
+}
 
 function id_sanitize(str) {
 	return str.replace(/\W/g, '');
@@ -327,7 +335,7 @@ function select_slots() {
 		$("#warning2-div").hide();
 	}
 
-	Cookies.set('cur_classes', cur_classes, { expires: 365 });
+	localStorage.setObj(cur_term + 'cur_classes', cur_classes, { expires: 365 });
 
 	if (conflicts_active) {
 		fill_table();
@@ -356,7 +364,7 @@ function set_option(index) {
 	cur_option = index;
 	$("#cal-options-1").text(cur_option + 1);
 
-	Cookies.set('cur_option', cur_option, { expires: 365 });
+	localStorage.setObj(cur_term + 'cur_option', cur_option, { expires: 365 });
 }
 
 function conflict_helper(new_sections, old_slots) {
@@ -779,8 +787,8 @@ function remove_class(number) {
 		$("#units-div").hide();
 		$("#warning-div").hide();
 		$("#warning2-div").hide();
-		Cookies.set('cur_classes', cur_classes, { expires: 365 });
-		Cookies.set('cur_option', cur_option, { expires: 365 });
+		localStorage.setObj(cur_term + 'cur_classes', cur_classes, { expires: 365 });
+		localStorage.setObj(cur_term + 'cur_option', cur_option, { expires: 365 });
 	} else {
 		select_slots();
 	}
@@ -852,7 +860,7 @@ function set_activity(name, slots) {
 	activities.push(activity);
 	classes[name] = activity;
 
-	Cookies.set('activities', activities, { expires: 365 });
+	localStorage.setObj(cur_term + 'activities', activities, { expires: 365 });
 }
 
 function calendar_export() {
@@ -983,6 +991,71 @@ function clipboard_export() {
 	$("#modal-textarea").prop("rows", option.length);
 	$('#modal-textarea').val(class_str.join('\r\n'));
 	$('#modal').modal('show');
+}
+
+function load_term_storage(term) {
+	var tmp_cur_classes = localStorage.getObj(term + 'cur_classes');
+	var tmp_activities = localStorage.getObj(term + 'activities');
+	if (tmp_activities != null) {
+		for (var a in tmp_activities) {
+			if (tmp_cur_classes != null && tmp_cur_classes.indexOf(tmp_activities[a]['no']) != -1) {
+				set_activity(tmp_activities[a]['no'], tmp_activities[a]['a'][0][0])
+			}
+		}
+		localStorage.setObj(term + 'activities', activities, { expires: 365 });
+	}
+
+	var tmp_locked_slots = localStorage.getObj(term + 'locked_slots');
+	if (tmp_locked_slots != null) {
+		for (var l in tmp_locked_slots) {
+			if (tmp_locked_slots.hasOwnProperty(l) && tmp_cur_classes.indexOf(l.split(',')[0]) != -1) {
+				locked_slots[l] = tmp_locked_slots[l];
+			}
+		}
+		localStorage.setObj(term + 'locked_slots', locked_slots, { expires: 365 });
+	}
+
+	var tmp_cur_option = parseInt(localStorage.getObj('cur_option'));
+
+	if (tmp_cur_classes != null) {
+		for (var t in tmp_cur_classes) {
+			if (tmp_cur_classes[t] in classes) {
+				(function () {
+					var number = tmp_cur_classes[t];
+					var n_number = id_sanitize(number);
+
+					$('#selected-div').append('<button type="button" class="btn btn-primary" id=' + n_number + '-button>' + number + '</button>');
+
+					$('#' + n_number + '-button').click(function () {
+						class_desc(number);
+					});
+
+					$('#' + n_number + '-button').dblclick(function () {
+						remove_class(number);
+					});
+				})();
+
+				cur_classes.push(tmp_cur_classes[t]);
+			}
+		}
+		$("#units-div").show();
+		select_slots();
+		if (tmp_cur_option < options.length) {
+			set_option(tmp_cur_option);
+		}
+	}
+}
+
+function switch_term(term) {
+	if (cur_term != term) {
+		$.getScript(term + ".js", function() {
+			$(".term-button").css("font-weight", "auto");
+			$("#" + term + "-button").css("font-weight", "bold");
+			load_term_storage(term);
+			fill_table();
+			Cookies.set('cur_term', cur_term);
+		});
+	}
 }
 
 $(document).ready(function () {
@@ -1135,6 +1208,12 @@ $(document).ready(function () {
 		fill_table();
 	});
 
+	$(".term-button").each(function() {
+		$(this).click(function() {
+			switch_term(this.id.replace("-button", ""));
+		});
+	});
+
 	$(function () {
   		$('[data-toggle="tooltip"]').tooltip()
 	});
@@ -1196,7 +1275,7 @@ $(document).ready(function () {
 						var stmp = slot;
 						$("#lec-" + tmp).click(function () {
 							locked_slots[stmp] = tmp;
-							Cookies.set('locked_slots', locked_slots, { expires: 365 });
+							localStorage.setObj(cur_term + 'locked_slots', locked_slots, { expires: 365 });
 							select_slots();
 						});
 					})();
@@ -1226,7 +1305,7 @@ $(document).ready(function () {
 						var stmp = slot;
 						$("#rec-" + tmp).click(function () {
 							locked_slots[stmp] = tmp;
-							Cookies.set('locked_slots', locked_slots, { expires: 365 });
+							localStorage.setObj(cur_term + 'locked_slots', locked_slots, { expires: 365 });
 							select_slots();
 						});
 					})();
@@ -1256,7 +1335,7 @@ $(document).ready(function () {
 						var stmp = slot;
 						$("#lab-" + tmp).click(function () {
 							locked_slots[stmp] = tmp;
-							Cookies.set('locked_slots', locked_slots, { expires: 365 });
+							localStorage.setObj(cur_term + 'locked_slots', locked_slots, { expires: 365 });
 							select_slots();
 						});
 					})();
@@ -1282,14 +1361,14 @@ $(document).ready(function () {
 		if (slot in locked_slots) {
 			delete locked_slots[slot];
 		}
-		Cookies.set('locked_slots', locked_slots, { expires: 365 });
+		localStorage.setObj(cur_term + 'locked_slots', locked_slots, { expires: 365 });
 		select_slots();
 	});
 
 	$("#lec-none").click(function () {
 		var slot = [cur_class, 'l'];
 		locked_slots[slot] = "none";
-		Cookies.set('locked_slots', locked_slots, { expires: 365 });
+		localStorage.setObj(cur_term + 'locked_slots', locked_slots, { expires: 365 });
 		select_slots();
 	});
 
@@ -1298,14 +1377,14 @@ $(document).ready(function () {
 		if (slot in locked_slots) {
 			delete locked_slots[slot];
 		}
-		Cookies.set('locked_slots', locked_slots, { expires: 365 });
+		localStorage.setObj(cur_term + 'locked_slots', locked_slots, { expires: 365 });
 		select_slots();
 	});
 
 	$("#rec-none").click(function () {
 		var slot = [cur_class, 'r'];
 		locked_slots[slot] = "none";
-		Cookies.set('locked_slots', locked_slots, { expires: 365 });
+		localStorage.setObj(cur_term + 'locked_slots', locked_slots, { expires: 365 });
 		select_slots();
 	});
 
@@ -1314,65 +1393,39 @@ $(document).ready(function () {
 		if (slot in locked_slots) {
 			delete locked_slots[slot];
 		}
-		Cookies.set('locked_slots', locked_slots, { expires: 365 });
+		localStorage.setObj(cur_term + 'locked_slots', locked_slots, { expires: 365 });
 		select_slots();
 	});
 
 	$("#lab-none").click(function () {
 		var slot = [cur_class, 'b'];
 		locked_slots[slot] = "none";
-		Cookies.set('locked_slots', locked_slots, { expires: 365 });
+		localStorage.setObj(cur_term + 'locked_slots', locked_slots, { expires: 365 });
 		select_slots();
 	});
 
-	var tmp_cur_classes = Cookies.getJSON('cur_classes');
-	var tmp_activities = Cookies.getJSON('activities');
-	if (tmp_activities != null) {
-		for (var a in tmp_activities) {
-			if (tmp_cur_classes != null && tmp_cur_classes.indexOf(tmp_activities[a]['no']) != -1) {
-				set_activity(tmp_activities[a]['no'], tmp_activities[a]['a'][0][0])
-			}
-		}
-		Cookies.set('activities', activities, { expires: 365 });
+	// Fix old cookies.
+	var tmp_cur_classes = Cookies.get('cur_classes');
+	var tmp_activities = Cookies.get('activities');
+	var tmp_locked_slots = Cookies.get('locked_slots');
+	var tmp_cur_option = Cookies.get('cur_option');
+
+	if (tmp_cur_classes) {
+		localStorage.setObj('fall17cur_classes', tmp_cur_classes);
+	}
+	if (tmp_activities) {
+		localStorage.setObj('fall17activities', tmp_activities);
+	}
+	if (tmp_locked_slots) {
+		localStorage.setObj('fall17locked_slots', tmp_locked_slots);
+	}
+	if (tmp_cur_option) {
+		localStorage.setObj('fall17cur_option', tmp_cur_option);
 	}
 
-	var tmp_locked_slots = Cookies.getJSON('locked_slots');
-	if (tmp_locked_slots != null) {
-		for (var l in tmp_locked_slots) {
-			if (tmp_locked_slots.hasOwnProperty(l) && tmp_cur_classes.indexOf(l.split(',')[0]) != -1) {
-				locked_slots[l] = tmp_locked_slots[l];
-			}
-		}
-		Cookies.set('locked_slots', locked_slots, { expires: 365 });
+	cur_term = Cookies.get('cur_term');
+	if (cur_term == null) {
+		cur_term = "spring18"
 	}
-
-	var tmp_cur_option = parseInt(Cookies.get('cur_option'));
-
-	if (tmp_cur_classes != null) {
-		for (var t in tmp_cur_classes) {
-			if (tmp_cur_classes[t] in classes) {
-				(function () {
-					var number = tmp_cur_classes[t];
-					var n_number = id_sanitize(number);
-
-					$('#selected-div').append('<button type="button" class="btn btn-primary" id=' + n_number + '-button>' + number + '</button>');
-
-					$('#' + n_number + '-button').click(function () {
-						class_desc(number);
-					});
-
-					$('#' + n_number + '-button').dblclick(function () {
-						remove_class(number);
-					});
-				})();
-
-				cur_classes.push(tmp_cur_classes[t]);
-			}
-		}
-		$("#units-div").show();
-		select_slots();
-		if (tmp_cur_option < options.length) {
-			set_option(tmp_cur_option);
-		}
-	}
+	switch_term(cur_term);
 });

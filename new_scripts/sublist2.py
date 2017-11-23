@@ -12,7 +12,12 @@ classes = {}
 
 for c in class_list:
     try:
-        r = requests.get(base_url + c)
+        while True:
+            try:    
+                r = requests.get(base_url + c, timeout=2)
+                break
+            except requests.exceptions.ConnectionError:
+                pass
         soup = BeautifulSoup(r.content, "lxml")
 
         start = soup.h3
