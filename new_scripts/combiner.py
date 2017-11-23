@@ -118,6 +118,9 @@ del classes['14.01R']['l']
 # Special case 2.S991 description.
 classes['2.S991']['n'] = "Designing the First Year at MIT"
 classes['2.S991']['d'] = "This subject will offer instruction in the process of design while working on a specific design challenge: the potential to significantly improve and innovate on the MIT undergraduate first year. Using design methods from across MIT Schools, students will learn about the design process beginning with identifying needs and goals to developing concepts and modes of validation. Beginning with stakeholder needs identification that will involve reaching out directly to the MIT community, students will be responsible for project deliverables including a customer needs document and a tradespace of options. Subject work will be team-based and project-focused, offering students an opportunity to present the audacious and incremental options developed to senior MIT stakeholders in a workshop format. Students will also be exposed to principles of curriculum design and pedagogy, as they develop a holistic perspective to the design of the MIT First Year."
+classes['2.S991']['u1'] = 3
+classes['2.S991']['u1'] = 9
+classes['2.S991']['he'] = True
 
 with open('full.json', 'w') as f:
     f.write('var classes = ')
