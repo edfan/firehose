@@ -884,7 +884,7 @@ function calendar_send(isSignedIn) {
 		$("#calendar-link").text("Working...");
 
 		gapi.client.calendar.calendarList.list({}).then(function (resp) {
-			var name = "Firehose: Fall 2017";
+			var name = "Firehose: Spring 2018";
 			var ids = [];
 
 			for (var i in resp.result.items) {
