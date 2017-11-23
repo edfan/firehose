@@ -919,10 +919,6 @@ function calendar_send(isSignedIn) {
 				}).then();
 			});
 
-			var start_dates = ['2017-09-11', '2017-09-12', '2017-09-06', '2017-09-07', '2017-09-08'];
-			var end_dates = ['20171218', '20171219', '20171220', '20171214', '20171215'];
-			var ex_dates = [['20171009'], ['20171010'], ['20170101'], ['20171123'],
-			['20170929', '20171110', '20171124']];
 			var batch = gapi.client.newBatch();
 
 			for (var s in gcal_slots) {
@@ -996,6 +992,12 @@ function clipboard_export() {
 function load_term_storage(term) {
 	var tmp_cur_classes = localStorage.getObj(term + 'cur_classes');
 	var tmp_activities = localStorage.getObj(term + 'activities');
+	
+	activities = null;
+	cur_classes = null;
+	cur_option = null;
+	locked_slots = null;
+
 	if (tmp_activities != null) {
 		for (var a in tmp_activities) {
 			if (tmp_cur_classes != null && tmp_cur_classes.indexOf(tmp_activities[a]['no']) != -1) {
@@ -1052,7 +1054,6 @@ function switch_term(term) {
 			$(".term-button").css("font-weight", "auto");
 			$("#" + term + "-button").css("font-weight", "bold");
 			load_term_storage(term);
-			fill_table();
 			Cookies.set('cur_term', cur_term);
 		});
 	}
@@ -1060,6 +1061,31 @@ function switch_term(term) {
 
 $(document).ready(function () {
 	Cookies.set('school', 'MIT', { expires: 3650 });
+
+	// Fix old cookies.
+	var tmp_cur_classes = Cookies.get('cur_classes');
+	var tmp_activities = Cookies.get('activities');
+	var tmp_locked_slots = Cookies.get('locked_slots');
+	var tmp_cur_option = Cookies.get('cur_option');
+
+	if (tmp_cur_classes) {
+		localStorage.setObj('fall17cur_classes', tmp_cur_classes);
+	}
+	if (tmp_activities) {
+		localStorage.setObj('fall17activities', tmp_activities);
+	}
+	if (tmp_locked_slots) {
+		localStorage.setObj('fall17locked_slots', tmp_locked_slots);
+	}
+	if (tmp_cur_option) {
+		localStorage.setObj('fall17cur_option', tmp_cur_option);
+	}
+
+	cur_term = Cookies.get('cur_term');
+	if (cur_term == null) {
+		cur_term = "spring18"
+	}
+	switch_term(cur_term);
 
 	$('#calendar').fullCalendar({
 		allDaySlot: false,
@@ -1403,29 +1429,4 @@ $(document).ready(function () {
 		localStorage.setObj(cur_term + 'locked_slots', locked_slots, { expires: 365 });
 		select_slots();
 	});
-
-	// Fix old cookies.
-	var tmp_cur_classes = Cookies.get('cur_classes');
-	var tmp_activities = Cookies.get('activities');
-	var tmp_locked_slots = Cookies.get('locked_slots');
-	var tmp_cur_option = Cookies.get('cur_option');
-
-	if (tmp_cur_classes) {
-		localStorage.setObj('fall17cur_classes', tmp_cur_classes);
-	}
-	if (tmp_activities) {
-		localStorage.setObj('fall17activities', tmp_activities);
-	}
-	if (tmp_locked_slots) {
-		localStorage.setObj('fall17locked_slots', tmp_locked_slots);
-	}
-	if (tmp_cur_option) {
-		localStorage.setObj('fall17cur_option', tmp_cur_option);
-	}
-
-	cur_term = Cookies.get('cur_term');
-	if (cur_term == null) {
-		cur_term = "spring18"
-	}
-	switch_term(cur_term);
 });
