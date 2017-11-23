@@ -992,7 +992,7 @@ function clipboard_export() {
 function load_term_storage(term) {
 	var tmp_cur_classes = localStorage.getObj(term + 'cur_classes');
 	var tmp_activities = localStorage.getObj(term + 'activities');
-	
+
 	activities = null;
 	cur_classes = null;
 	cur_option = null;
@@ -1050,9 +1050,10 @@ function load_term_storage(term) {
 
 function switch_term(term) {
 	if (cur_term != term) {
-		$.getScript(term + ".js", function() {
+		$.getScript(term + ".js").done(function () {
 			$(".term-button").css("font-weight", "auto");
 			$("#" + term + "-button").css("font-weight", "bold");
+			console.log("switch to term", term);
 			load_term_storage(term);
 			Cookies.set('cur_term', cur_term);
 		});
@@ -1070,15 +1071,19 @@ $(document).ready(function () {
 
 	if (tmp_cur_classes) {
 		localStorage.setObj('fall17cur_classes', tmp_cur_classes);
+		Cookies.remove('cur_classes');
 	}
 	if (tmp_activities) {
 		localStorage.setObj('fall17activities', tmp_activities);
+		Cookies.remove('activities');
 	}
 	if (tmp_locked_slots) {
 		localStorage.setObj('fall17locked_slots', tmp_locked_slots);
+		Cookies.remove('locked_slots');
 	}
 	if (tmp_cur_option) {
 		localStorage.setObj('fall17cur_option', tmp_cur_option);
+		Cookies.remove('cur_option');
 	}
 
 	cur_term = Cookies.get('cur_term');
