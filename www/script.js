@@ -1050,7 +1050,10 @@ function load_term_storage(term) {
 
 function switch_term(term) {
 	if (cur_term != term) {
-		$.getScript(term + ".js").done(function () {
+		$.ajax(url: "script",term + ".js",
+			   dataType: "script",
+			   async: false
+			).done(function () {
 			$(".term-button").css("font-weight", "auto");
 			$("#" + term + "-button").css("font-weight", "bold");
 			console.log("switch to term", term);
