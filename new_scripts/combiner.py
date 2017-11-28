@@ -122,6 +122,11 @@ classes['2.S991']['u1'] = 3
 classes['2.S991']['u3'] = 9
 classes['2.S991']['he'] = True
 
+# Special case 6.08 / 6.S08.
+classes['6.08']['ra'] = 6.6
+classes['6.08']['h'] = 12.3
+classes['6.08']['si'] = 109.5
+
 with open('full.json', 'w') as f:
     f.write('var classes = ')
     json.dump(classes, f, separators=(',', ':'))

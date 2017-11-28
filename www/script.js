@@ -702,9 +702,17 @@ function class_desc(number) {
 
 	$('#class-units').text((u1 + u2 + u3) + ' units: ' + u1 + '-' + u2 + '-' + u3);
 
-	$('#class-rating').text((classes[number]['ra']).format(1));
-	$('#class-hours').text((classes[number]['h']).format(1));
-	$('#class-people').text((classes[number]['si']).format(1));
+	if (classes[number]['ra'] != 0) {
+		$('#class-rating').text((classes[number]['ra']).format(1));
+		$('#class-hours').text((classes[number]['h']).format(1));
+		$('#class-people').text((classes[number]['si']).format(1));
+		$('#out-of-rating').show();	
+	} else {
+		$('#class-rating').text("N/A");
+		$('#class-hours').text("N/A");
+		$('#class-people').text("N/A");
+		$('#out-of-rating').hide();	
+	}
 	$('#class-eval').show();
 
 	$('#class-desc').html(classes[number]['d'] + '<br><br>');
