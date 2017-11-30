@@ -1,11 +1,10 @@
 #left-div {
     float: left;
     text-align: center;
-    width: 55%;
+    width: 52%;
 }
 
 #left-int-div {
-    background-color: white;
     width: 91%;
     height: 700px;
     margin: 0 auto;
@@ -13,7 +12,7 @@
 
 #right-div {
     float: right;
-    width: 45%;
+    width: 48%;
 }
 
 #header-div {
