@@ -568,7 +568,6 @@ function link_classes(text, type) {
     var split = text.split(" ");
 
     for (var p in split) {
-	console.log(split[p]);
 	lp = split[p];
 	to_append = '';
 
@@ -1007,9 +1006,10 @@ function sortable_listener() {
 	var old_option = cur_option;
 	var new_classes = [];
 	e.detail.newEndList.forEach(function(c) {
-	    new_classes.push(c.innerHTML);
+	    new_classes.push(c.innerHTML.replace('*', '').replace('+', ''));
 	});
 	cur_classes = new_classes;
+	localStorage.setObj('spring18_cur_classes', cur_classes);
 	select_slots();
 	set_option(old_option);
     });
