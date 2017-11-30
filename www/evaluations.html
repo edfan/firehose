@@ -13,21 +13,17 @@
   <link rel="stylesheet" type="text/css" href="scroller.dataTables.min.css">
   <script defer src="dataTables.scroller.min.js"></script>
 
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js" integrity="sha256-NjbogQqosWgor0UBdCURR5dzcvAgHnfUZMcZ8RCwkk8="
-    crossorigin="anonymous"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js" integrity="sha256-NjbogQqosWgor0UBdCURR5dzcvAgHnfUZMcZ8RCwkk8=" crossorigin="anonymous"></script>
 
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js" integrity="sha256-1hjUhpc44NwiNg8OwMu2QzJXhD8kcj+sJA3aCQZoUjg="
-    crossorigin="anonymous"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js" integrity="sha256-1hjUhpc44NwiNg8OwMu2QzJXhD8kcj+sJA3aCQZoUjg=" crossorigin="anonymous"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha256-gL1ibrbVcRIHKlCO5OXOPC/lZz/gpdApgQAzskqqXp8=" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi"
-    crossorigin="anonymous">
-  <script defer src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK"
-    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+  <script defer src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.3.1/fullcalendar.min.css" integrity="sha256-31guqc+y1B7LB0VRo9h4fLZvY6B2tBsWzsswyBQRteU="
-    crossorigin="anonymous" />
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.3.1/fullcalendar.min.js" integrity="sha256-KfusLKl7lF5lJzh3+hg6yiNE6i0NAFV8uNiWrVn79u4="
-    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.3.1/fullcalendar.min.css" integrity="sha256-31guqc+y1B7LB0VRo9h4fLZvY6B2tBsWzsswyBQRteU=" crossorigin="anonymous" />
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.3.1/fullcalendar.min.js" integrity="sha256-KfusLKl7lF5lJzh3+hg6yiNE6i0NAFV8uNiWrVn79u4=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.6.3/html.sortable.min.js" integrity="sha256-gO90Q7Ekvli89tFc8Tfv/e7Ta4x+YR8pc+ypnHdxBtQ=" crossorigin="anonymous"></script>
 
   <link rel="stylesheet" href="jquery.timepicker.css" />
   <script defer src="jquery.timepicker.min.js"></script>
@@ -61,7 +57,7 @@
     <div id="info-div">
       <img src="img/logo.png" height="40px" vspace="2%" />
       <p style="margin-bottom: 12px;">Spring 2018</p>
-      <span id="info-line">Spring schedules are here! More features coming soon&trade;.</span>
+      <span id="info-line">Try dragging the class buttons! Ooooh. IAP Firehose coming soon.</span>
     </div>
     <hr>
 
@@ -85,7 +81,7 @@
         <button type="button" class="btn btn-primary" id="add-activity-button" disabled>Add activity</button>
       </div>
 
-      <div id="selected-div"></div><br>
+      <div id="selected-div" class="sortable"></div><br>
 
       <p id="units-div" style="display: none;">Units: <span id="total-units"></span>&nbsp;&nbsp;&nbsp;Hours: <span id="total-hours"></span></p>
       <p id="warning-div" style="display: none;">* Class does not have evaluations, so its hours were set to its units.</p>
