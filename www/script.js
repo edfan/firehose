@@ -129,10 +129,14 @@ jQuery.extend(jQuery.fn.dataTableExt.oSort, {
 
 function search_setup() {
     $('#class-input').on('keyup', function () {
-	if (table.column(0).search() !== this.value) {
-	    table.column(0)
-		.search("^" + escapeRegExp(this.value), true, false, true)
-		.draw();
+	if (table.search() !== this.value) {
+		if (this.value.indexOf('.') !== -1) {
+	    	table.search("^" + escapeRegExp(this.value), true, false, true)
+				 .draw();
+		} else {
+	    	table.search(this.value, false, true, true)
+				 .draw();
+		}
 	}
     });
 }
@@ -1042,19 +1046,23 @@ $(document).ready(function () {
 	order: [[0, "asc"]],
 	columnDefs: [
 	    {
-		targets: [0],
-		type: "class",
-		render: function (data, type, row, meta) {
-		    if (type === 'display') {
-			data = '<a href="#">' + data + '</a>';
-		    }
+			targets: [0],
+			type: "class",
+			render: function (data, type, row, meta) {
+		    	if (type === 'display') {
+					data = '<a href="#">' + data + '</a>';
+		    	}
 
-		    return data;
-		}
-	    },
+		    	return data;
+			}
+		},
+		{
+			targets: [1, 2],
+			searchable: false
+		},
 	    {
-		targets: [3],
-		orderable: false
+			targets: [3],
+			orderable: false
 	    }
 	],
 	scrollY: "30vh",
