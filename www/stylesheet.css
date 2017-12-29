@@ -178,6 +178,10 @@
     margin: 0 auto 10;
 }
 
+.btn-group {
+    margin-bottom: -1px;
+}
+
 .btn-primary, .btn-primary.focus {
     color: #ec5339;
     background-color: #fff;

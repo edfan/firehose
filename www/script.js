@@ -12,6 +12,7 @@ var lab_active = false;
 var final_active = false;
 var under_active = false;
 var grad_active = false;
+var units_active = false;
 var cur_class;
 var cur_classes = [];
 var options;
@@ -143,13 +144,13 @@ function search_setup() {
 
 function expand_type(type) {
     if (type == 'l') {
-	return 'lec';
+		return 'lec';
     } else if (type == 'r') {
-	return 'rec';
+		return 'rec';
     } else if (type == 'b') {
-	return 'lab';
+		return 'lab';
     } else {
-	return '';
+		return '';
     }
 }
 
@@ -211,35 +212,35 @@ function select_helper(all_sections, chosen_slots, chosen_options, cur_conflicts
     var slots = classes[section[0]][section[1]];
 
     for (var s = 0; s < slots.length; s++) {
-	slot = slots[s][0];
-	new_conflicts = 0;
+		slot = slots[s][0];
+		new_conflicts = 0;
 
-	for (var cs = 0; cs < chosen_slots.length; cs++) {
-	    for (var ss = 0; ss < slot.length; ss++) {
-		if (conflict_check(slot[ss], chosen_slots[cs])) {
-		    new_conflicts++;
+		for (var cs = 0; cs < chosen_slots.length; cs++) {
+			for (var ss = 0; ss < slot.length; ss++) {
+			if (conflict_check(slot[ss], chosen_slots[cs])) {
+				new_conflicts++;
+			}
+			}
 		}
-	    }
-	}
 
-	if (cur_conflicts + new_conflicts > min_conflicts) {
-	    continue;
-	}
+		if (cur_conflicts + new_conflicts > min_conflicts) {
+			continue;
+		}
 
-	out = select_helper(new_all_sections,
-			    chosen_slots.concat(slot),
-			    chosen_options.concat(s),
-			    cur_conflicts + new_conflicts,
-			    min_conflicts);
+		out = select_helper(new_all_sections,
+					chosen_slots.concat(slot),
+					chosen_options.concat(s),
+					cur_conflicts + new_conflicts,
+					min_conflicts);
 
-	if (out[1] < min_conflicts) {
-	    chosen = [];
-	    min_conflicts = out[1];
-	}
+		if (out[1] < min_conflicts) {
+			chosen = [];
+			min_conflicts = out[1];
+		}
 
-	if (out[1] == min_conflicts) {
-	    chosen = chosen.concat(out[0]);
-	}
+		if (out[1] == min_conflicts) {
+			chosen = chosen.concat(out[0]);
+		}
     }
 
     return [chosen, min_conflicts]
@@ -249,15 +250,15 @@ function select_helper(all_sections, chosen_slots, chosen_options, cur_conflicts
 function select_slots() {
     var all_class_sections = [];
     for (var c = 0; c < cur_classes.length; c++) {
-	for (var s = 0; s < classes[cur_classes[c]]['s'].length; s++) {
-	    all_class_sections.push([classes[cur_classes[c]]['no'],
-				     classes[cur_classes[c]]['s'][s]])
-	}
+		for (var s = 0; s < classes[cur_classes[c]]['s'].length; s++) {
+			all_class_sections.push([classes[cur_classes[c]]['no'],
+									 classes[cur_classes[c]]['s'][s]])
+		}
     }
 
     all_class_sections.sort(function (a, b) {
-	return (classes[a[0]][a[1]].length -
-		classes[b[0]][b[1]].length);
+		return (classes[a[0]][a[1]].length -
+				classes[b[0]][b[1]].length);
     });
 
     all_sections = [];
@@ -265,16 +266,16 @@ function select_slots() {
     var init_slots = [];
     var auto_sections = [];
     for (var i = 0; i < all_class_sections.length; i++) {
-	var section = all_class_sections[i]
-	if (section in locked_slots) {
-	    if (locked_slots[section] != "none") {
-		all_sections.push(section);
-		tmp_options.push(locked_slots[section]);
-		init_slots = init_slots.concat(classes[section[0]][section[1]][locked_slots[section]][0]);
-	    }
-	} else {
-	    auto_sections.push(section);
-	}
+		var section = all_class_sections[i]
+		if (section in locked_slots) {
+			if (locked_slots[section] != "none") {
+			all_sections.push(section);
+			tmp_options.push(locked_slots[section]);
+			init_slots = init_slots.concat(classes[section[0]][section[1]][locked_slots[section]][0]);
+			}
+		} else {
+			auto_sections.push(section);
+		}
     }
     all_sections = all_sections.concat(auto_sections);
 
@@ -303,39 +304,39 @@ function select_slots() {
     var flag2 = false;
     var toappend;
     for (var c = 0; c < cur_classes.length; c++) {
-	toappend = '';
-	n_number = id_sanitize(cur_classes[c]);
-	units += classes[cur_classes[c]]['u1'] + classes[cur_classes[c]]['u2'] + classes[cur_classes[c]]['u3'];
-	hours += classes[cur_classes[c]]['h'];
+		toappend = '';
+		n_number = id_sanitize(cur_classes[c]);
+		units += classes[cur_classes[c]]['u1'] + classes[cur_classes[c]]['u2'] + classes[cur_classes[c]]['u3'];
+		hours += classes[cur_classes[c]]['h'];
 
-	if (classes[cur_classes[c]]['h'] === 0 && classes[cur_classes[c]]['s'][0] != 'a') {
-	    toappend += '*';
-	    flag = true;
-	    hours += classes[cur_classes[c]]['u1'] + classes[cur_classes[c]]['u2'] + classes[cur_classes[c]]['u3'];
-	}
+		if (classes[cur_classes[c]]['h'] === 0 && classes[cur_classes[c]]['s'][0] != 'a') {
+			toappend += '*';
+			flag = true;
+			hours += classes[cur_classes[c]]['u1'] + classes[cur_classes[c]]['u2'] + classes[cur_classes[c]]['u3'];
+		}
 
-	if (classes[cur_classes[c]]['tb']) {
-	    toappend += '+';
-	    flag2 = true;
-	}
+		if (classes[cur_classes[c]]['tb']) {
+			toappend += '+';
+			flag2 = true;
+		}
 
-	$('#' + n_number + '-button').text(cur_classes[c] + toappend);
+		$('#' + n_number + '-button').text(cur_classes[c] + toappend);
     }
 
     $("#total-units").text(units);
     $("#total-hours").text(hours.format(1));
 
     if (flag) {
-	$("#total-hours").append("*");
-	$("#warning-div").show();
+		$("#total-hours").append("*");
+		$("#warning-div").show();
     } else {
-	$("#warning-div").hide();
+		$("#warning-div").hide();
     }
 
     if (flag2) {
-	$("#warning2-div").show();
+		$("#warning2-div").show();
     } else {
-	$("#warning2-div").hide();
+		$("#warning2-div").hide();
     }
 
     localStorage.setObj('spring18_cur_classes', cur_classes);
@@ -354,14 +355,14 @@ function set_option(index) {
     gcal_slots = [];
 
     for (var o = 0; o < option.length; o++) {
-	var number = all_sections[o][0];
-	var type = all_sections[o][1];
-	slots = classes[number][type][option[o]];
-	var room = slots[1];
-	for (var s = 0; s < slots[0].length; s++) {
-	    add_cal(number, type, room,
-		    slots[0][s][0], slots[0][s][1]);
-	}
+		var number = all_sections[o][0];
+		var type = all_sections[o][1];
+		slots = classes[number][type][option[o]];
+		var room = slots[1];
+		for (var s = 0; s < slots[0].length; s++) {
+			add_cal(number, type, room,
+				slots[0][s][0], slots[0][s][1]);
+		}
     }
 
     cur_option = index;
@@ -375,24 +376,24 @@ function conflict_helper(new_sections, old_slots) {
     var slots;
 
     section_loop: for (var n = 0; n < new_sections.length; n++) {
-	section = new_sections[n];
-	slots = classes[section[0]][section[1]];
+		section = new_sections[n];
+		slots = classes[section[0]][section[1]];
 
-	slot_loop: for (var s = 0; s < slots.length; s++) {
-	    slot = slots[s][0];
+		slot_loop: for (var s = 0; s < slots.length; s++) {
+			slot = slots[s][0];
 
-	    for (var os = 0; os < old_slots.length; os++) {
-		for (var ss = 0; ss < slot.length; ss++) {
-		    if (conflict_check(slot[ss], old_slots[os])) {
-			continue slot_loop;
-		    }
+			for (var os = 0; os < old_slots.length; os++) {
+				for (var ss = 0; ss < slot.length; ss++) {
+					if (conflict_check(slot[ss], old_slots[os])) {
+					continue slot_loop;
+					}
+				}
+			}
+
+			continue section_loop;
 		}
-	    }
 
-	    continue section_loop;
-	}
-
-	return false;
+		return false;
     }
 
     return true;
@@ -402,147 +403,153 @@ function is_selected(number) {
     var selected = false;
 
     if (hass_active || hass_a_active || hass_h_active || hass_s_active) {
-	if (hass_active || hass_a_active) {
-	    if (classes[number]['ha']) {
-		selected = true;
-	    }
-	}
+		if (hass_active || hass_a_active) {
+			if (classes[number]['ha']) {
+			selected = true;
+			}
+		}
 
-	if (hass_active || hass_h_active) {
-	    if (classes[number]['hh']) {
-		selected = true;
-	    }
-	}
+		if (hass_active || hass_h_active) {
+			if (classes[number]['hh']) {
+			selected = true;
+			}
+		}
 
-	if (hass_active || hass_s_active) {
-	    if (classes[number]['hs']) {
-		selected = true;
-	    }
-	}
+		if (hass_active || hass_s_active) {
+			if (classes[number]['hs']) {
+			selected = true;
+			}
+		}
 
-	if (hass_active) {
-	    if (classes[number]['he']) {
-		selected = true;
-	    }
-	}
+		if (hass_active) {
+			if (classes[number]['he']) {
+			selected = true;
+			}
+		}
 
-	if (!selected) {
-	    return false;
-	}
+		if (!selected) {
+			return false;
+		}
     }
 
     selected = false;
 
     if (ci_h_active || ci_hw_active) {
-	if (ci_h_active) {
-	    if (classes[number]['ci']) {
-		selected = true;
-	    }
-	}
+		if (ci_h_active) {
+			if (classes[number]['ci']) {
+			selected = true;
+			}
+		}
 
-	if (ci_hw_active) {
-	    if (classes[number]['cw']) {
-		selected = true;
-	    }
-	}
+		if (ci_hw_active) {
+			if (classes[number]['cw']) {
+			selected = true;
+			}
+		}
 
-	if (!selected) {
-	    return false;
-	}
+		if (!selected) {
+			return false;
+		}
     }
 
     if (no_ci_active) {
-	if (classes[number]['ci'] || classes[number]['cw']) {
-	    return false;
-	}
+		if (classes[number]['ci'] || classes[number]['cw']) {
+			return false;
+		}
     }
 
     if (rest_active) {
-	if (!classes[number]['re']) {
-	    return false;
-	}
+		if (!classes[number]['re']) {
+			return false;
+		}
     }
 
     if (lab_active) {
-	if (!(classes[number]['la'] || classes[number]['pl'])) {
-	    return false;
-	}
+		if (!(classes[number]['la'] || classes[number]['pl'])) {
+			return false;
+		}
     }
 
     if (final_active) {
-	if (classes[number]['f']) {
-	    return false;
+		if (classes[number]['f']) {
+			return false;
+		}
 	}
-    }
+	
+	if (units_active) {
+		if (classes[number]['u1'] + classes[number]['u2'] + classes[number]['u3'] > 9) {
+			return false;
+		}
+	}
 
     if (under_active || grad_active) {
-	selected = false;
+		selected = false;
 
-	if (under_active) {
-	    if (classes[number]['le'] == 'U') {
-		selected = true;
-	    }
-	}
+		if (under_active) {
+			if (classes[number]['le'] == 'U') {
+				selected = true;
+			}
+		}
 
-	if (grad_active) {
-	    if (classes[number]['le'] == 'G') {
-		selected = true;
-	    }
+		if (grad_active) {
+			if (classes[number]['le'] == 'G') {
+				selected = true;
+			}
 	}
 
 	if (!selected) {
-	    return false;
-	}
+			return false;
+		}
     }
 
     selected = false;
 
     if (conflicts_active) {
-	if (!conflicts_flag) {
-	    var option;
-	    var section;
-	    var slots;
-	    var slot;
+		if (!conflicts_flag) {
+			var option;
+			var section;
+			var slots;
+			var slot;
 
-	    calc_classes = cur_classes.slice();
-	    calc_slots = [];
+			calc_classes = cur_classes.slice();
+			calc_slots = [];
 
-	    for (var op = 0; op < options.length; op++) {
-		option = options[op];
-		slots = [];
+			for (var op = 0; op < options.length; op++) {
+				option = options[op];
+				slots = [];
 
-		for (var o = 0; o < option.length; o++) {
-		    slots.push.apply(slots, classes[all_sections[o][0]][all_sections[o][1]][option[o]][0]);
-		}
+				for (var o = 0; o < option.length; o++) {
+					slots.push.apply(slots, classes[all_sections[o][0]][all_sections[o][1]][option[o]][0]);
+				}
 
-		calc_slots.push(slots);
-	    }
+				calc_slots.push(slots);
+	   		}
 
 	    conflicts_flag = true;
-	}
+		}
 
-	if (cur_classes.length == 0) {
-	    return true;
-	}
+		if (cur_classes.length == 0) {
+			return true;
+		}
 
-	var class_slots = [];
+		var class_slots = [];
 
-	for (var s = 0; s < classes[number]['s'].length; s++) {
-	    class_slots.push([classes[number]['no'],
-			      classes[number]['s'][s]]);
-	}
+		for (var s = 0; s < classes[number]['s'].length; s++) {
+			class_slots.push([classes[number]['no'],
+					classes[number]['s'][s]]);
+		}
 
-	if (class_slots.length == 0) {
-	    return false;
-	}
+		if (class_slots.length == 0) {
+			return false;
+		}
 
-	for (var c = 0; c < calc_slots.length; c++) {
-	    if (conflict_helper(class_slots, calc_slots[c])) {
-		return true;
-	    }
-	}
+		for (var c = 0; c < calc_slots.length; c++) {
+			if (conflict_helper(class_slots, calc_slots[c])) {
+				return true;
+			}
+		}
 
-	return false;
+		return false;
     }
 
     return true;
@@ -551,15 +558,17 @@ function is_selected(number) {
 function fill_table() {
     table.clear();
 
-    conflicts_flag = false;
+	conflicts_flag = false;
+	
+	console.log(units_active);
 
     for (var c in classes) {
-	if (is_selected(c)) {
-	    table.rows.add([[classes[c]['no'],
-			     classes[c]['ra'].format(1),
-			     classes[c]['h'].format(1),
-			     classes[c]['n']]]);
-	}
+		if (is_selected(c)) {
+			table.rows.add([[classes[c]['no'],
+					classes[c]['ra'].format(1),
+					classes[c]['h'].format(1),
+					classes[c]['n']]]);
+		}
     }
 
     table.draw();
@@ -1173,22 +1182,24 @@ $(document).ready(function () {
     });
 
     $(".act-day").click(function () {
-	var days = [$("#act-mon").is(":checked"), $("#act-tue").is(":checked"),
-		    $("#act-wed").is(":checked"), $("#act-thu").is(":checked"),
-		    $("#act-fri").is(":checked")];
+		var days = [$("#act-mon").is(":checked"), $("#act-tue").is(":checked"),
+					$("#act-wed").is(":checked"), $("#act-thu").is(":checked"),
+					$("#act-fri").is(":checked")];
 
-	for (var i = 0; i < 5; i++) {
-	    if (days[i]) {
-			$('#add-activity-button').prop('disabled', false);
-			return;
-	    }
-	}
+		for (var i = 0; i < 5; i++) {
+			if (days[i]) {
+				$('#add-activity-button').prop('disabled', false);
+				return;
+			}
+		}
 
-	$('#add-activity-button').prop('disabled', true);
+		$('#add-activity-button').prop('disabled', true);
     });
 
     $(".selector-button").click(function () {
 		window[this.id + '_active'] = !window[this.id + '_active'];
+		console.log(this.id);
+		console.log(units_active);
 		fill_table();
     });
 
