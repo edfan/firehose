@@ -20,7 +20,7 @@ courses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 20, 22, 24
            'MS', 'NS', '21A', '21G', '21H', '21L', '21M', '21W', 'CMS', 'CON', 'CSB', 'ESD',
            'ESG', 'HST', 'ISP', 'MAS', 'STS', 'WGS']
 
-terms = ['2017SP']
+terms = ['2018FA']
 
 def url_from_course(course):
     return eval_url + '?departmentId={:+>4}&search=Search'.format(course)
@@ -39,6 +39,7 @@ def mit_duo_login():
     session.find_element_by_name('Submit').click()
 
     # Send push Duo authentication
+    time.sleep(5)
     WebDriverWait(session, 10).until(EC.frame_to_be_available_and_switch_to_it('duo_iframe'))
     session.find_element_by_xpath('//*[contains(text(), "Send Me a Push")]').click()
 
