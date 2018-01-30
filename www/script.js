@@ -62,18 +62,18 @@ function class_sort_internal(a, b) {
     var len;
 
     if (a.length < b.length) {
-	return -1
+		return -1;
     } else if (a.length > b.length) {
-	return 1;
+		return 1;
     }
 
     for (var i = 0; i < a.length; i++) {
-	if (a.charAt(i) < b.charAt(i)) {
-	    return -1;
-	}
-	else if (a.charAt(i) > b.charAt(i)) {
-	    return 1;
-	}
+		if (a.charAt(i) < b.charAt(i)) {
+			return -1;
+		}
+		else if (a.charAt(i) > b.charAt(i)) {
+			return 1;
+		}
     }
 
     return 0;
@@ -84,23 +84,23 @@ function class_sort_internal2(a, b) {
     var len;
 
     if (a.length < b.length) {
-	mult = -1;
-	len = a.length;
+		mult = -1;
+		len = a.length;
     } else if (a.length > b.length) {
-	mult = 1;
-	len = b.length;
+		mult = 1;
+		len = b.length;
     } else {
-	mult = 0;
-	len = a.length;
+		mult = 0;
+		len = a.length;
     }
 
     for (i = 0; i < len; i++) {
-	if (a.charAt(i) < b.charAt(i)) {
-	    return -1;
-	}
-	else if (a.charAt(i) > b.charAt(i)) {
-	    return 1;
-	}
+		if (a.charAt(i) < b.charAt(i)) {
+			return -1;
+		}
+		else if (a.charAt(i) > b.charAt(i)) {
+			return 1;
+		}
     }
 
     return mult;
@@ -130,15 +130,15 @@ jQuery.extend(jQuery.fn.dataTableExt.oSort, {
 
 function search_setup() {
     $('#class-input').on('keyup', function () {
-	if (table.search() !== this.value) {
-		if (this.value.indexOf('.') !== -1) {
-	    	table.search("^" + escapeRegExp(this.value), true, false, true)
-				 .draw();
-		} else {
-	    	table.search(this.value, false, true, true)
-				 .draw();
+		if (table.search() !== this.value) {
+			if (this.value.indexOf('.') !== -1) {
+				table.search("^" + escapeRegExp(this.value), true, false, true)
+					.draw();
+			} else {
+				table.search(this.value, false, true, true)
+					.draw();
+			}
 		}
-	}
     });
 }
 
@@ -165,7 +165,7 @@ function add_cal(number, type, room, slot, length) {
     var type_full = expand_type(type);
 
     gcal_slots.push([day - 1, hour + ':' + minute, end_hour + ':' + end_minute,
-		     number + ' ' + type_full, room]);
+		     		 number + ' ' + type_full, room]);
 
     var index = cur_classes.indexOf(number);
     var color = colors[index % colors.length];
@@ -182,23 +182,23 @@ function add_cal(number, type, room, slot, length) {
     $("#calendar").fullCalendar('renderEvent', event, true);
 
     var n_number = id_sanitize(number);
-    $("#" + n_number + "-button").css({
-	"background-color": color,
-	"border-color": color,
-	"color": "#ffffff"
+	$("#" + n_number + "-button").css({
+		"background-color": color,
+		"border-color": color,
+		"color": "#ffffff"
     });
 }
 
 function conflict_check(slot1, slot2) {
     return ((slot1[0] < slot2[0] + slot2[1]) &&
-	    (slot2[0] < slot1[0] + slot1[1]))
+	    	(slot2[0] < slot1[0] + slot1[1]))
 }
 
 function select_helper(all_sections, chosen_slots, chosen_options, cur_conflicts, min_conflicts) {
     var chosen = [];
 
     if (all_sections.length == 0) {
-	return [[chosen_options], cur_conflicts]
+		return [[chosen_options], cur_conflicts]
     }
 
     var slot;
@@ -217,9 +217,9 @@ function select_helper(all_sections, chosen_slots, chosen_options, cur_conflicts
 
 		for (var cs = 0; cs < chosen_slots.length; cs++) {
 			for (var ss = 0; ss < slot.length; ss++) {
-			if (conflict_check(slot[ss], chosen_slots[cs])) {
-				new_conflicts++;
-			}
+				if (conflict_check(slot[ss], chosen_slots[cs])) {
+					new_conflicts++;
+				}
 			}
 		}
 
@@ -228,10 +228,10 @@ function select_helper(all_sections, chosen_slots, chosen_options, cur_conflicts
 		}
 
 		out = select_helper(new_all_sections,
-					chosen_slots.concat(slot),
-					chosen_options.concat(s),
-					cur_conflicts + new_conflicts,
-					min_conflicts);
+							chosen_slots.concat(slot),
+							chosen_options.concat(s),
+							cur_conflicts + new_conflicts,
+							min_conflicts);
 
 		if (out[1] < min_conflicts) {
 			chosen = [];
@@ -559,8 +559,6 @@ function fill_table() {
     table.clear();
 
 	conflicts_flag = false;
-	
-	console.log(units_active);
 
     for (var c in classes) {
 		if (is_selected(c)) {
@@ -905,102 +903,101 @@ function set_activity(name, slots, hours) {
 }
 
 function calendar_export() {
-    if (typeof gapi.auth2 != 'undefined' && gapi.auth2.getAuthInstance().isSignedIn.get()) {
-	calendar_send(true);
+    if (gapi.auth2.getAuthInstance() != null && gapi.auth2.getAuthInstance().isSignedIn.get()) {
+		calendar_send(true);
     } else {
-	gapi.client.init({
-	    'apiKey': "AIzaSyC_ALyKTv8OvcaBXlJU1u3ifJoeQVCY45Q",
-	    'discoveryDocs': ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
-	    'clientId': "770500080614-drje51h0h8hlsfra9s4cv93vb9omm220.apps.googleusercontent.com",
-	    'scope': "https://www.googleapis.com/auth/calendar"
-	}).then(function () {
-	    return gapi.auth2.getAuthInstance().signIn();
-	}).then(function () {
-	    calendar_send(gapi.auth2.getAuthInstance().isSignedIn.get());
-	});
+		gapi.client.init({
+			'apiKey': "AIzaSyC_ALyKTv8OvcaBXlJU1u3ifJoeQVCY45Q",
+			'discoveryDocs': ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
+			'clientId': "770500080614-drje51h0h8hlsfra9s4cv93vb9omm220.apps.googleusercontent.com",
+			'scope': "https://www.googleapis.com/auth/calendar"
+		}).then(function () {
+			gapi.auth2.getAuthInstance().isSignedIn.listen(calendar_send);
+			return gapi.auth2.getAuthInstance().signIn();
+		})
     }
 }
 
 function calendar_send(isSignedIn) {
     if (isSignedIn) {
-	$("#calendar-link").text("Working...");
+		$("#calendar-link").text("Working...");
 
-	gapi.client.calendar.calendarList.list({}).then(function (resp) {
-	    var name = "Firehose: Spring 2018";
-	    var ids = [];
+		gapi.client.calendar.calendarList.list({}).then(function (resp) {
+			var name = "Firehose: Spring 2018";
+			var ids = [];
 
-	    for (var i in resp.result.items) {
-		if (resp.result.items[i].summary == name) {
-		    ids.push(resp.result.items[i].id);
-		}
-	    }
+			for (var i in resp.result.items) {
+				if (resp.result.items[i].summary == name) {
+					ids.push(resp.result.items[i].id);
+				}	
+			}
 
-	    for (var i in ids) {
-		gapi.client.calendar.calendars.delete({
-		    'calendarId': ids[i]
-		}).then();
-	    }
+			for (var i in ids) {
+				gapi.client.calendar.calendars.delete({
+					'calendarId': ids[i]
+				}).then();
+			}
 
-	    return gapi.client.calendar.calendars.insert({
-		'summary': name
-	    });
-	}).then(function (resp) {
-	    var id = resp.result.id;
+			return gapi.client.calendar.calendars.insert({
+			'summary': name
+			});
+		}).then(function (resp) {
+			var id = resp.result.id;
 
-	    gapi.client.calendar.calendarList.get({
-		'calendarId': id
-	    }).then(function (resp) {
-		var cal_list = resp.result;
-		resp.result.backgroundColor = "#DB5E45"
+			gapi.client.calendar.calendarList.get({
+				'calendarId': id
+			}).then(function (resp) {
+				var cal_list = resp.result;
+				resp.result.backgroundColor = "#DB5E45"
 
-		gapi.client.calendar.calendarList.update({
-		    'calendarId': resp.result.id,
-		    'colorRgbFormat': true,
-		    'resource': cal_list
-		}).then();
-	    });
+				gapi.client.calendar.calendarList.update({
+					'calendarId': resp.result.id,
+					'colorRgbFormat': true,
+					'resource': cal_list
+				}).then();
+			});
 
-            var start_dates = ['2018-02-12', '2018-02-06', '2018-02-07', '2018-02-08', '2018-02-09'];
-            var end_dates = ['20180514', '20180515', '20180516', '20180517', '20180511'];
-            var ex_dates = [['20180219', '20180326', '20140416'], ['20180220', '20180327', '20140417'], ['20180328'], ['20180329'], ['20180330']];
-	    var batch = gapi.client.newBatch();
+			var start_dates = ['2018-02-12', '2018-02-06', '2018-02-07', '2018-02-08', '2018-02-09'];
+			var end_dates = ['20180514', '20180515', '20180516', '20180517', '20180511'];
+			var ex_dates = [['20180219', '20180326', '20140416'], ['20180220', '20180327', '20140417'], ['20180328'], ['20180329'], ['20180330']];
+			var batch = gapi.client.newBatch();
 
-	    for (var s in gcal_slots) {
-		var g = gcal_slots[s];
+			for (var s in gcal_slots) {
+				var g = gcal_slots[s];
 
-		var ex_date = '';
-		var time = 'T' + g[1].replace(':', '') + '00,';
+				var ex_date = '';
+				var time = 'T' + g[1].replace(':', '') + '00,';
 
-		for (var x in ex_dates[g[0]]) {
-		    ex_date += ex_dates[g[0]][x] + time;
-		}
+				for (var x in ex_dates[g[0]]) {
+					ex_date += ex_dates[g[0]][x] + time;
+				}
 
-		batch.add(gapi.client.calendar.events.insert({
-		    'calendarId': id,
-		    'resource': {
-			'summary': g[3],
-			'location': g[4],
-			'start': {
-			    'dateTime': start_dates[g[0]] + 'T' + g[1] + ':00',
-			    'timeZone': "America/New_York"
-			},
-			'end': {
-			    'dateTime': start_dates[g[0]] + 'T' + g[2] + ':00',
-			    'timeZone': "America/New_York"
-			},
-			'recurrence': [
-			    'RRULE:FREQ=WEEKLY;UNTIL=' + end_dates[g[0]],
-			    'EXDATE;TZID=America/New_York:' + ex_date
-			]
-		    }
-		}));
-	    }
+				batch.add(gapi.client.calendar.events.insert({
+					'calendarId': id,
+					'resource': {
+					'summary': g[3],
+					'location': g[4],
+					'start': {
+						'dateTime': start_dates[g[0]] + 'T' + g[1] + ':00',
+						'timeZone': "America/New_York"
+					},
+					'end': {
+						'dateTime': start_dates[g[0]] + 'T' + g[2] + ':00',
+						'timeZone': "America/New_York"
+					},
+					'recurrence': [
+						'RRULE:FREQ=WEEKLY;UNTIL=' + end_dates[g[0]],
+						'EXDATE;TZID=America/New_York:' + ex_date
+					]
+					}
+				}));
+			}
 
-	    return batch;
-	}).then(function (resp) {
-	    window.open('https://calendar.google.com', '_blank');
-	    $("#calendar-link").text("Export to Google Calendar");
-	});
+			return batch;
+		}).then(function (resp) {
+			window.open('https://calendar.google.com', '_blank');
+			$("#calendar-link").text("Export to Google Calendar");
+		});
     }
 }
 
@@ -1009,23 +1006,23 @@ function clipboard_export() {
     var option = options[cur_option];
     
     for (var o = 0; o < option.length; o++) {
-	var number = all_sections[o][0];
-	var type = all_sections[o][1];
-	if (type != 'a') {
-	    slots = classes[number][type][option[o]];
-	    var room = slots[1];
-	    var csb_slot = classes[number][type + 'r'][option[o]]
-	    class_strs.push([number, (number + ' ' + expand_type(type)).paddingRight('             ') + room.paddingRight('         ') + csb_slot]); 			
-	}
+		var number = all_sections[o][0];
+		var type = all_sections[o][1];
+		if (type != 'a') {
+			slots = classes[number][type][option[o]];
+			var room = slots[1];
+			var csb_slot = classes[number][type + 'r'][option[o]]
+			class_strs.push([number, (number + ' ' + expand_type(type)).paddingRight('             ') + room.paddingRight('         ') + csb_slot]); 			
+		}
     }
 
     class_strs.sort(function(a, b) {
-	return class_sort(a[0], b[0]);
+		return class_sort(a[0], b[0]);
     });
 
     var class_str = [];
     for (var i = 0; i < class_strs.length; i++) {
-	class_str.push(class_strs[i][1])
+		class_str.push(class_strs[i][1])
     }
 
     $("#modal-textarea").prop("rows", option.length);
@@ -1035,66 +1032,66 @@ function clipboard_export() {
 
 function sortable_listener() {
     sortable('.sortable')[0].addEventListener('sortupdate', function(e) {
-	var old_option = cur_option;
-	var new_classes = [];
-	e.detail.newEndList.forEach(function(c) {
-	    new_classes.push(c.innerHTML.replace('*', '').replace('+', ''));
-	});
-	cur_classes = new_classes;
-	localStorage.setObj('spring18_cur_classes', cur_classes);
-	select_slots();
-	set_option(old_option);
+		var old_option = cur_option;
+		var new_classes = [];
+		e.detail.newEndList.forEach(function(c) {
+			new_classes.push(c.innerHTML.replace('*', '').replace('+', ''));
+		});
+		cur_classes = new_classes;
+		localStorage.setObj('spring18_cur_classes', cur_classes);
+		select_slots();
+		set_option(old_option);
     });
 }
 
 $(document).ready(function () {
-    Cookies.set('school', 'MIT', { expires: 3650 });
+	Cookies.set('school', 'MIT', { expires: 3650 });
 
     $('#calendar').fullCalendar({
-	allDaySlot: false,
-	columnFormat: 'dddd',
-	defaultDate: '2016-08-01',
-	defaultView: 'agendaWeek',
-	editable: false,
-	header: false,
-	height: "auto",
-	minTime: "08:00:00",
-	maxTime: "22:00:00",
-	weekends: false,
-	eventClick: function (calEvent, jsEvent, view) {
-	    var name = calEvent.title.split(' ')[0];
-	    class_desc(name);
-	}
+		allDaySlot: false,
+		columnFormat: 'dddd',
+		defaultDate: '2016-08-01',
+		defaultView: 'agendaWeek',
+		editable: false,
+		header: false,
+		height: "auto",
+		minTime: "08:00:00",
+		maxTime: "22:00:00",
+		weekends: false,
+		eventClick: function (calEvent, jsEvent, view) {
+			var name = calEvent.title.split(' ')[0];
+			class_desc(name);
+		}
     });
 
     table = $("#eval-table").DataTable({
-	iDisplayLength: 3000,
-	sDom: "t",
-	deferRender: true,
-	order: [[0, "asc"]],
-	columnDefs: [
-	    {
-			targets: [0],
-			type: "class",
-			render: function (data, type, row, meta) {
-		    	if (type === 'display') {
-					data = '<a href="#">' + data + '</a>';
-		    	}
+		iDisplayLength: 3000,
+		sDom: "t",
+		deferRender: true,
+		order: [[0, "asc"]],
+		columnDefs: [
+			{
+				targets: [0],
+				type: "class",
+				render: function (data, type, row, meta) {
+					if (type === 'display') {
+						data = '<a href="#">' + data + '</a>';
+					}
 
-		    	return data;
+					return data;
+				}
+			},
+			{
+				targets: [1, 2],
+				searchable: false
+			},
+			{
+				targets: [3],
+				orderable: false
 			}
-		},
-		{
-			targets: [1, 2],
-			searchable: false
-		},
-	    {
-			targets: [3],
-			orderable: false
-	    }
-	],
-	scrollY: "30vh",
-	scroller: true
+		],
+		scrollY: "30vh",
+		scroller: true
     });
 
     fill_table();
@@ -1106,46 +1103,46 @@ $(document).ready(function () {
     table.columns.adjust().draw();
 
     $("#class-input").on("keypress", function (e) {
-	if (e.keyCode == 13) {
-	    var c = $('#class-input').val().toUpperCase();
-	    if (classes.hasOwnProperty(c)) {
-		if (cur_classes.indexOf(c) == -1) {
-		    add_class(c);
-		} else {
-		    remove_class(c);
+		if (e.keyCode == 13) {
+			var c = $('#class-input').val().toUpperCase();
+			if (classes.hasOwnProperty(c)) {
+				if (cur_classes.indexOf(c) == -1) {
+					add_class(c);
+				} else {
+					remove_class(c);
+				}
+				$('#class-input').val('');
+			}
 		}
-		$('#class-input').val('');
-	    }
-	}
     });
 
     $('#eval-table tbody').on('click', 'tr', function () {
-	var tr = $(this).closest('tr');
-	var row = table.row(tr);
+		var tr = $(this).closest('tr');
+		var row = table.row(tr);
 
-	class_desc(row.data()[0]);
+		class_desc(row.data()[0]);
     });
 
     $('#eval-table tbody').on('dblclick', 'tr', function () {
-	var tr = $(this).closest('tr');
-	var row = table.row(tr);
-	var c = row.data()[0];
+		var tr = $(this).closest('tr');
+		var row = table.row(tr);
+		var c = row.data()[0];
 
-	if (cur_classes.indexOf(c) == -1) {
-	    add_class(c);
-	} else {
-	    remove_class(c);
-	}
+		if (cur_classes.indexOf(c) == -1) {
+			add_class(c);
+		} else {
+			remove_class(c);
+		}
     });
 
     $("#cal-left").click(function () {
-	set_option((cur_option + options.length - 1) % options.length);
-	$("#cal-left").blur();
+		set_option((cur_option + options.length - 1) % options.length);
+		$("#cal-left").blur();
     });
 
     $("#cal-right").click(function () {
-	set_option((cur_option + options.length + 1) % options.length);
-	$("#cal-right").blur();
+		set_option((cur_option + options.length + 1) % options.length);
+		$("#cal-right").blur();
     });
 
     $("#activity-button").click(function () {
@@ -1159,16 +1156,16 @@ $(document).ready(function () {
     });
 
     $("#start-time").timepicker({
-	'forceRoundTime': true,
-	'disableTouchKeyboard': true,
-	'minTime': '08:00am',
-	'maxTime': '09:30pm'
+		'forceRoundTime': true,
+		'disableTouchKeyboard': true,
+		'minTime': '08:00am',
+		'maxTime': '09:30pm'
     });
     $("#end-time").timepicker({
-	'forceRoundTime': true,
-	'disableTouchKeyboard': true,
-	'minTime': '08:30am',
-	'maxTime': '10:00pm'
+		'forceRoundTime': true,
+		'disableTouchKeyboard': true,
+		'minTime': '08:30am',
+		'maxTime': '10:00pm'
     });
 
     $("#add-activity-button").click(function () {
@@ -1198,8 +1195,6 @@ $(document).ready(function () {
 
     $(".selector-button").click(function () {
 		window[this.id + '_active'] = !window[this.id + '_active'];
-		console.log(this.id);
-		console.log(units_active);
 		fill_table();
     });
 
@@ -1213,21 +1208,21 @@ $(document).ready(function () {
     });
 
     $("#expand-button").click(function () {
-	if ($("#adv-buttons-div").is(":visible")) {
-	    $("#adv-buttons-div").hide();
-	    $("#expand-button").text("+ More filters");
-	} else {
-	    $("#adv-buttons-div").show();
-	    $("#expand-button").text("- Fewer filters");
-	}
+		if ($("#adv-buttons-div").is(":visible")) {
+			$("#adv-buttons-div").hide();
+			$("#expand-button").text("+ More filters");
+		} else {
+			$("#adv-buttons-div").show();
+			$("#expand-button").text("- Fewer filters");
+		}
     });
 
     $("#prereg-link").click(function () {
-	window.open("https://student.mit.edu/cgi-bin/sfprwtrm.sh?" + cur_classes.join(','), "_blank");
+		window.open("https://student.mit.edu/cgi-bin/sfprwtrm.sh?" + cur_classes.join(','), "_blank");
     });
 
     $("#calendar-link").click(function () {
-	calendar_export();
+		gapi.load('client:auth2', calendar_export);
     });
 
     $("#clipboard-link").click(function () {
@@ -1236,14 +1231,14 @@ $(document).ready(function () {
     });
 
     $("#clipboard-button").click(function () {
-	$("#modal-textarea").select();
-	if (document.execCommand('copy')) {
-	    $('#clipboard-button').tooltip('show');
-	    setTimeout(function() {
-			$('#clipboard-button').tooltip('hide');
-	    }, 1000);
-	}
-	$("#modal-textarea").prop("selected", false);
+		$("#modal-textarea").select();
+		if (document.execCommand('copy')) {
+			$('#clipboard-button').tooltip('show');
+			setTimeout(function() {
+				$('#clipboard-button').tooltip('hide');
+			}, 1000);
+		}
+		$("#modal-textarea").prop("selected", false);
     });
 
     $("#manual-button").click(function () {
@@ -1271,15 +1266,15 @@ $(document).ready(function () {
 		    })();
 		}
 
-		$("#man-lec-div").show();
+			$("#man-lec-div").show();
 	    } else {
-		$("#man-lec-div").hide();
+			$("#man-lec-div").hide();
 	    }
 
 	    if (slot in locked_slots) {
-		$("#lec-" + locked_slots[slot]).prop("checked", true);
+			$("#lec-" + locked_slots[slot]).prop("checked", true);
 	    } else {
-		$("#lec-auto").prop("checked", true);
+			$("#lec-auto").prop("checked", true);
 	    }
 
 	    slot = [cur_class, 'r'];
@@ -1291,25 +1286,25 @@ $(document).ready(function () {
 						  '"> ' + classes[cur_class]['rr'][r] + '<br>');
 
 		    (function () {
-			var tmp = r;
-			var stmp = slot;
-			$("#rec-" + tmp).click(function () {
-			    locked_slots[stmp] = tmp;
-			    localStorage.setObj('spring18_locked_slots', locked_slots);
-			    select_slots();
-			});
+				var tmp = r;
+				var stmp = slot;
+				$("#rec-" + tmp).click(function () {
+					locked_slots[stmp] = tmp;
+					localStorage.setObj('spring18_locked_slots', locked_slots);
+					select_slots();
+				});
 		    })();
 		}
 
-		$("#man-rec-div").show();
+			$("#man-rec-div").show();
 	    } else {
-		$("#man-rec-div").hide();
+			$("#man-rec-div").hide();
 	    }
 
 	    if (slot in locked_slots) {
-		$("#rec-" + locked_slots[slot]).prop("checked", true);
+			$("#rec-" + locked_slots[slot]).prop("checked", true);
 	    } else {
-		$("#rec-auto").prop("checked", true);
+			$("#rec-auto").prop("checked", true);
 	    }
 
 	    slot = [cur_class, 'b'];
@@ -1330,15 +1325,15 @@ $(document).ready(function () {
 			});
 		    })();
 		}
-		$("#man-lab-div").show();
+			$("#man-lab-div").show();
 	    } else {
-		$("#man-lab-div").hide();
+			$("#man-lab-div").hide();
 	    }
 
 	    if (slot in locked_slots) {
-		$("#lab-" + locked_slots[slot]).prop("checked", true);
+			$("#lab-" + locked_slots[slot]).prop("checked", true);
 	    } else {
-		$("#lab-auto").prop("checked", true);
+			$("#lab-auto").prop("checked", true);
 	    }
 
 	    $("#manual-div").show();
@@ -1347,51 +1342,51 @@ $(document).ready(function () {
     });
 
     $("#lec-auto").click(function () {
-	var slot = [cur_class, 'l'];
-	if (slot in locked_slots) {
-	    delete locked_slots[slot];
-	}
-	localStorage.setObj('spring18_locked_slots', locked_slots);
-	select_slots();
+		var slot = [cur_class, 'l'];
+		if (slot in locked_slots) {
+			delete locked_slots[slot];
+		}
+		localStorage.setObj('spring18_locked_slots', locked_slots);
+		select_slots();
     });
 
     $("#lec-none").click(function () {
-	var slot = [cur_class, 'l'];
-	locked_slots[slot] = "none";
-	localStorage.setObj('spring18_locked_slots', locked_slots);
-	select_slots();
+		var slot = [cur_class, 'l'];
+		locked_slots[slot] = "none";
+		localStorage.setObj('spring18_locked_slots', locked_slots);
+		select_slots();
     });
 
     $("#rec-auto").click(function () {
-	var slot = [cur_class, 'r'];
-	if (slot in locked_slots) {
-	    delete locked_slots[slot];
-	}
-	localStorage.setObj('spring18_locked_slots', locked_slots);
-	select_slots();
+		var slot = [cur_class, 'r'];
+		if (slot in locked_slots) {
+			delete locked_slots[slot];
+		}
+		localStorage.setObj('spring18_locked_slots', locked_slots);
+		select_slots();
     });
 
     $("#rec-none").click(function () {
-	var slot = [cur_class, 'r'];
-	locked_slots[slot] = "none";
-	localStorage.setObj('spring18_locked_slots', locked_slots);
-	select_slots();
+		var slot = [cur_class, 'r'];
+		locked_slots[slot] = "none";
+		localStorage.setObj('spring18_locked_slots', locked_slots);
+		select_slots();
     });
 
     $("#lab-auto").click(function () {
-	var slot = [cur_class, 'b'];
-	if (slot in locked_slots) {
-	    delete locked_slots[slot];
-	}
-	localStorage.setObj('spring18_locked_slots', locked_slots);
-	select_slots();
+		var slot = [cur_class, 'b'];
+		if (slot in locked_slots) {
+			delete locked_slots[slot];
+		}
+		localStorage.setObj('spring18_locked_slots', locked_slots);
+		select_slots();
     });
 
     $("#lab-none").click(function () {
-	var slot = [cur_class, 'b'];
-	locked_slots[slot] = "none";
-	localStorage.setObj('spring18_locked_slots', locked_slots);
-	select_slots();
+		var slot = [cur_class, 'b'];
+		locked_slots[slot] = "none";
+		localStorage.setObj('spring18_locked_slots', locked_slots);
+		select_slots();
     });
 
     var tmp_cur_classes = localStorage.getObj('spring18_cur_classes');
@@ -1399,7 +1394,7 @@ $(document).ready(function () {
     if (tmp_activities != null) {
 		for (var a in tmp_activities) {
 			if (tmp_cur_classes != null && tmp_cur_classes.indexOf(tmp_activities[a]['no']) != -1) {
-			set_activity(tmp_activities[a]['no'], tmp_activities[a]['a'][0][0], tmp_activities[a]['h'])
+				set_activity(tmp_activities[a]['no'], tmp_activities[a]['a'][0][0], tmp_activities[a]['h'])
 			}
 		}
 		localStorage.setObj('spring18_activities', activities);
@@ -1409,7 +1404,7 @@ $(document).ready(function () {
     if (tmp_locked_slots != null) {
 		for (var l in tmp_locked_slots) {
 			if (tmp_locked_slots.hasOwnProperty(l) && tmp_cur_classes.indexOf(l.split(',')[0]) != -1) {
-			locked_slots[l] = tmp_locked_slots[l];
+				locked_slots[l] = tmp_locked_slots[l];
 			}
 		}
 		localStorage.setObj('spring18_locked_slots', locked_slots);
@@ -1420,22 +1415,22 @@ $(document).ready(function () {
     if (tmp_cur_classes != null) {
 		for (var t in tmp_cur_classes) {
 			if (tmp_cur_classes[t] in classes) {
-			(function () {
-				var number = tmp_cur_classes[t];
-				var n_number = id_sanitize(number);
+				(function () {
+					var number = tmp_cur_classes[t];
+					var n_number = id_sanitize(number);
 
-				$('#selected-div').append('<button type="button" class="btn btn-primary" id=' + n_number + '-button>' + number + '</button>');
+					$('#selected-div').append('<button type="button" class="btn btn-primary" id=' + n_number + '-button>' + number + '</button>');
 
-				$('#' + n_number + '-button').click(function () {
-				class_desc(number);
-				});
+					$('#' + n_number + '-button').click(function () {
+					class_desc(number);
+					});
 
-				$('#' + n_number + '-button').dblclick(function () {
-				remove_class(number);
-				});
-			})();
+					$('#' + n_number + '-button').dblclick(function () {
+					remove_class(number);
+					});
+				})();
 
-			cur_classes.push(tmp_cur_classes[t]);
+				cur_classes.push(tmp_cur_classes[t]);
 			}
 		}
 		$("#units-div").show();
@@ -1446,8 +1441,9 @@ $(document).ready(function () {
     }
 
     sortable('.sortable', {
-	forcePlaceholderSize: true,
-	placeholder: '<button type="button" class="btn btn-primary">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>'
+		forcePlaceholderSize: true,
+		placeholder: '<button type="button" class="btn btn-primary">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>'
     });
-    sortable_listener();
+	sortable_listener();
+	
 });
