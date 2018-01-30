@@ -912,9 +912,10 @@ function calendar_export() {
 			'clientId': "770500080614-drje51h0h8hlsfra9s4cv93vb9omm220.apps.googleusercontent.com",
 			'scope': "https://www.googleapis.com/auth/calendar"
 		}).then(function () {
-			gapi.auth2.getAuthInstance().isSignedIn.listen(calendar_send);
 			return gapi.auth2.getAuthInstance().signIn();
-		})
+		}).then(function () {
+			calendar_send(gapi.auth2.getAuthInstance().isSignedIn.get());
+		});
     }
 }
 
