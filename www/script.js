@@ -959,7 +959,8 @@ function calendar_send(isSignedIn) {
 			});
 
 			var start_dates = ['2018-02-12', '2018-02-06', '2018-02-07', '2018-02-08', '2018-02-09'];
-			var end_dates = ['20180514', '20180515', '20180516', '20180517', '20180511'];
+			var end_dates = ['20180521', '20180522', '20180523', '20180524', '20180518'];
+			var r_dates = ['20180220', '20180206', '20180207', '20180208', '20180209'];
 			var ex_dates = [['20180219', '20180326', '20140416'], ['20180220', '20180327', '20140417'], ['20180328'], ['20180329'], ['20180330']];
 			var batch = gapi.client.newBatch();
 
@@ -988,7 +989,8 @@ function calendar_send(isSignedIn) {
 					},
 					'recurrence': [
 						'RRULE:FREQ=WEEKLY;UNTIL=' + end_dates[g[0]],
-						'EXDATE;TZID=America/New_York:' + ex_date
+						'EXDATE;TZID=America/New_York:' + ex_date,
+						'RDATE;TZID=America/New_York' + r_dates[g[0]] + 'T' + g[1].replace(':', '') + '00,'
 					]
 					}
 				}));
