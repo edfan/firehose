@@ -990,7 +990,7 @@ function calendar_send(isSignedIn) {
 					'recurrence': [
 						'RRULE:FREQ=WEEKLY;UNTIL=' + end_dates[g[0]],
 						'EXDATE;TZID=America/New_York:' + ex_date,
-						'RDATE;TZID=America/New_York' + r_dates[g[0]] + 'T' + g[1].replace(':', '') + '00,'
+						'RDATE;TZID=America/New_York:' + r_dates[g[0]] + 'T' + g[1].replace(':', '') + '00,'
 					]
 					}
 				}));
