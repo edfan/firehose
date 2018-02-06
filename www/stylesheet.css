@@ -8,7 +8,10 @@
     width: 91%;
     height: 710px;
     margin: 0 auto;
-    overflow: hidden;
+}
+
+.fc-scroller {
+    overflow: hidden !important;
 }
 
 #right-div {
