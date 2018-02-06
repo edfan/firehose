@@ -333,7 +333,6 @@
 }
 
 .fc-time {
-    opacity: 0.8;
     font-size: 0.75em !important;
 }
 
@@ -341,8 +340,9 @@
     display: block;
     font-size: 0.8em;
 }
+
 .fc-content .fc-title::first-line {
-    font-size: 1.28em;
+    font-size: 1.3em;
 }
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
