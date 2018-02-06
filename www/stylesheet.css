@@ -209,8 +209,6 @@
     border-color: #ec5339;
     background-image: none;
     outline: 0 !important;
-    -webkit-box-shadow: none;
-    box-shadow: none;
 }
 
 .btn-primary.active, .btn-primary.active.focus {
@@ -219,8 +217,6 @@
     border-color: #ec5339;
     background-image: none;
     outline: 0;
-    -webkit-box-shadow: none;
-    box-shadow: none;
 }
 
 .btn-primary:hover, .btn-primary.active:hover {
