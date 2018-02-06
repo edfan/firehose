@@ -178,6 +178,23 @@
     margin: 0 auto 10;
 }
 
+.btn .btn:focus {
+    margin: 0.1em;
+    box-shadow: 0px 0px 2px #808080;
+    -webkit-transition: all 0.1s ease-out;
+    -moz-transition: all 0.1s ease-out;
+    transition: all 0.1s ease-out;
+}
+
+.btn:hover {
+    box-shadow: 0px 0px 8px #808080;
+    -webkit-transition: all 0.1s ease-out;
+    -moz-transition: all 0.1s ease-out;
+    transition: all 0.1s ease-out;
+    cursor: pointer;
+    transform: scale(1.05);
+}
+
 .btn-group {
     margin-bottom: -1px;
 }
@@ -187,7 +204,7 @@
     background-color: #fff;
     border-color: #ec5339;
     background-image: none;
-    outline: 0;
+    outline: 0 !important;
     -webkit-box-shadow: none;
     box-shadow: none;
 }
@@ -285,21 +302,72 @@
     flex: 1;
 }
 
-.fc-time:not(.fc-axis) {
-    font-size: 70%;
+/* classes */
+
+.fc-event-container a {
+    padding: 0.1em;
+    -webkit-transition: all 0.1s ease-out;
+    -moz-transition: all 0.1s ease-out;
+    transition: all 0.1s ease-out;
+    box-shadow: 0px 0px 2px #999999;
+}
+.fc-event-container a:hover {
+    transform: scale(1.05);
+    -webkit-transition: all 0.1s ease-out;
+    -moz-transition: all 0.1s ease-out;
+    transition: all 0.1s ease-out;
+    box-shadow: 0px 0px 12px #999999;
+    cursor: pointer;
+}
+
+.fc-unthemed .fc-content, .fc-unthemed .fc-divider, .fc-unthemed .fc-list-heading td, .fc-unthemed .fc-list-view, .fc-unthemed .fc-popover, .fc-unthemed .fc-row, .fc-unthemed tbody, .fc-unthemed td, .fc-unthemed th, .fc-unthemed thead {
+    border-color: #d4d4d4;
+}
+.fc-event .fc-bg {
+    background: transparent;
+}
+
+.fc-content {
+    color: white;
+    opacity: 0.9;
+}
+
+.fc-time {
+    opacity: 0.8;
+    font-size: 0.75em !important;
+}
+
+.fc-content .fc-title {
+    display: block;
+    font-size: 0.8em;
+}
+.fc-content .fc-title::first-line {
+    font-size: 1.28em;
 }
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     color:   #909090;
 }
 :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-   color:    #909090;
-   opacity:  1;
+    color:    #909090;
+    opacity:  1;
 }
 ::-moz-placeholder { /* Mozilla Firefox 19+ */
-   color:    #909090;
-   opacity:  1;
+    color:    #909090;
+    opacity:  1;
 }
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
-   color:    #909090;
+    color:    #909090;
+}
+
+/* text boxes */
+
+input {
+    padding: 0.2em;
+    background-color:
+    border: none;
+} 
+  
+input:focus {
+    outline: none;
 }
