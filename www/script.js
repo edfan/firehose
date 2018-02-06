@@ -341,9 +341,11 @@ function select_slots() {
 
     localStorage.setObj('spring18_cur_classes', cur_classes);
 
+	/*
     if (conflicts_active) {
-	fill_table();
-    }
+		fill_table();
+	}
+	*/
 }
 
 function set_option(index) {
@@ -777,11 +779,11 @@ function add_class(number) {
     sortable_listener();
     
     $('#' + n_number + '-button').click(function () {
-	class_desc(number);
+		class_desc(number);
     });
 
     $('#' + n_number + '-button').dblclick(function () {
-	remove_class(number);
+		remove_class(number);
     });
 
     cur_classes.push(number);

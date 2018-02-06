@@ -1,0 +1,373 @@
+#left-div {
+    float: left;
+    text-align: center;
+    width: 53%;
+}
+
+#left-int-div {
+    width: 91%;
+    height: 700px;
+    margin: 0 auto;
+}
+
+#right-div {
+    float: right;
+    width: 47%;
+}
+
+#header-div {
+    display: block;
+    width: 100%;
+    height: 20px;
+}
+
+#info-div {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 90%;
+    width: 450px;
+    margin: 0 auto;
+    text-align: center;
+    line-height: 7px;
+}
+
+#info-line {
+    font-size: 80%;
+}
+
+#info2-div {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 70%;
+    width: 450px;
+    margin: auto;
+    text-align: center;
+    line-height: 7px;
+}
+
+#info3-p {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 70%;
+    line-height: 7px;
+    margin: 7 auto 0 auto;
+}
+
+#export-div {
+    margin: 10 auto;
+    font-size: 90%;
+}
+
+#sbuttons-div {
+    margin: 0 auto 5 auto;
+}
+
+#adv-buttons-div {
+    margin: 10 auto 0 auto;
+}
+
+#prereg-link, #calendar-link, #clipboard-link {
+    color: #0275d8;
+    cursor: pointer;
+}
+
+#prereg-link:hover, #calendar-link:hover, #clipboard-link:hover {
+    text-decoration: underline;
+}
+
+#modal-textarea {
+    font-family: monospace;
+    resize: none;
+}
+    
+#footer-div {
+    margin: 0 auto 375 auto;
+    font-size: 65%;
+    color: #B0B0B0;
+}
+
+#footer-div a {
+    color: inherit;
+}
+
+#info-div img {
+    display: block;
+    margin: 9px auto;
+
+}
+
+#selector-div {
+    font-family: 'Open Sans', sans-serif;
+    margin: 0 auto 0 auto;
+    left: 50%;
+    text-align: center;
+    line-height: 1;
+}
+
+#selected-div {
+    margin: 12 auto 0 auto;
+    text-align: left;
+}
+
+#expand-button{
+    color: #0275d8;
+    cursor: pointer;
+    font-size: 70%;
+    position: relative;
+    top: 5px;
+}
+
+#expand-button:hover {
+    text-decoration: underline;
+}
+
+#warning-div, #warning2-div {
+    margin: 0 auto 5 auto;
+    font-size: 70%;
+}
+
+#warning3-div {
+    margin: 5 auto;
+    font-size: 70%;
+}
+
+#buttons-div {
+    margin: 20 auto;
+    text-align: center;
+}
+
+#spacer-div {
+    height: 0px;
+}
+
+#spacer2-div {
+    height: 0px;
+}
+
+#spacer3-div {
+    height: 4px;
+}
+
+#class-input-label {
+    font-size: 110%;
+}
+
+#units-div {
+    margin: 0 auto 10 auto;
+}
+
+#activity-button {
+    margin: 5 auto 5 auto;
+    font-size: 70%;
+    color: #0275d8;
+    cursor: pointer;
+}
+
+#activity-button:hover {
+    text-decoration: underline;
+}
+
+.link-span {
+    color: #0275d8;
+    cursor: pointer;
+}
+
+.link-span:hover {
+    text-decoration: underline;
+}
+
+.time {
+    width: 80px;
+    margin: 0 auto 10;
+}
+
+.btn .btn:focus {
+    margin: 0.1em;
+    box-shadow: 0px 0px 2px #808080;
+    -webkit-transition: all 0.1s ease-out;
+    -moz-transition: all 0.1s ease-out;
+    transition: all 0.1s ease-out;
+}
+
+.btn:hover {
+    box-shadow: 0px 0px 8px #808080;
+    -webkit-transition: all 0.1s ease-out;
+    -moz-transition: all 0.1s ease-out;
+    transition: all 0.1s ease-out;
+    cursor: pointer;
+    transform: scale(1.07);
+}
+
+.btn-group {
+    margin-bottom: -1px;
+}
+
+.btn-primary, .btn-primary.focus {
+    color: #ec5339;
+    background-color: #fff;
+    border-color: #ec5339;
+    background-image: none;
+    outline: 0 !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.btn-primary.active, .btn-primary.active.focus {
+    color: #fff;
+    background-color: #ec5339;
+    border-color: #ec5339;
+    background-image: none;
+    outline: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.btn-primary:hover, .btn-primary.active:hover {
+    color: #fff;
+    background-color: #3794dc;
+    border-color: #3794dc;
+}
+
+.btn-secondary, .btn-secondary.focus,
+.btn-secondary.active, .btn-secondary.active.focus {
+    background-image: none;
+    outline: 0 !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+#eval-table-div {
+    font-family: 'PT Serif', serif;
+    width: 100%;
+    max-width: 1200px;
+    margin: 5 auto 15 auto;
+    cursor: pointer;
+}
+
+#eval-loading {
+    font-family: 'Open Sans', sans-serif;
+    margin: 50px;
+    text-align: center;
+    font-size: 120%;
+}
+
+.eval-subtable {
+    table-layout: fixed;
+    width: 100%;
+}
+
+#desc-div p {
+    margin-bottom: 6px;
+}
+
+.lazyload-img {
+    margin-top: -1px;
+}
+
+#class-name {
+    font-weight: bold;
+    line-height: 1;
+}
+
+#class-type {
+    font-size: 80%;
+}
+
+#class-eval {
+    font-size: 80%;
+}
+
+#class-desc {
+    font-size: 80%;
+    line-height: 1.25;
+}
+
+#class-buttons-div {
+    margin: 7 auto 7 auto;
+}
+
+#manual-button {
+    font-size: 80%;
+    color: #0275d8;
+    cursor: pointer;
+}
+
+#manual-button:hover {
+    text-decoration: underline;
+}
+
+#manual-div {
+    display: flex;
+    margin: 5 auto 10 auto;
+}
+
+#manual-div > div {
+    flex: 1;
+}
+
+/* classes */
+
+.fc-event-container a {
+    padding: 0.1em;
+    -webkit-transition: all 0.1s ease-out;
+    -moz-transition: all 0.1s ease-out;
+    transition: all 0.1s ease-out;
+    box-shadow: 0px 0px 2px #999999;
+}
+.fc-event-container a:hover {
+    transform: scale(1.05);
+    -webkit-transition: all 0.1s ease-out;
+    -moz-transition: all 0.1s ease-out;
+    transition: all 0.1s ease-out;
+    box-shadow: 0px 0px 12px #999999;
+    cursor: pointer;
+}
+
+.fc-unthemed .fc-content, .fc-unthemed .fc-divider, .fc-unthemed .fc-list-heading td, .fc-unthemed .fc-list-view, .fc-unthemed .fc-popover, .fc-unthemed .fc-row, .fc-unthemed tbody, .fc-unthemed td, .fc-unthemed th, .fc-unthemed thead {
+    border-color: #d4d4d4;
+}
+.fc-event .fc-bg {
+    background: transparent;
+}
+
+.fc-content {
+    color: white;
+    opacity: 0.9;
+}
+
+.fc-time {
+    opacity: 0.8;
+    font-size: 0.75em !important;
+}
+
+.fc-content .fc-title {
+    display: block;
+    font-size: 0.8em;
+}
+.fc-content .fc-title::first-line {
+    font-size: 1.28em;
+}
+
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:   #909090;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    #909090;
+    opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    #909090;
+    opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color:    #909090;
+}
+
+/* text boxes */
+
+input {
+    padding: 0.2em;
+    background-color:
+    border: none;
+} 
+  
+input:focus {
+    outline: none;
+}
