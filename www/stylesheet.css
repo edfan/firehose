@@ -6,8 +6,9 @@
 
 #left-int-div {
     width: 91%;
-    height: 700px;
+    height: 710px;
     margin: 0 auto;
+    overflow: hidden;
 }
 
 #right-div {
