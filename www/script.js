@@ -25,6 +25,7 @@ var conflicts_flag;
 var activities = [];
 var locked_slots = {};
 var gcal_slots = [];
+var new_css = false;
 
 var colors = ["#16A085", "#2980B9", "#9B59B6", "#C0392B", "#D35400", "#7F8C8D", "#27AE60"];
 var colors_dark = ["#36C0A5", "#49A0D9", "#BB79D6", "#E0594B", "#F37420", "#9FACAD", "#47CE80"];
@@ -1049,6 +1050,21 @@ function sortable_listener() {
 	});
 }
 
+function toggle_css() {
+	if (new_css) {
+		$(".fc-event .fc-bg").css("background", "");
+		$(".fc-content").css("color", "");
+		$(".fc-content").css("opacity", "");
+	} else {
+		$(".fc-event .fc-bg").css("background", "transparent");
+		$(".fc-content").css("color", "white");
+		$(".fc-content").css("opacity", "0.9");
+	}
+
+	new_css = !new_css;
+	localStorage.setObj('new_css', new_css);
+}
+
 $(document).ready(function () {
 	Cookies.set('school', 'MIT', { expires: 3650 });
 
@@ -1244,6 +1260,10 @@ $(document).ready(function () {
 			}, 1000);
 		}
 		$("#modal-textarea").prop("selected", false);
+	});
+
+	$("#toggle-css").click(function() {
+		toggle_css();
 	});
 
 	$("#manual-button").click(function () {
@@ -1451,4 +1471,7 @@ $(document).ready(function () {
 	});
 	sortable_listener();
 
+	if (localStorage.getObj('new_css')) {
+		toggle_css();
+	}
 });

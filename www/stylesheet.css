@@ -67,7 +67,7 @@
     margin: 10 auto 0 auto;
 }
 
-#prereg-link, #calendar-link, #clipboard-link {
+#prereg-link, #calendar-link, #clipboard-link, #toggle-css {
     color: #0275d8;
     cursor: pointer;
 }
@@ -315,14 +315,6 @@
 
 .fc-unthemed .fc-content, .fc-unthemed .fc-divider, .fc-unthemed .fc-list-heading td, .fc-unthemed .fc-list-view, .fc-unthemed .fc-popover, .fc-unthemed .fc-row, .fc-unthemed tbody, .fc-unthemed td, .fc-unthemed th, .fc-unthemed thead {
     border-color: #d4d4d4;
-}
-.fc-event .fc-bg {
-    background: transparent;
-}
-
-.fc-content {
-    color: white;
-    opacity: 0.9;
 }
 
 .fc-time {
