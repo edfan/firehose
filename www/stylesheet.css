@@ -184,14 +184,13 @@
 
 .btn .btn:focus {
     margin: 0.1em;
-    box-shadow: 0px 0px 2px #808080;
     -webkit-transition: all 0.1s ease-out;
     -moz-transition: all 0.1s ease-out;
     transition: all 0.1s ease-out;
 }
 
 .btn:hover {
-    box-shadow: 0px 0px 8px #808080;
+    box-shadow: 0px 0px 4px #808080;
     -webkit-transition: all 0.1s ease-out;
     -moz-transition: all 0.1s ease-out;
     transition: all 0.1s ease-out;
@@ -309,14 +308,8 @@
     -webkit-transition: all 0.1s ease-out;
     -moz-transition: all 0.1s ease-out;
     transition: all 0.1s ease-out;
-    box-shadow: 0px 0px 2px #999999;
 }
 .fc-event-container a:hover {
-    transform: scale(1.05);
-    -webkit-transition: all 0.1s ease-out;
-    -moz-transition: all 0.1s ease-out;
-    transition: all 0.1s ease-out;
-    box-shadow: 0px 0px 12px #999999;
     cursor: pointer;
 }
 
