@@ -32,8 +32,8 @@
   <script defer src="https://apis.google.com/js/client.js"></script>
 
   <link rel="stylesheet" type="text/css" href="stylesheet.css">
-  <script defer src="fall17.js"></script>
-  <script defer src="script-compiled-fall.js"></script>
+  <script defer src="full.js"></script>
+  <script defer src="script-compiled.js"></script>
 </head>
 
 <body>
@@ -47,8 +47,8 @@
     <div id="left-int-div">
       <div id='calendar'></div>
     </div>
-    <div id="export-div"><!-- <span id="prereg-link">Preregister these classes!</span> | <span id="calendar-link">Export to Google Calendar</span> | --><span id="clipboard-link">Text form</span></div>
-    <div id="footer-div">&copy; 2017 <a href="mailto:edwardf@mit.edu">Edward Fan</a>. Subject descriptions and evaluations are &copy; 2014-2017
+    <div id="export-div"><!-- <span id="prereg-link">Preregister these classes!</span> | --><span id="calendar-link">Export to Google Calendar</span> | <span id="clipboard-link">Text form</span> | <span id="toggle-css">Toggle new theme</span></div>
+    <div id="footer-div">&copy; 2018 <a href="mailto:edwardf@mit.edu">Edward Fan</a>. CSS by Shannon Peng. <br>Subject descriptions and evaluations are &copy; 2014-2018
       Massachusetts Institute of Technology.</div>
   </div>
 
@@ -56,8 +56,8 @@
     <div id="spacer3-div"></div>
     <div id="info-div">
       <img src="img/logo.png" height="40px" vspace="2%" />
-      <p style="margin-bottom: 12px;">Fall 2017 | <a href="iap.html"><span style="font-size: 70%">IAP 2018</span></a> | <a href="/"><span style="font-size: 70%">Spring 2018</span></a></p>
-      <!-- <span id="info-line">Note: Many classes only run for part of IAP- check the catalog!</span> -->
+      <p style="margin-bottom: 12px;"><a href="semesters/i18/iap.html"><span style="font-size: 70%">IAP 2018</span></a> | <a href="semesters/s18/spring.html"><span style="font-size: 70%">Spring 2018</span></a> | Fall 2018</span></a></p>
+      <!-- <span id="info-line">Want to take classes <em>and</em> intern? Check out <a href="http://xterms.mit.edu" target="_blank">x-terms</a>!</span> -->
     </div>
     <hr>
 
@@ -80,7 +80,7 @@
         <label class="checkbox-inline"><input type="checkbox" class="act-day" id="act-fri"> Fri </label><br>
         <input id="start-time" type="text" class="time ui-timepicker-input" autocomplete="off" value="10:00am"> to 
         <input id="end-time" type="text" class="time ui-timepicker-input" autocomplete="off" value="1:00pm"><br>
-        <button type="button" class="btn btn-primary" id="add-activity-button" disabled>Add activity</button>
+        <button type="button" class="btn btn-primary" id="add-activity-button" disabled>Add/edit activity</button>
       </div>
 
       <div id="selected-div" class="sortable"></div><br>
@@ -126,6 +126,8 @@
           <label class="btn btn-primary selector-button" id="no_ci">
             <input type="checkbox" autocomplete="off">Not CI-H
           </label>
+        </div><br>
+        <div class="btn-group" data-toggle="buttons">
           <label class="btn btn-primary selector-button" id="rest" data-toggle="tooltip" data-placement="top" title="REST" data-trigger="hover">
             <input type="checkbox" autocomplete="off"><img src="img/rest.gif" style="padding-top: 2px; padding-bottom: 2px" />
           </label>
@@ -138,7 +140,10 @@
           <label class="btn btn-primary selector-button" id="grad" data-toggle="tooltip" data-placement="top" title="Graduate" data-trigger="hover">
             <input type="checkbox" autocomplete="off"><img src="img/grad.gif" style="padding-top: 2px; padding-bottom: 2px" />
           </label>
-        </div>
+          <label class="btn btn-primary selector-button" id="units">
+            <input type="checkbox" autocomplete="off">&le; 9 units
+          </label>
+        </div>  
       </div>
     </div>
 
@@ -172,10 +177,10 @@
         class="type-span" id="grad-span" style="display: none"><img height="16" width="16" data-src="img/grad.gif" 
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Graduate" data-trigger="hover"/> (</span><span 
         class="type-span" id="fall-span" style="display: none"><img height="16" width="16" data-src="img/fall.gif" 
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Fall" data-trigger="hover"/></span><span 
-        class="type-span" id="iap-span" style="display: none">,<img height="16" width="16" data-src="img/iap.gif" 
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="IAP" data-trigger="hover"/></span><span 
-        class="type-span" id="spring-span" style="display: none">,<img height="16" width="16" data-src="img/spring.gif" style="margin-left: -1px"
+        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Fall" data-trigger="hover"/>,</span><span 
+        class="type-span" id="iap-span" style="display: none"><img height="16" width="16" data-src="img/iap.gif" 
+        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="IAP" data-trigger="hover"/>,</span><span 
+        class="type-span" id="spring-span" style="display: none"><img height="16" width="16" data-src="img/spring.gif" style="margin-left: -1px"
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Spring" data-trigger="hover"/></span><span 
         class="type-span" id="summer-span" style="display: none">,<img height="16" width="16" data-src="img/summer.gif" 
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Summer" data-trigger="hover"/></span><span 

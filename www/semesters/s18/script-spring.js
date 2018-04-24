@@ -340,7 +340,7 @@ function select_slots() {
 		$("#warning2-div").hide();
 	}
 
-	localStorage.setObj('fall18_cur_classes', cur_classes);
+	localStorage.setObj('spring18_cur_classes', cur_classes);
 
 	/*
     if (conflicts_active) {
@@ -371,7 +371,7 @@ function set_option(index) {
 	cur_option = index;
 	$("#cal-options-1").text(cur_option + 1);
 
-	localStorage.setObj('fall18_cur_option', cur_option);
+	localStorage.setObj('spring18_cur_option', cur_option);
 	set_css(new_css);
 }
 
@@ -811,8 +811,8 @@ function remove_class(number) {
 		$("#units-div").hide();
 		$("#warning-div").hide();
 		$("#warning2-div").hide();
-		localStorage.setObj('fall18_cur_classes', cur_classes);
-		localStorage.setObj('fall18_cur_option', cur_option);
+		localStorage.setObj('spring18_cur_classes', cur_classes);
+		localStorage.setObj('spring18_cur_option', cur_option);
 	} else {
 		select_slots();
 	}
@@ -903,7 +903,7 @@ function set_activity(name, slots, hours) {
 	activities.push(activity);
 	classes[name] = activity;
 
-	localStorage.setObj('fall18_activities', activities);
+	localStorage.setObj('spring18_activities', activities);
 }
 
 function calendar_export() {
@@ -962,10 +962,10 @@ function calendar_send(isSignedIn) {
 				}).then();
 			});
 
-			var start_dates = ['2018-09-10', '2018-09-11', '2018-09-05', '2018-09-06', '2018-09-07'];
-			var end_dates = ['20181217', '20181218', '20181219', '20181213', '20181214'];
-			// var r_dates = ['20180220', '20180206', '20180207', '20180208', '20180209'];
-			var ex_dates = [['20181008', '20181112'], ['20181009'], ['20181219'], ['20181122'], ['20180921', '20181123']];
+			var start_dates = ['2018-02-12', '2018-02-06', '2018-02-07', '2018-02-08', '2018-02-09'];
+			var end_dates = ['20180521', '20180522', '20180523', '20180524', '20180518'];
+			var r_dates = ['20180220', '20180206', '20180207', '20180208', '20180209'];
+			var ex_dates = [['20180219', '20180326', '20180416'], ['20180220', '20180327', '20180417'], ['20180328'], ['20180329'], ['20180330']];
 			var batch = gapi.client.newBatch();
 
 			for (var s in gcal_slots) {
@@ -1045,7 +1045,7 @@ function sortable_listener() {
 			new_classes.push(c.innerHTML.replace('*', '').replace('+', ''));
 		});
 		cur_classes = new_classes;
-		localStorage.setObj('fall18_cur_classes', cur_classes);
+		localStorage.setObj('spring18_cur_classes', cur_classes);
 		select_slots();
 		set_option(old_option);
 	});
@@ -1285,7 +1285,7 @@ $(document).ready(function () {
 						var stmp = slot;
 						$("#lec-" + tmp).click(function () {
 							locked_slots[stmp] = tmp;
-							localStorage.setObj('fall18_locked_slots', locked_slots);
+							localStorage.setObj('spring18_locked_slots', locked_slots);
 							select_slots();
 						});
 					})();
@@ -1315,7 +1315,7 @@ $(document).ready(function () {
 						var stmp = slot;
 						$("#rec-" + tmp).click(function () {
 							locked_slots[stmp] = tmp;
-							localStorage.setObj('fall18_locked_slots', locked_slots);
+							localStorage.setObj('spring18_locked_slots', locked_slots);
 							select_slots();
 						});
 					})();
@@ -1345,7 +1345,7 @@ $(document).ready(function () {
 						var stmp = slot;
 						$("#lab-" + tmp).click(function () {
 							locked_slots[stmp] = tmp;
-							localStorage.setObj('fall18_locked_slots', locked_slots);
+							localStorage.setObj('spring18_locked_slots', locked_slots);
 							select_slots();
 						});
 					})();
@@ -1371,14 +1371,14 @@ $(document).ready(function () {
 		if (slot in locked_slots) {
 			delete locked_slots[slot];
 		}
-		localStorage.setObj('fall18_locked_slots', locked_slots);
+		localStorage.setObj('spring18_locked_slots', locked_slots);
 		select_slots();
 	});
 
 	$("#lec-none").click(function () {
 		var slot = [cur_class, 'l'];
 		locked_slots[slot] = "none";
-		localStorage.setObj('fall18_locked_slots', locked_slots);
+		localStorage.setObj('spring18_locked_slots', locked_slots);
 		select_slots();
 	});
 
@@ -1387,14 +1387,14 @@ $(document).ready(function () {
 		if (slot in locked_slots) {
 			delete locked_slots[slot];
 		}
-		localStorage.setObj('fall18_locked_slots', locked_slots);
+		localStorage.setObj('spring18_locked_slots', locked_slots);
 		select_slots();
 	});
 
 	$("#rec-none").click(function () {
 		var slot = [cur_class, 'r'];
 		locked_slots[slot] = "none";
-		localStorage.setObj('fall18_locked_slots', locked_slots);
+		localStorage.setObj('spring18_locked_slots', locked_slots);
 		select_slots();
 	});
 
@@ -1403,39 +1403,39 @@ $(document).ready(function () {
 		if (slot in locked_slots) {
 			delete locked_slots[slot];
 		}
-		localStorage.setObj('fall18_locked_slots', locked_slots);
+		localStorage.setObj('spring18_locked_slots', locked_slots);
 		select_slots();
 	});
 
 	$("#lab-none").click(function () {
 		var slot = [cur_class, 'b'];
 		locked_slots[slot] = "none";
-		localStorage.setObj('fall18_locked_slots', locked_slots);
+		localStorage.setObj('spring18_locked_slots', locked_slots);
 		select_slots();
 	});
 
-	var tmp_cur_classes = localStorage.getObj('fall18_cur_classes');
-	var tmp_activities = localStorage.getObj('fall18_activities');
+	var tmp_cur_classes = localStorage.getObj('spring18_cur_classes');
+	var tmp_activities = localStorage.getObj('spring18_activities');
 	if (tmp_activities != null) {
 		for (var a in tmp_activities) {
 			if (tmp_cur_classes != null && tmp_cur_classes.indexOf(tmp_activities[a]['no']) != -1) {
 				set_activity(tmp_activities[a]['no'], tmp_activities[a]['a'][0][0], tmp_activities[a]['h'])
 			}
 		}
-		localStorage.setObj('fall18_activities', activities);
+		localStorage.setObj('spring18_activities', activities);
 	}
 
-	var tmp_locked_slots = localStorage.getObj('fall18_locked_slots');
+	var tmp_locked_slots = localStorage.getObj('spring18_locked_slots');
 	if (tmp_locked_slots != null) {
 		for (var l in tmp_locked_slots) {
 			if (tmp_locked_slots.hasOwnProperty(l) && tmp_cur_classes.indexOf(l.split(',')[0]) != -1) {
 				locked_slots[l] = tmp_locked_slots[l];
 			}
 		}
-		localStorage.setObj('fall18_locked_slots', locked_slots);
+		localStorage.setObj('spring18_locked_slots', locked_slots);
 	}
 
-	var tmp_cur_option = parseInt(localStorage.getObj('fall18_cur_option'));
+	var tmp_cur_option = parseInt(localStorage.getObj('spring18_cur_option'));
 
 	if (tmp_cur_classes != null) {
 		for (var t in tmp_cur_classes) {

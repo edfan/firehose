@@ -10,33 +10,30 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/jquery.dataTables.min.css" integrity="sha256-+Z1rYa3ys5OdZNUck5G7lBvb8A13OrYwvf+d8PfEaHQ=" crossorigin="anonymous" />
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js" integrity="sha256-TX6POJQ2u5/aJmHTJ/XUL5vWCbuOw0AQdgUEzk4vYMc=" crossorigin="anonymous"></script>
-  <link rel="stylesheet" type="text/css" href="scroller.dataTables.min.css">
-  <script defer src="dataTables.scroller.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="../../scroller.dataTables.min.css">
+  <script defer src="../../dataTables.scroller.min.js"></script>
 
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js" integrity="sha256-NjbogQqosWgor0UBdCURR5dzcvAgHnfUZMcZ8RCwkk8="
-    crossorigin="anonymous"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js" integrity="sha256-NjbogQqosWgor0UBdCURR5dzcvAgHnfUZMcZ8RCwkk8=" crossorigin="anonymous"></script>
 
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js" integrity="sha256-1hjUhpc44NwiNg8OwMu2QzJXhD8kcj+sJA3aCQZoUjg="
-    crossorigin="anonymous"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js" integrity="sha256-1hjUhpc44NwiNg8OwMu2QzJXhD8kcj+sJA3aCQZoUjg=" crossorigin="anonymous"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha256-gL1ibrbVcRIHKlCO5OXOPC/lZz/gpdApgQAzskqqXp8=" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi"
-    crossorigin="anonymous">
-  <script defer src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK"
-    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+  <script defer src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.3.1/fullcalendar.min.css" integrity="sha256-31guqc+y1B7LB0VRo9h4fLZvY6B2tBsWzsswyBQRteU="
-    crossorigin="anonymous" />
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.3.1/fullcalendar.min.js" integrity="sha256-KfusLKl7lF5lJzh3+hg6yiNE6i0NAFV8uNiWrVn79u4="
-    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.3.1/fullcalendar.min.css" integrity="sha256-31guqc+y1B7LB0VRo9h4fLZvY6B2tBsWzsswyBQRteU=" crossorigin="anonymous" />
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.3.1/fullcalendar.min.js" integrity="sha256-KfusLKl7lF5lJzh3+hg6yiNE6i0NAFV8uNiWrVn79u4=" crossorigin="anonymous"></script>
 
-  <link rel="stylesheet" href="jquery.timepicker.css" />
-  <script defer src="jquery.timepicker.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.6.3/html.sortable.min.js" integrity="sha256-gO90Q7Ekvli89tFc8Tfv/e7Ta4x+YR8pc+ypnHdxBtQ=" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="../../jquery.timepicker.css" />
+  <script defer src="../../jquery.timepicker.min.js"></script>
 
   <link href="https://fonts.googleapis.com/css?family=Open+Sans|PT+Serif" rel="stylesheet">
   <script defer src="https://apis.google.com/js/client.js"></script>
 
-  <link rel="stylesheet" type="text/css" href="stylesheet.css">
-  <script defer src="script.js"></script>
+  <link rel="stylesheet" type="text/css" href="../../stylesheet.css">
+  <script defer src="iap.js"></script>
+  <script defer src="script-compiled-iap.js"></script>
 </head>
 
 <body>
@@ -50,7 +47,7 @@
     <div id="left-int-div">
       <div id='calendar'></div>
     </div>
-    <div id="export-div"><!-- <span id="prereg-link">Preregister these classes!</span> | --><span id="calendar-link">Export to Google Calendar</span> | <span id="clipboard-link">Text form</span></div>
+    <div id="export-div"><!-- <span id="prereg-link">Preregister these classes!</span> | <span id="calendar-link">Export to Google Calendar</span> | --><span id="clipboard-link">Text form</span></div>
     <div id="footer-div">&copy; 2017 <a href="mailto:edwardf@mit.edu">Edward Fan</a>. Subject descriptions and evaluations are &copy; 2014-2017
       Massachusetts Institute of Technology.</div>
   </div>
@@ -58,14 +55,14 @@
   <div id="right-div">
     <div id="spacer3-div"></div>
     <div id="info-div">
-      <img src="img/logo.png" height="40px" vspace="2%" />
-      <span class="term-button" id="fall17-button" style="margin-bottom: 12px;">Fall 2017</span> | <span class="term-button" id="iap18-button" style="margin-bottom: 12px;">IAP 2018</span> | <span class="term-button" id="spring18-button" style="margin-bottom: 12px;">Spring 2018</span>
-      <!-- <span id="info-line">Spring 2017 evaluations have been added to the averages!</span> -->
+      <img src="../../img/logo.png" height="40px" vspace="2%" />
+      <p style="margin-bottom: 12px;">IAP 2018 | <a href="../s18/spring.html"><span style="font-size: 70%">Spring 2018</span></a> | <a href="/"><span style="font-size: 70%">Fall 2018</span></a></p>
+      <span id="info-line">Note: Many classes only run for part of IAP- check the catalog!</span>
     </div>
     <hr>
 
     <div id="selector-div">
-      <label id="class-input-label" for="class-input">Insert course number:&nbsp;</label>
+      <label id="class-input-label" for="class-input">Class number or name:&nbsp;</label>
       <input type="text" placeholder="8.01" style="width: 20% !important;" id="class-input" onfocus="this.placeholder = ''" onblur="this.placeholder = '8.01'" autofocus>
       <!-- <p id="info3-p">Tip: double-click a row to quickly add or remove a class.</p> -->
 
@@ -73,7 +70,9 @@
 
       <div id="activity-div" style="display: none;">
         <label id="activity-input-label" for="activity-input">Name:&nbsp;</label>
-        <input type="text" style="width: 40% !important;" id="activity-input"><br><br>
+        <input type="text" style="width: 30% !important;" id="activity-input" data-toggle="popover" data-placement="left" data-trigger="manual" data-content="Activities can't conflict with class numbers.">&nbsp;&nbsp;&nbsp;
+        <label id="activity-input-label" for="activity-hours-input">Hours:&nbsp;</label>
+        <input type="text" style="width: 50px !important;" id="activity-hours-input" value="0" data-toggle="popover" data-placement="left" data-trigger="manual" data-content="Hours must be a number."><br><br>
         <label class="checkbox-inline"><input type="checkbox" class="act-day" id="act-mon"> Mon </label>&nbsp;
         <label class="checkbox-inline"><input type="checkbox" class="act-day" id="act-tue"> Tue </label>&nbsp;
         <label class="checkbox-inline"><input type="checkbox" class="act-day" id="act-wed"> Wed </label>&nbsp;
@@ -84,7 +83,7 @@
         <button type="button" class="btn btn-primary" id="add-activity-button" disabled>Add activity</button>
       </div>
 
-      <div id="selected-div"></div><br>
+      <div id="selected-div" class="sortable"></div><br>
 
       <p id="units-div" style="display: none;">Units: <span id="total-units"></span>&nbsp;&nbsp;&nbsp;Hours: <span id="total-hours"></span></p>
       <p id="warning-div" style="display: none;">* Class does not have evaluations, so its hours were set to its units.</p>
@@ -113,13 +112,13 @@
       <div id="adv-buttons-div" style="display:none;">
         <div class="btn-group" data-toggle="buttons">
           <label class="btn btn-primary selector-button" id="hass_a" data-toggle="tooltip" data-placement="top" title="HASS-A" data-trigger="hover">
-	          <input type="checkbox" autocomplete="off"><img src="img/hassA.gif" style="padding-top: 2px; padding-bottom: 2px" />
+	          <input type="checkbox" autocomplete="off"><img src="../../img/hassA.gif" style="padding-top: 2px; padding-bottom: 2px" />
 	        </label>
           <label class="btn btn-primary selector-button" id="hass_h" data-toggle="tooltip" data-placement="top" title="HASS-H" data-trigger="hover"> 
-	         <input type="checkbox" autocomplete="off"><img src="img/hassH.gif" style="padding-top: 2px; padding-bottom: 2px" />
+	         <input type="checkbox" autocomplete="off"><img src="../../img/hassH.gif" style="padding-top: 2px; padding-bottom: 2px" />
 	        </label>
           <label class="btn btn-primary selector-button" id="hass_s" data-toggle="tooltip" data-placement="top" title="HASS-S" data-trigger="hover">
-            <input type="checkbox" autocomplete="off"><img src="img/hassS.gif" style="padding-top: 2px; padding-bottom: 2px" />
+            <input type="checkbox" autocomplete="off"><img src="../../img/hassS.gif" style="padding-top: 2px; padding-bottom: 2px" />
           </label>
           <label class="btn btn-primary selector-button" id="ci_hw">
             <input type="checkbox" autocomplete="off">CI-HW
@@ -128,16 +127,16 @@
             <input type="checkbox" autocomplete="off">Not CI-H
           </label>
           <label class="btn btn-primary selector-button" id="rest" data-toggle="tooltip" data-placement="top" title="REST" data-trigger="hover">
-            <input type="checkbox" autocomplete="off"><img src="img/rest.gif" style="padding-top: 2px; padding-bottom: 2px" />
+            <input type="checkbox" autocomplete="off"><img src="../../img/rest.gif" style="padding-top: 2px; padding-bottom: 2px" />
           </label>
           <label class="btn btn-primary selector-button" id="lab" data-toggle="tooltip" data-placement="top" title="Institute Lab" data-trigger="hover">
-            <input type="checkbox" autocomplete="off"><img src="img/Lab.gif" style="padding-top: 2px; padding-bottom: 2px" />
+            <input type="checkbox" autocomplete="off"><img src="../../img/Lab.gif" style="padding-top: 2px; padding-bottom: 2px" />
           </label>
           <label class="btn btn-primary selector-button" id="under" data-toggle="tooltip" data-placement="top" title="Undergrad" data-trigger="hover">
-            <input type="checkbox" autocomplete="off"><img src="img/under.gif" style="padding-top: 2px; padding-bottom: 2px" />
+            <input type="checkbox" autocomplete="off"><img src="../../img/under.gif" style="padding-top: 2px; padding-bottom: 2px" />
           </label>
           <label class="btn btn-primary selector-button" id="grad" data-toggle="tooltip" data-placement="top" title="Graduate" data-trigger="hover">
-            <input type="checkbox" autocomplete="off"><img src="img/grad.gif" style="padding-top: 2px; padding-bottom: 2px" />
+            <input type="checkbox" autocomplete="off"><img src="../../img/grad.gif" style="padding-top: 2px; padding-bottom: 2px" />
           </label>
         </div>
       </div>
@@ -166,40 +165,40 @@
       <p id="class-name"></p>
       <div id="flags-div">
       <p id="class-type">
-        <span class="type-span" id="nonext-span" style="display: none"><img height="16" width="16" data-src="img/nonext.gif" 
+        <span class="type-span" id="nonext-span" style="display: none"><img height="16" width="16" data-src="../../img/nonext.gif" 
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Not offered 2018-2019" data-trigger="hover"/></span><span 
-        class="type-span" id="under-span" style="display: none"><img height="16" width="16" data-src="img/under.gif" 
+        class="type-span" id="under-span" style="display: none"><img height="16" width="16" data-src="../../img/under.gif" 
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Undergrad" data-trigger="hover"/> (</span><span 
-        class="type-span" id="grad-span" style="display: none"><img height="16" width="16" data-src="img/grad.gif" 
+        class="type-span" id="grad-span" style="display: none"><img height="16" width="16" data-src="../../img/grad.gif" 
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Graduate" data-trigger="hover"/> (</span><span 
-        class="type-span" id="fall-span" style="display: none"><img height="16" width="16" data-src="img/fall.gif" 
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Fall" data-trigger="hover"/></span><span 
-        class="type-span" id="iap-span" style="display: none">,<img height="16" width="16" data-src="img/iap.gif" 
+        class="type-span" id="fall-span" style="display: none"><img height="16" width="16" data-src="../../img/fall.gif" 
+        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Fall" data-trigger="hover"/>,</span><span 
+        class="type-span" id="iap-span" style="display: none"><img height="16" width="16" data-src="../../img/iap.gif" 
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="IAP" data-trigger="hover"/></span><span 
-        class="type-span" id="spring-span" style="display: none">,<img height="16" width="16" data-src="img/spring.gif" 
+        class="type-span" id="spring-span" style="display: none">,<img height="16" width="16" data-src="../../img/spring.gif" style="margin-left: -1px"
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Spring" data-trigger="hover"/></span><span 
-        class="type-span" id="summer-span" style="display: none">,<img height="16" width="16" data-src="img/summer.gif" 
+        class="type-span" id="summer-span" style="display: none">,<img height="16" width="16" data-src="../../img/summer.gif" 
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Summer" data-trigger="hover"/></span><span 
         class="type-span" id="end-paren-span" style="display: none">) </span><span 
-        class="type-span" id="repeat-span" style="display: none"> <img height="16" width="16" data-src="img/repeat.gif" 
+        class="type-span" id="repeat-span" style="display: none"> <img height="16" width="16" data-src="../../img/repeat.gif" 
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Can be repeated for credit" data-trigger="hover"/> </span><span 
-        class="type-span" id="rest-span" style="display: none"><img height="16" width="16" data-src="img/rest.gif" 
+        class="type-span" id="rest-span" style="display: none"><img height="16" width="16" data-src="../../img/rest.gif" 
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="REST" data-trigger="hover"/></span><span 
-        class="type-span" id="Lab-span" style="display: none"><img height="16" width="16" data-src="img/Lab.gif" 
+        class="type-span" id="Lab-span" style="display: none"><img height="16" width="16" data-src="../../img/Lab.gif" 
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Institute Lab" data-trigger="hover"/></span><span 
-        class="type-span" id="PartLab-span" style="display: none"><img height="22" width="22" data-src="img/PartLab.gif" 
+        class="type-span" id="PartLab-span" style="display: none"><img height="22" width="22" data-src="../../img/PartLab.gif" 
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Partial Institute Lab" data-trigger="hover"/></span><span 
-        class="type-span" id="hassH-span" style="display: none"><img height="16" width="16" data-src="img/hassH.gif" 
+        class="type-span" id="hassH-span" style="display: none"><img height="16" width="16" data-src="../../img/hassH.gif" 
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="HASS-H" data-trigger="hover"/></span><span 
-        class="type-span" id="hassA-span" style="display: none"><img height="16" width="16" data-src="img/hassA.gif" 
+        class="type-span" id="hassA-span" style="display: none"><img height="16" width="16" data-src="../../img/hassA.gif" 
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="HASS-A" data-trigger="hover"/></span><span 
-        class="type-span" id="hassS-span" style="display: none"><img height="16" width="16" data-src="img/hassS.gif" 
+        class="type-span" id="hassS-span" style="display: none"><img height="16" width="16" data-src="../../img/hassS.gif" 
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="HASS-S" data-trigger="hover"/></span><span 
-        class="type-span" id="hassE-span" style="display: none"><img height="16" width="16" data-src="img/hassE.gif" 
+        class="type-span" id="hassE-span" style="display: none"><img height="16" width="16" data-src="../../img/hassE.gif" 
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="HASS-E" data-trigger="hover" /></span><span 
-        class="type-span" id="cih1-span" style="display: none"> <img height="16" width="28" data-src="img/cih1.gif" 
+        class="type-span" id="cih1-span" style="display: none"> <img height="16" width="28" data-src="../../img/cih1.gif" 
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="CI-H" data-trigger="hover"/></span><span 
-        class="type-span" id="cihw-span" style="display: none"> <img height="16" width="32" data-src="img/cihw.gif" 
+        class="type-span" id="cihw-span" style="display: none"> <img height="16" width="32" data-src="../../img/cihw.gif" 
         class="lazyload-img" data-toggle="tooltip" data-placement="top" title="CI-HW" data-trigger="hover"/></span> &nbsp;&nbsp;
         <span id="class-units"></span>
         <span class="type-span" id="final-span" style="display: none">&nbsp;&nbsp;&nbsp;Has final</span><br>
@@ -207,8 +206,8 @@
         <span id="class-same"></span>
         <span id="class-meets"></span>
       </p>
-      <p id="class-eval" style="display: none;">Rating: <span id="class-rating"></span>/7.0 &nbsp;&nbsp; Hours: <span id="class-hours"></span> &nbsp;&nbsp; Avg # in
-        class: <span id="class-people"></span></p>
+      <p id="class-eval" style="display: none;">Rating: <span id="class-rating"></span><span id="out-of-rating">/7.0</span> &nbsp;&nbsp; Hours: <span id="class-hours"></span> &nbsp;&nbsp; Avg # of
+        students: <span id="class-people"></span></p>
       </div>
       <div id="class-buttons-div"></div>
       <p id="manual-button" style="display: none;">+ Manually set sections</p>
@@ -240,7 +239,6 @@
     <div id="info2-div">
       <p>Questions? Issues? Feedback? <a href="mailto:edwardf@mit.edu">Send me an email!</a></p>
       <p>Looking for the old Firehose? It's been moved <a href="https://firehose.guide/old_www/evaluations.html" target="_blank">here</a>.</p>
-      <a href="https://projx.mit.edu" target="_blank"><img src="img/projx.png" width="80px" /></a>
     </div>
 
   </div>
