@@ -50,6 +50,13 @@ Storage.prototype.getObj = function (key) {
 	return JSON.parse(this.getItem(key))
 }
 
+var course_rank = {"1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10,
+				   "11": 11, "12": 12, "14": 14, "15": 15, "16": 16, "17": 17, "18": 18, "20": 20,
+				   "21": 21, "21A": 22, "21G": 23, "21H": 24, "21L": 25, "21M": 26, "21W": 27,
+				   "22": 30, "24": 31, "AS": 32, "CC": 33, "CMS": 34, "CSB": 35, "EC": 36, "EM": 37,
+				   "ES": 38, "ESD": 39, "HST": 40, "IDS": 41, "MS": 42, "MAS": 43, "NS": 44, "OR": 45, 
+				   "RED": 46, "SCM": 47, "SP": 48, "STS": 49, "WGS": 50};
+
 function id_sanitize(str) {
 	return str.replace(/\W/g, '');
 }
@@ -59,13 +66,17 @@ function escapeRegExp(str) {
 }
 
 function class_sort_internal(a, b) {
+	/*
 	var mult;
 	var len;
 
-	if (a.length < b.length) {
-		return -1;
-	} else if (a.length > b.length) {
-		return 1;
+	if (!((a.indexOf("21") != -1 && b.length >= 2 && b.indexOf("2") != -1 && b.indexOf("21") == -1) || 
+		  (b.indexOf("21") == -1 && a.length >= 2 && a.indexOf("2") != -1 && a.indexOf("21") == -1))) {
+		if (a.length < b.length) {
+			return -1;
+		} else if (a.length > b.length) {
+			return 1;
+		}
 	}
 
 	for (var i = 0; i < a.length; i++) {
@@ -75,6 +86,13 @@ function class_sort_internal(a, b) {
 		else if (a.charAt(i) > b.charAt(i)) {
 			return 1;
 		}
+	}
+	*/
+
+	if (course_rank[a] < course_rank[b]) {
+		return -1;
+	} else if (course_rank[a] > course_rank[b]) {
+		return 1;
 	}
 
 	return 0;
