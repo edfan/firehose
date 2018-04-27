@@ -88,10 +88,12 @@ function class_sort_internal(a, b) {
 		}
 	}
 	*/
+	cr_a = course_rank[a];
+	cr_b = course_rank[b];
 
-	if (course_rank[a] < course_rank[b]) {
+	if (cr_a < cr_b || cr_b === undefined) {
 		return -1;
-	} else if (course_rank[a] > course_rank[b]) {
+	} else if (cr_a > cr_b || cr_a === undefined) {
 		return 1;
 	}
 
