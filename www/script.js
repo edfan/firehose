@@ -1257,7 +1257,24 @@ $(document).ready(function () {
 	});
 
 	$("#prereg-link").click(function () {
-		window.open("https://student.mit.edu/cgi-bin/sfprwtrm.sh?" + cur_classes.join(','), "_blank");
+		var prereg_classes = [];
+		for (var c in cur_classes) {
+			if (cur_classes[c] === "14.01R") {
+				prereg_classes.push("14.01");
+				continue;
+			}
+
+			if (cur_classes[c] === "14.02R") {
+				prereg_classes.push("14.02");
+				continue;
+			}
+
+			if (classes[cur_classes[c]]['s'].indexOf("a") == -1) {
+				prereg_classes.push(cur_classes[c]);
+			}
+		}
+		console.log(prereg_classes)
+		window.open("https://student.mit.edu/cgi-bin/sfprwtrm.sh?" + prereg_classes.join(','), "_blank");
 	});
 
 	$("#calendar-link").click(function () {

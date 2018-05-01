@@ -35,6 +35,7 @@
 }
 
 #info-line {
+    margin-top: 5px;
     font-size: 80%;
 }
 
@@ -349,8 +350,6 @@
 
 input {
     padding: 0.2em;
-    background-color:
-    border: none;
 } 
   
 input:focus {
