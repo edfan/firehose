@@ -68,7 +68,7 @@
     margin: 10 auto 0 auto;
 }
 
-#prereg-link, #calendar-link, #clipboard-link, #toggle-css {
+#prereg-link, #calendar-link, #clipboard-link, #toggle-css, #clear-all {
     color: #0275d8;
     cursor: pointer;
 }

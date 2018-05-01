@@ -1303,6 +1303,15 @@ $(document).ready(function () {
 		localStorage.setObj('new_css', new_css);
 	});
 
+	$("#clear-all").click(function() {
+		if (confirm('Are you sure you want to clear everything for this semester?')) {
+			var tmp_classes = cur_classes.slice();
+			for (var c in tmp_classes) {
+				remove_class(tmp_classes[c]);
+			}
+		}
+	});
+
 	$("#manual-button").click(function () {
 		if ($("#manual-div").is(":visible")) {
 			$("#manual-div").hide();
