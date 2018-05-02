@@ -73,7 +73,7 @@
     cursor: pointer;
 }
 
-#prereg-link:hover, #calendar-link:hover, #clipboard-link:hover {
+#prereg-link:hover, #calendar-link:hover, #clipboard-link:hover, #toggle-css:hover, #clear-all:hover {
     text-decoration: underline;
 }
 
