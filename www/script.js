@@ -1237,6 +1237,12 @@ $(document).ready(function () {
 		fill_table();
 	});
 
+	$("#hass_a, #hass_h, #hass_s").click(function () {
+		if (hass_active) {
+			$('#hass').trigger('click');
+		}
+	});
+
 	$(function () {
 		$('[data-toggle="tooltip"]').tooltip();
 		$('[data-toggle="popover"]').popover();
