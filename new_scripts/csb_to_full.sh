@@ -5,4 +5,4 @@ python csb.py
 python sublist2.py
 python combiner.py
 cp full.json ../www/full.js
-open ../www/evaluations.html
+open ../www/index.html
