@@ -1321,12 +1321,11 @@ $(document).ready(function () {
 		function () {
 			$(this).stop().animate({
 				opacity: 0.6,
-				right: "48px",
-				transform: "360deg"
-			}, 572, function () {
+				right: "48px"
+			}, 300, function () {
 				$("#js-img-lg").show().animate({
 					opacity: 0.8
-				}, 228);
+				}, 120);
 				$(this).hide();
 			});
 		}
