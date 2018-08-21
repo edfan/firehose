@@ -92,6 +92,18 @@
     color: inherit;
 }
 
+#js-img-sm {
+    height: 35px;
+    opacity: 0.1;
+    position: relative;
+}
+
+#js-img-lg {
+    height: 35px;
+    opacity: 0.6;
+    display: none;
+}
+
 #info-div img {
     display: block;
     margin: 9px auto;

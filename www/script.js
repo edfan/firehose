@@ -1279,7 +1279,6 @@ $(document).ready(function () {
 				prereg_classes.push(cur_classes[c]);
 			}
 		}
-		console.log(prereg_classes)
 		window.open("https://student.mit.edu/cgi-bin/sfprwtrm.sh?" + prereg_classes.join(','), "_blank");
 	});
 
@@ -1303,13 +1302,13 @@ $(document).ready(function () {
 		$("#modal-textarea").prop("selected", false);
 	});
 
-	$("#toggle-css").click(function() {
+	$("#toggle-css").click(function () {
 		new_css = !new_css
 		set_css(new_css);
 		localStorage.setObj('new_css', new_css);
 	});
 
-	$("#clear-all").click(function() {
+	$("#clear-all").click(function () {
 		if (confirm('Are you sure you want to clear everything for this semester?')) {
 			var tmp_classes = cur_classes.slice();
 			for (var c in tmp_classes) {
@@ -1317,6 +1316,32 @@ $(document).ready(function () {
 			}
 		}
 	});
+
+	$("#js-img-sm").mouseenter(
+		function () {
+			$(this).stop().animate({
+				opacity: 0.6,
+				right: "48px",
+				transform: "360deg"
+			}, 572, function () {
+				$("#js-img-lg").show().animate({
+					opacity: 0.8
+				}, 228);
+				$(this).hide();
+			});
+		}
+	)
+
+	$("#js-div").mouseleave(
+		function () {
+			$("#js-img-lg").hide().css("opacity", 0.6);
+			$("#js-img-sm").stop().show();
+			$("#js-img-sm").animate({
+				opacity: 0.1,
+				right: "0px"
+			}, 350);
+		}
+	)
 
 	$("#manual-button").click(function () {
 		if ($("#manual-div").is(":visible")) {
