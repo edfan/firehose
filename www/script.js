@@ -27,8 +27,14 @@ var locked_slots = {};
 var gcal_slots = [];
 var new_css = false;
 
-var colors = ["#16A085", "#2980B9", "#9B59B6", "#C0392B", "#D35400", "#7F8C8D", "#27AE60"];
-var colors_dark = ["#36C0A5", "#49A0D9", "#BB79D6", "#E0594B", "#F37420", "#9FACAD", "#47CE80"];
+var colors = ["#16A085", "#2980B9", "#9B59B6", "#C0392B", "#D35400", "#DEC14D", "#27AE60"];
+var colors_dark = ["#36C0A5", "#49A0D9", "#BB79D6", "#E0594B", "#F37420", "#FEE16D", "#47CE80"];
+
+//var colors = ["#589FB8", "#456C63", "#789351", "#DEC67C", "#E9DCC9", "#D29F61", "#E4CAA2", "#DBBA9C"];
+
+//var colors = ["#C7E4D3", "#E2DB8A", "#DA8E68", "#C0BB72", "#9D957F", "#E7D0A9"];
+
+//var colors = ["#AEDAEE", "#9F9D41", "#F49F3A", "#ED798B", "#684563", "#DB3C35", "#F8BF88", "#854F3F"];
 
 Number.prototype.format = function (n, x) {
 	var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
