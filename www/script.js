@@ -27,8 +27,8 @@ var locked_slots = {};
 var gcal_slots = [];
 var new_css = false;
 
-var colors = ["#16A085", "#2980B9", "#9B59B6", "#C0392B", "#D35400", "#DEC14D", "#27AE60"];
-var colors_dark = ["#36C0A5", "#49A0D9", "#BB79D6", "#E0594B", "#F37420", "#FEE16D", "#47CE80"];
+var colors = ["#16A085", "#2980B9", "#9B59B6", "#C0392B", "#D35400", "#CFAC3E", "#27AE60"];
+var colors_dark = ["#36C0A5", "#49A0D9", "#BB79D6", "#E0594B", "#F37420", "#EFCC5E", "#47CE80"];
 
 //var colors = ["#589FB8", "#456C63", "#789351", "#DEC67C", "#E9DCC9", "#D29F61", "#E4CAA2", "#DBBA9C"];
 
