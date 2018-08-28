@@ -1190,6 +1190,7 @@ $(document).ready(function () {
 		$("#cal-right").blur();
 	});
 
+	/*
 	$("#activity-button").click(function () {
 		if ($("#activity-div").is(":visible")) {
 			$("#activity-div").hide();
@@ -1198,6 +1199,11 @@ $(document).ready(function () {
 			$("#activity-div").show();
 			$("#activity-button").text("- Hide non-class activity pane");
 		}
+	});
+	*/
+
+	$("#activity-button").click(function () {
+		$("#activity-modal").modal('show');
 	});
 
 	$("#start-time").timepicker({
