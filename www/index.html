@@ -47,7 +47,7 @@
     <div id="left-int-div">
       <div id='calendar'></div>
     </div>
-    <div id="export-div"><!-- <span id="prereg-link">Preregister these classes!</span> | --><span id="calendar-link">Export to Google Calendar</span> | <span id="clipboard-link">Text form</span> | <span id="toggle-css">Toggle new theme</span> | <span id="clear-all">Clear all</span></div>
+    <div id="export-div"><!-- <span id="prereg-link">Preregister these classes!</span> | --><span id="calendar-link" data-toggle="tooltip" data-placement="top" title="Make sure popups are enabled!" data-trigger="hover">Export to Google Calendar</span> | <span id="clipboard-link">Text form</span> | <span id="toggle-css">Toggle new theme</span> | <span id="clear-all">Clear all</span></div>
     <div id="footer-div">&copy; 2018 <a href="mailto:edwardf@mit.edu">Edward Fan</a>. CSS by Shannon Peng. <br>Subject descriptions and evaluations are &copy; 2014-2018
       Massachusetts Institute of Technology.</div>
   </div>
@@ -64,7 +64,7 @@
     <div id="selector-div">
       <label id="class-input-label" for="class-input">Class number or name:&nbsp;</label>
       <input type="text" placeholder="8.01" style="width: 20% !important;" id="class-input" onfocus="this.placeholder = ''" onblur="this.placeholder = '8.01'" autofocus>
-      <p id="info3-p">Tip: double-click to quickly add or remove a class.</p>
+      <!-- <p id="info3-p">Tip: double-click to quickly add or remove a class.</p> -->
 
       <p id="activity-button">+ Add non-class activity</p>
 
