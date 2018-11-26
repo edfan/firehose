@@ -78,20 +78,24 @@ def tsp(t):
         return tsp_eve(t)
 
     t = t.split()[0]
-    
     slots = []
-    split = [''.join(x) for _, x in itertools.groupby(t, key=str.isalpha)]
-    startendtime = split[1].split('-')
+    
+    try:
+        for t in t.split(','):
 
-    for d in split[0]:
-        if len(startendtime) > 1:
-            length = times[startendtime[1]] - times[startendtime[0]]
-        else:
-            length = 2
-        slots.append((days[d] + times[startendtime[0]], length))
+            split = [''.join(x) for _, x in itertools.groupby(t, key=str.isalpha)]
+            startendtime = split[1].split('-')
+
+            for d in split[0]:
+                if len(startendtime) > 1:
+                    length = times[startendtime[1]] - times[startendtime[0]]
+                else:
+                    length = 2
+                slots.append((days[d] + times[startendtime[0]], length))
+    except Exception:
+        print(t)
 
     return slots
-    
 
 f = open('csb_raw')
 

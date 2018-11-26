@@ -334,6 +334,10 @@
     font-size: 0.75em !important;
 }
 
+.fc-content {
+    margin-top: -1px;
+}
+
 .fc-content .fc-title {
     display: block;
     font-size: 0.8em;

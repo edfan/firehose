@@ -22,6 +22,8 @@ var all_sections;
 var calc_classes = [];
 var calc_slots = [];
 var conflicts_flag;
+var activity_times = [];
+var activity_times_raw = [];
 var activities = [];
 var locked_slots = {};
 var gcal_slots = [];
@@ -366,7 +368,7 @@ function select_slots() {
 		$("#warning2-div").hide();
 	}
 
-	localStorage.setObj('fall18_cur_classes', cur_classes);
+	localStorage.setObj('spring19_cur_classes', cur_classes);
 
 	/*
     if (conflicts_active) {
@@ -397,7 +399,7 @@ function set_option(index) {
 	cur_option = index;
 	$("#cal-options-1").text(cur_option + 1);
 
-	localStorage.setObj('fall18_cur_option', cur_option);
+	localStorage.setObj('spring19_cur_option', cur_option);
 	set_css(new_css);
 }
 
@@ -781,10 +783,21 @@ function class_desc(number) {
 		$("#manual-div").hide();
 	} else {
 		$('#class-buttons-div').html('<button type="button" class="btn btn-primary" id=' + n_number + '-remove-button>Remove class</button>');
-
 		$('#' + n_number + '-remove-button').click(function () {
 			remove_class(number);
 		});
+
+		if (classes[number]['s'].length == 1 && classes[number]['s'][0] == 'a') {
+			$('#class-buttons-div').append('<button type="button" class="btn btn-primary" id=' + n_number + '-edit-button>Edit activity</button>')
+			$('#' + n_number + '-edit-button').click(function () {
+				activity_times = classes[number]['at']
+				activity_times_raw = classes[number]['atr']
+				activity_timeslot_close();
+				$("#activity-input").val(classes[number]['no']);
+				$("#activity-hours-input").val(classes[number]['h']);
+				$("#activity-modal").modal('show');
+			});
+		}
 
 		$("#manual-button").text("+ Manually set sections");
 		$("#manual-button").show();
@@ -837,25 +850,57 @@ function remove_class(number) {
 		$("#units-div").hide();
 		$("#warning-div").hide();
 		$("#warning2-div").hide();
-		localStorage.setObj('fall18_cur_classes', cur_classes);
-		localStorage.setObj('fall18_cur_option', cur_option);
+		localStorage.setObj('spring19_cur_classes', cur_classes);
+		localStorage.setObj('spring19_cur_option', cur_option);
 	} else {
 		select_slots();
 	}
 }
 
-function add_activity() {
+function activity_timeslot_close() {
+	$("#activity-times").html('');
+
+	for (var i in activity_times_raw) {
+		var button_id = "remove-activity-" + i;
+		$("#activity-times").append('<button type="button" id="' + button_id + '" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+									activity_times_raw[i] + '<br>');
+		$("#" + button_id).click(function () {
+			activity_times.splice(i, 1);
+			activity_times_raw.splice(i, 1);
+			activity_timeslot_close();
+		});
+	}
+}
+
+function add_activity_time() {
 	var days = [$("#act-mon").is(":checked"), $("#act-tue").is(":checked"),
 	$("#act-wed").is(":checked"), $("#act-thu").is(":checked"),
 	$("#act-fri").is(":checked")];
-	var name = $("#activity-input").val();
+	var day_names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
 	var start_time = $("#start-time").timepicker('getSecondsFromMidnight') / 1800 - 16;
 	var end_time = $("#end-time").timepicker('getSecondsFromMidnight') / 1800 - 16;
-	var hours = $("#activity-hours-input").val();
 
 	if (start_time >= end_time) {
 		return;
 	}
+
+	for (var i = 0; i < 5; i++) {
+		if (days[i]) {
+			var time_str = day_names[i] + ', ' + $("#start-time").val() + ' - ' + $("#end-time").val();
+			if (activity_times_raw.indexOf(time_str) != -1) {
+				continue;
+			}
+			activity_times.push([i * 30 + start_time, end_time - start_time]);
+			activity_times_raw.push(time_str);
+		}
+	}
+
+	activity_timeslot_close();
+}
+
+function add_activity() {
+	var name = $("#activity-input").val();
+	var hours = $("#activity-hours-input").val();
 
 	if (name in classes) {
 		if (classes[name]['s'].length != 1 || classes[name]['s'][0] != 'a') {
@@ -875,23 +920,17 @@ function add_activity() {
 		return;
 	}
 
-	var slots = [];
-
-	for (var i = 0; i < 5; i++) {
-		if (days[i]) {
-			slots.push([i * 30 + start_time, end_time - start_time]);
-		}
-	}
-
-	set_activity(name, slots, Number(hours));
+	set_activity(name, activity_times, activity_times_raw, Number(hours));
 	if (cur_classes.indexOf(name) == -1) {
 		add_class(name);
 	} else {
 		select_slots();
 	}
+
+	$("#activity-modal").modal('hide');
 }
 
-function set_activity(name, slots, hours) {
+function set_activity(name, slots, slots_raw, hours) {
 	var activity = {
 		'no': name,
 		'co': '',
@@ -923,13 +962,15 @@ function set_activity(name, slots, hours) {
 		'n': name,
 		'ra': 0,
 		'h': hours,
-		'si': 0
+		'si': 0,
+		'at': slots,
+		'atr': slots_raw
 	};
 
 	activities.push(activity);
 	classes[name] = activity;
 
-	localStorage.setObj('fall18_activities', activities);
+	localStorage.setObj('spring19_activities', activities);
 }
 
 function calendar_export() {
@@ -954,7 +995,7 @@ function calendar_send(isSignedIn) {
 		$("#calendar-link").text("Working...");
 
 		gapi.client.calendar.calendarList.list({}).then(function (resp) {
-			var name = "Firehose: Fall 2018";
+			var name = "Firehose: Spring 2019";
 			var ids = [];
 
 			for (var i in resp.result.items) {
@@ -988,10 +1029,10 @@ function calendar_send(isSignedIn) {
 				}).then();
 			});
 
-			var start_dates = ['2018-09-10', '2018-09-11', '2018-09-05', '2018-09-06', '2018-09-07'];
-			var end_dates = ['20181217', '20181218', '20181219', '20181213', '20181214'];
-			// var r_dates = ['20180220', '20180206', '20180207', '20180208', '20180209'];
-			var ex_dates = [['20181008', '20181112'], ['20181009'], ['20181219'], ['20181122'], ['20180921', '20181123']];
+			var start_dates = ['2019-02-11', '2019-02-05', '2019-02-06', '2019-02-07', '2019-02-08'];
+			var end_dates = ['20190520', '20190521', '20190522', '20190523', '20190517'];
+			var r_dates = ['20190219', '20180205', '20180206', '20180207', '20180208'];
+			var ex_dates = [['20190218', '20190325', '20190415'], ['20190219', '20190326', '20190416'], ['20190327'], ['20190328'], ['20190329']];
 			var batch = gapi.client.newBatch();
 
 			for (var s in gcal_slots) {
@@ -1071,7 +1112,7 @@ function sortable_listener() {
 			new_classes.push(c.innerHTML.replace('*', '').replace('+', ''));
 		});
 		cur_classes = new_classes;
-		localStorage.setObj('fall18_cur_classes', cur_classes);
+		localStorage.setObj('spring19_cur_classes', cur_classes);
 		select_slots();
 		set_option(old_option);
 	});
@@ -1203,6 +1244,11 @@ $(document).ready(function () {
 	*/
 
 	$("#activity-button").click(function () {
+		activity_times = []
+		activity_times_raw = []
+		$("#activity-input").val('');
+		$("#activity-hours-input").val('0');
+		activity_timeslot_close();
 		$("#activity-modal").modal('show');
 	});
 
@@ -1219,6 +1265,10 @@ $(document).ready(function () {
 		'maxTime': '10:00pm'
 	});
 
+	$("#activity-modal-add-timeslot").click(function () {
+		add_activity_time();
+	});
+
 	$("#add-activity-button").click(function () {
 		add_activity();
 	});
@@ -1229,6 +1279,7 @@ $(document).ready(function () {
 		}
 	});
 
+	/*
 	$(".act-day").click(function () {
 		var days = [$("#act-mon").is(":checked"), $("#act-tue").is(":checked"),
 		$("#act-wed").is(":checked"), $("#act-thu").is(":checked"),
@@ -1243,6 +1294,7 @@ $(document).ready(function () {
 
 		$('#add-activity-button').prop('disabled', true);
 	});
+	*/	
 
 	$(".selector-button").click(function () {
 		window[this.id + '_active'] = !window[this.id + '_active'];
@@ -1373,7 +1425,7 @@ $(document).ready(function () {
 						var stmp = slot;
 						$("#lec-" + tmp).click(function () {
 							locked_slots[stmp] = tmp;
-							localStorage.setObj('fall18_locked_slots', locked_slots);
+							localStorage.setObj('spring19_locked_slots', locked_slots);
 							select_slots();
 						});
 					})();
@@ -1403,7 +1455,7 @@ $(document).ready(function () {
 						var stmp = slot;
 						$("#rec-" + tmp).click(function () {
 							locked_slots[stmp] = tmp;
-							localStorage.setObj('fall18_locked_slots', locked_slots);
+							localStorage.setObj('spring19_locked_slots', locked_slots);
 							select_slots();
 						});
 					})();
@@ -1433,7 +1485,7 @@ $(document).ready(function () {
 						var stmp = slot;
 						$("#lab-" + tmp).click(function () {
 							locked_slots[stmp] = tmp;
-							localStorage.setObj('fall18_locked_slots', locked_slots);
+							localStorage.setObj('spring19_locked_slots', locked_slots);
 							select_slots();
 						});
 					})();
@@ -1459,14 +1511,14 @@ $(document).ready(function () {
 		if (slot in locked_slots) {
 			delete locked_slots[slot];
 		}
-		localStorage.setObj('fall18_locked_slots', locked_slots);
+		localStorage.setObj('spring19_locked_slots', locked_slots);
 		select_slots();
 	});
 
 	$("#lec-none").click(function () {
 		var slot = [cur_class, 'l'];
 		locked_slots[slot] = "none";
-		localStorage.setObj('fall18_locked_slots', locked_slots);
+		localStorage.setObj('spring19_locked_slots', locked_slots);
 		select_slots();
 	});
 
@@ -1475,14 +1527,14 @@ $(document).ready(function () {
 		if (slot in locked_slots) {
 			delete locked_slots[slot];
 		}
-		localStorage.setObj('fall18_locked_slots', locked_slots);
+		localStorage.setObj('spring19_locked_slots', locked_slots);
 		select_slots();
 	});
 
 	$("#rec-none").click(function () {
 		var slot = [cur_class, 'r'];
 		locked_slots[slot] = "none";
-		localStorage.setObj('fall18_locked_slots', locked_slots);
+		localStorage.setObj('spring19_locked_slots', locked_slots);
 		select_slots();
 	});
 
@@ -1491,39 +1543,39 @@ $(document).ready(function () {
 		if (slot in locked_slots) {
 			delete locked_slots[slot];
 		}
-		localStorage.setObj('fall18_locked_slots', locked_slots);
+		localStorage.setObj('spring19_locked_slots', locked_slots);
 		select_slots();
 	});
 
 	$("#lab-none").click(function () {
 		var slot = [cur_class, 'b'];
 		locked_slots[slot] = "none";
-		localStorage.setObj('fall18_locked_slots', locked_slots);
+		localStorage.setObj('spring19_locked_slots', locked_slots);
 		select_slots();
 	});
 
-	var tmp_cur_classes = localStorage.getObj('fall18_cur_classes');
-	var tmp_activities = localStorage.getObj('fall18_activities');
+	var tmp_cur_classes = localStorage.getObj('spring19_cur_classes');
+	var tmp_activities = localStorage.getObj('spring19_activities');
 	if (tmp_activities != null) {
 		for (var a in tmp_activities) {
 			if (tmp_cur_classes != null && tmp_cur_classes.indexOf(tmp_activities[a]['no']) != -1) {
-				set_activity(tmp_activities[a]['no'], tmp_activities[a]['a'][0][0], tmp_activities[a]['h'])
+				set_activity(tmp_activities[a]['no'], tmp_activities[a]['at'], tmp_activities[a]['atr'], tmp_activities[a]['h'])
 			}
 		}
-		localStorage.setObj('fall18_activities', activities);
+		localStorage.setObj('spring19_activities', activities);
 	}
 
-	var tmp_locked_slots = localStorage.getObj('fall18_locked_slots');
+	var tmp_locked_slots = localStorage.getObj('spring19_locked_slots');
 	if (tmp_locked_slots != null) {
 		for (var l in tmp_locked_slots) {
 			if (tmp_locked_slots.hasOwnProperty(l) && tmp_cur_classes.indexOf(l.split(',')[0]) != -1) {
 				locked_slots[l] = tmp_locked_slots[l];
 			}
 		}
-		localStorage.setObj('fall18_locked_slots', locked_slots);
+		localStorage.setObj('spring19_locked_slots', locked_slots);
 	}
 
-	var tmp_cur_option = parseInt(localStorage.getObj('fall18_cur_option'));
+	var tmp_cur_option = parseInt(localStorage.getObj('spring19_cur_option'));
 
 	if (tmp_cur_classes != null) {
 		for (var t in tmp_cur_classes) {
