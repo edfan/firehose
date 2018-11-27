@@ -100,15 +100,16 @@ for c in times:
 try:
     # Special case 14.01/14.02 rec-only sections.
     classes['14.01R'] = copy.deepcopy(classes['14.01'])
-    classes['14.01']['r'] = classes['14.01']['r'][:4]
-    classes['14.01']['rr'] = classes['14.01']['rr'][:4]
+    classes['14.01']['r'] = classes['14.01']['r'][:3] + [classes['14.01']['r'][5]]
+    classes['14.01']['rr'] = classes['14.01']['rr'][:3] + [classes['14.01']['rr'][5]]
     classes['14.01R']['no'] = '14.01R'
     classes['14.01R']['s'] = ['r']
-    classes['14.01R']['r'] = classes['14.01R']['r'][4:]
-    classes['14.01R']['rr'] = classes['14.01R']['rr'][4:]
+    classes['14.01R']['r'] = classes['14.01R']['r'][3:5]
+    classes['14.01R']['rr'] = classes['14.01R']['rr'][3:5]
     classes['14.01R']['n'] += " (recitation only)"
     del classes['14.01R']['l']
 
+    """
     classes['14.02R'] = copy.deepcopy(classes['14.02'])
     classes['14.02']['r'] = classes['14.02']['r'][1:]
     classes['14.02']['rr'] = classes['14.02']['rr'][1:]
@@ -118,6 +119,7 @@ try:
     classes['14.02R']['rr'] = classes['14.02R']['rr'][:1]
     classes['14.02R']['n'] += " (recitation only)"
     del classes['14.02R']['l']
+    """
 
     # Special case 16.001/16.003 evals.
     classes['16.001']['h'] = 12.3
@@ -126,8 +128,8 @@ try:
     #classes['6.08']['ra'] = 6.6
     #classes['6.08']['h'] = 12.3
     #classes['6.08']['si'] = 109.5
-except:
-    pass
+except Exception as e:
+    print(e)
 
 with open('full.json', 'w') as f:
     f.write('var classes = ')
