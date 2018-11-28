@@ -1178,7 +1178,7 @@ $(document).ready(function () {
 				orderable: false
 			}
 		],
-		scrollY: "30vh",
+		scrollY: "275px",
 		scroller: true
 	});
 
