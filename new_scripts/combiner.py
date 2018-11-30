@@ -122,7 +122,7 @@ try:
     """
 
     # Special case 16.001/16.003 evals.
-    classes['16.001']['h'] = 12.3
+    classes['16.003']['h'] = 13.9
 
     # Special case 6.08 / 6.S08.
     #classes['6.08']['ra'] = 6.6
