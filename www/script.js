@@ -768,6 +768,10 @@ function class_desc(number) {
 		'" target="_blank">Course Catalog</a> | <a href="https://sisapp.mit.edu/ose-rpt/subjectEvaluationSearch.htm?search=Search&subjectCode=' +
 		number + '" target="_blank">Class Evaluations</a>');
 
+	if (classes[number]['co'] === '6') {
+		$('#class-desc').append(' | <a href="https://underground-guide.mit.edu/search?q=' + number + '" target="_blank">HKN Underground Guide</a>')
+	}
+
 	cur_class = number;
 
 	n_number = id_sanitize(number);
