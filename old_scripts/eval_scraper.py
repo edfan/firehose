@@ -17,10 +17,10 @@ with open('password', 'r') as f:
 
 eval_url = 'https://edu-apps.mit.edu/ose-rpt/subjectEvaluationSearch.htm'
 courses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 20, 22, 24, 'AS', 'EC',
-           'MS', 'NS', '21A', '21G', '21H', '21L', '21M', '21W', 'CMS', 'CON', 'CSB', 'ESD',
-           'ESG', 'HST', 'ISP', 'MAS', 'STS', 'WGS']
+           'MS', 'NS', '21A', '21G', '21H', '21L', '21M', '21W', 'CDO', 'CMS', 'CON', 'CSB', 'ESD',
+           'ESG', 'HST', 'ISP', 'MAS', 'SCM', 'STS', 'WGS']
 
-terms = ['2018JA', '2018SP', '2018SU']
+terms = ['2019FA', '2019JA']
 
 def url_from_course(course):
     return eval_url + '?departmentId={:+>4}&search=Search'.format(course)

@@ -60,13 +60,15 @@ def tsp_eve(t):
     
     slots = []
     startendtime = t.split('-')
-
-    for d in wdays:
-        if len(startendtime) > 1:
-            length = eve_times[startendtime[1]] - times[startendtime[0]]
-        else:
-            length = 2
-        slots.append((days[d] + eve_times[startendtime[0]], length))
+    try:
+        for d in wdays:
+            if len(startendtime) > 1:
+                length = eve_times[startendtime[1]] - times[startendtime[0]]
+            else:
+                length = 2
+            slots.append((days[d] + eve_times[startendtime[0]], length))
+    except Exception:
+        print(t)
 
     return slots
 

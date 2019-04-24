@@ -368,7 +368,7 @@ function select_slots() {
 		$("#warning2-div").hide();
 	}
 
-	localStorage.setObj('spring19_cur_classes', cur_classes);
+	localStorage.setObj('fall19_cur_classes', cur_classes);
 
 	/*
     if (conflicts_active) {
@@ -399,7 +399,7 @@ function set_option(index) {
 	cur_option = index;
 	$("#cal-options-1").text(cur_option + 1);
 
-	localStorage.setObj('spring19_cur_option', cur_option);
+	localStorage.setObj('fall19_cur_option', cur_option);
 	set_css(new_css);
 }
 
@@ -854,8 +854,8 @@ function remove_class(number) {
 		$("#units-div").hide();
 		$("#warning-div").hide();
 		$("#warning2-div").hide();
-		localStorage.setObj('spring19_cur_classes', cur_classes);
-		localStorage.setObj('spring19_cur_option', cur_option);
+		localStorage.setObj('fall19_cur_classes', cur_classes);
+		localStorage.setObj('fall19_cur_option', cur_option);
 	} else {
 		select_slots();
 	}
@@ -976,7 +976,7 @@ function set_activity(name, slots, slots_raw, hours) {
 	activities.push(activity);
 	classes[name] = activity;
 
-	localStorage.setObj('spring19_activities', activities);
+	localStorage.setObj('fall19_activities', activities);
 }
 
 function calendar_export() {
@@ -1001,7 +1001,7 @@ function calendar_send(isSignedIn) {
 		$("#calendar-link").text("Working...");
 
 		gapi.client.calendar.calendarList.list({}).then(function (resp) {
-			var name = "Firehose: Spring 2019";
+			var name = "Firehose: Fall 2019";
 			var ids = [];
 
 			for (var i in resp.result.items) {
@@ -1035,10 +1035,10 @@ function calendar_send(isSignedIn) {
 				}).then();
 			});
 
-			var start_dates = ['2019-02-11', '2019-02-05', '2019-02-06', '2019-02-07', '2019-02-08'];
-			var end_dates = ['20190520', '20190521', '20190522', '20190523', '20190517'];
-			var r_dates = ['20190219', '20180205', '20180206', '20180207', '20180208'];
-			var ex_dates = [['20190218', '20190325', '20190415'], ['20190219', '20190326', '20190416'], ['20190327'], ['20190328'], ['20190329']];
+			var start_dates = ['2019-09-10', '2019-09-11', '2019-09-05', '2019-09-06', '2019-09-07'];
+			var end_dates = ['20191217', '20191218', '20191219', '20191213', '20191214'];
+			// var r_dates = ['20190219', '20180205', '20180206', '20180207', '20180208'];
+			var ex_dates = [['20191008', '20191112', '20190415'], ['20191009'], [], ['20191122'], ['20190921', '20191123']];
 			var batch = gapi.client.newBatch();
 
 			for (var s in gcal_slots) {
@@ -1067,7 +1067,7 @@ function calendar_send(isSignedIn) {
 						'recurrence': [
 							'RRULE:FREQ=WEEKLY;UNTIL=' + end_dates[g[0]],
 							'EXDATE;TZID=America/New_York:' + ex_date,
-							'RDATE;TZID=America/New_York:' + r_dates[g[0]] + 'T' + g[1].replace(':', '') + '00,'
+							// 'RDATE;TZID=America/New_York:' + r_dates[g[0]] + 'T' + g[1].replace(':', '') + '00,'
 						]
 					}
 				}));
@@ -1118,7 +1118,7 @@ function sortable_listener() {
 			new_classes.push(c.innerHTML.replace('*', '').replace('+', ''));
 		});
 		cur_classes = new_classes;
-		localStorage.setObj('spring19_cur_classes', cur_classes);
+		localStorage.setObj('fall19_cur_classes', cur_classes);
 		select_slots();
 		set_option(old_option);
 	});
@@ -1431,7 +1431,7 @@ $(document).ready(function () {
 						var stmp = slot;
 						$("#lec-" + tmp).click(function () {
 							locked_slots[stmp] = tmp;
-							localStorage.setObj('spring19_locked_slots', locked_slots);
+							localStorage.setObj('fall19_locked_slots', locked_slots);
 							select_slots();
 						});
 					})();
@@ -1461,7 +1461,7 @@ $(document).ready(function () {
 						var stmp = slot;
 						$("#rec-" + tmp).click(function () {
 							locked_slots[stmp] = tmp;
-							localStorage.setObj('spring19_locked_slots', locked_slots);
+							localStorage.setObj('fall19_locked_slots', locked_slots);
 							select_slots();
 						});
 					})();
@@ -1491,7 +1491,7 @@ $(document).ready(function () {
 						var stmp = slot;
 						$("#lab-" + tmp).click(function () {
 							locked_slots[stmp] = tmp;
-							localStorage.setObj('spring19_locked_slots', locked_slots);
+							localStorage.setObj('fall19_locked_slots', locked_slots);
 							select_slots();
 						});
 					})();
@@ -1517,14 +1517,14 @@ $(document).ready(function () {
 		if (slot in locked_slots) {
 			delete locked_slots[slot];
 		}
-		localStorage.setObj('spring19_locked_slots', locked_slots);
+		localStorage.setObj('fall19_locked_slots', locked_slots);
 		select_slots();
 	});
 
 	$("#lec-none").click(function () {
 		var slot = [cur_class, 'l'];
 		locked_slots[slot] = "none";
-		localStorage.setObj('spring19_locked_slots', locked_slots);
+		localStorage.setObj('fall19_locked_slots', locked_slots);
 		select_slots();
 	});
 
@@ -1533,14 +1533,14 @@ $(document).ready(function () {
 		if (slot in locked_slots) {
 			delete locked_slots[slot];
 		}
-		localStorage.setObj('spring19_locked_slots', locked_slots);
+		localStorage.setObj('fall19_locked_slots', locked_slots);
 		select_slots();
 	});
 
 	$("#rec-none").click(function () {
 		var slot = [cur_class, 'r'];
 		locked_slots[slot] = "none";
-		localStorage.setObj('spring19_locked_slots', locked_slots);
+		localStorage.setObj('fall19_locked_slots', locked_slots);
 		select_slots();
 	});
 
@@ -1549,39 +1549,39 @@ $(document).ready(function () {
 		if (slot in locked_slots) {
 			delete locked_slots[slot];
 		}
-		localStorage.setObj('spring19_locked_slots', locked_slots);
+		localStorage.setObj('fall19_locked_slots', locked_slots);
 		select_slots();
 	});
 
 	$("#lab-none").click(function () {
 		var slot = [cur_class, 'b'];
 		locked_slots[slot] = "none";
-		localStorage.setObj('spring19_locked_slots', locked_slots);
+		localStorage.setObj('fall19_locked_slots', locked_slots);
 		select_slots();
 	});
 
-	var tmp_cur_classes = localStorage.getObj('spring19_cur_classes');
-	var tmp_activities = localStorage.getObj('spring19_activities');
+	var tmp_cur_classes = localStorage.getObj('fall19_cur_classes');
+	var tmp_activities = localStorage.getObj('fall19_activities');
 	if (tmp_activities != null) {
 		for (var a in tmp_activities) {
 			if (tmp_cur_classes != null && tmp_cur_classes.indexOf(tmp_activities[a]['no']) != -1) {
 				set_activity(tmp_activities[a]['no'], tmp_activities[a]['at'], tmp_activities[a]['atr'], tmp_activities[a]['h'])
 			}
 		}
-		localStorage.setObj('spring19_activities', activities);
+		localStorage.setObj('fall19_activities', activities);
 	}
 
-	var tmp_locked_slots = localStorage.getObj('spring19_locked_slots');
+	var tmp_locked_slots = localStorage.getObj('fall19_locked_slots');
 	if (tmp_locked_slots != null) {
 		for (var l in tmp_locked_slots) {
 			if (tmp_locked_slots.hasOwnProperty(l) && tmp_cur_classes.indexOf(l.split(',')[0]) != -1) {
 				locked_slots[l] = tmp_locked_slots[l];
 			}
 		}
-		localStorage.setObj('spring19_locked_slots', locked_slots);
+		localStorage.setObj('fall19_locked_slots', locked_slots);
 	}
 
-	var tmp_cur_option = parseInt(localStorage.getObj('spring19_cur_option'));
+	var tmp_cur_option = parseInt(localStorage.getObj('fall19_cur_option'));
 
 	if (tmp_cur_classes != null) {
 		for (var t in tmp_cur_classes) {

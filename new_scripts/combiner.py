@@ -100,43 +100,26 @@ for c in times:
 try:
     # Special case 14.01/14.02 rec-only sections.
     classes['14.01R'] = copy.deepcopy(classes['14.01'])
-    classes['14.01']['r'] = classes['14.01']['r'][:3] + [classes['14.01']['r'][5]]
-    classes['14.01']['rr'] = classes['14.01']['rr'][:3] + [classes['14.01']['rr'][5]]
+    classes['14.01']['r'] = classes['14.01']['r'][:2]
+    classes['14.01']['rr'] = classes['14.01']['rr'][:2]
     classes['14.01R']['no'] = '14.01R'
     classes['14.01R']['s'] = ['r']
-    classes['14.01R']['r'] = classes['14.01R']['r'][3:5]
-    classes['14.01R']['rr'] = classes['14.01R']['rr'][3:5]
+    classes['14.01R']['r'] = classes['14.01R']['r'][2:]
+    classes['14.01R']['rr'] = classes['14.01R']['rr'][2:]
     classes['14.01R']['n'] += " (recitation only)"
     del classes['14.01R']['l']
 
-    """
+
     classes['14.02R'] = copy.deepcopy(classes['14.02'])
-    classes['14.02']['r'] = classes['14.02']['r'][1:]
-    classes['14.02']['rr'] = classes['14.02']['rr'][1:]
+    classes['14.02']['r'] = classes['14.02']['r'][:2]
+    classes['14.02']['rr'] = classes['14.02']['rr'][:2]
     classes['14.02R']['no'] = '14.02R'
     classes['14.02R']['s'] = ['r']
-    classes['14.02R']['r'] = classes['14.02R']['r'][:1]
-    classes['14.02R']['rr'] = classes['14.02R']['rr'][:1]
+    classes['14.02R']['r'] = classes['14.02R']['r'][2:]
+    classes['14.02R']['rr'] = classes['14.02R']['rr'][2:]
     classes['14.02R']['n'] += " (recitation only)"
     del classes['14.02R']['l']
-    """
 
-    # Special case 16.001/16.003 evals.
-    classes['16.003']['h'] = 13.9
-
-    # Special case descriptions.
-    classes['15.S22']['n'] = "Digital Technology and the Law: AI, Big Data, Blockchain, and Other Hot Spots"
-    classes['15.S22']['d'] = "Topics will include law-sensitive current developments in AI in decision support and autonomous devices; Big Data and analytics; blockchain, cryptocurrencies, and fintech; the Internet, Internet of Things, and social media; information rights, privacy, and cybersecurity; and intellectual property rights in these technologies. Undergrads welcome and, space permitting, will be admitted without Sloan bidding."
-    classes['15.S22']['u'] = "https://sloanbid.mit.edu/resources/15.s22.pdf"
-    classes['15.S22']['t'] = ['SP']
-    classes['15.S22']['u1'] = 3
-    classes['15.S22']['u3'] = 3
-
-    classes['21H.S01']['n'] = "South Africa and Apartheid"
-    classes['21H.S01']['d'] = "Explores the spatial, legal, economic, social and political structures that created Apartheid in South Africa, and to the factors that led to the collapse of the racist order. Examines the many forces of black oppression and, also, the various forms of resistance to Apartheid. Themes include industrialization and the formation of the black working classes, constructions of race, ethnicities and sexualities, land alienation and rural struggles, township poverty and violence, Black education, and the Black Consciousness Movement."
-
-    classes['21H.S02']['n'] = "Citizenship & Exclusion in Ancient Greek Worlds"
-    classes['21H.S02']['d'] = "Right now, questions about how we should define citizenship are at the forefront of national debates. This seminar examines related discourses in ancient Greek worlds, such as Sparta, Athens, and Ptolemaic Egypt. We will discuss who was a citizen and how someone practiced 'good' citizenship in these contexts. Moreover, we will pay special attention to excluded groups which did not formally have a voice in running these states. Given how omnipresent technology is in today's politics, we will also consider the means of participation and communication that were possible in pre-modern worlds.  No previous knowledge of ancient Greek history or language is expected. Students will read ancient primary sources in translation, including selections of court cases and political speeches. Also, certain class meetings will involve field trips to local museum collections to interact with objects and documents that are over 2,000 years old!"
 
 except Exception as e:
     print(e)
