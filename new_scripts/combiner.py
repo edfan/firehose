@@ -68,7 +68,7 @@ for c in times:
         classes[c]['sa'] = ''
         classes[c]['mw'] = ''
         classes[c]['le'] = 'U'
-        classes[c]['t'] = ['SP']
+        classes[c]['t'] = ['FA']
         classes[c]['pr'] = 'None'
         classes[c]['d'] = "This class is in the registrar's schedule, but not the course catalog."
         classes[c]['n'] = 'Special Subject'
