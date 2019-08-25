@@ -107,10 +107,11 @@ classes = {}
 f.readline()
 
 for line in f:
-    c = line.split('\t')
+    c = line.replace('"', '').split('\t')
+    c = [x.strip() for x in c]
 
     # Check that this line is actually a class.
-    if not line[0].isalnum() or len(c) < 3:
+    if not c[0][0].isalnum() or len(c) < 3:
         continue
 
     # Check that the class hasn't been cancelled.
