@@ -111,7 +111,11 @@ for line in f:
     c = [x.strip() for x in c]
 
     # Check that this line is actually a class.
-    if not c[0][0].isalnum() or len(c) < 3:
+    try:
+        if not c[0][0].isalnum() or len(c) < 3:
+            continue
+    except:
+        print(c)
         continue
 
     # Check that the class hasn't been cancelled.
