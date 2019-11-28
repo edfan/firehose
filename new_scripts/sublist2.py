@@ -14,7 +14,7 @@ for c in class_list:
     try:
         while True:
             try:    
-                r = requests.get(base_url + c, timeout=2)
+                r = requests.get(base_url + c, timeout=5)
                 break
             except requests.exceptions.ConnectionError:
                 pass
