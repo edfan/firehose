@@ -980,6 +980,8 @@ function set_activity(name, slots, slots_raw, hours) {
 		'sa': '',
 		'mw': '',
 		'u': '',
+		'i': '',
+		'v': false,
 		'pr': 'None',
 		'd': 'Your activity!',
 		'n': name,
