@@ -777,6 +777,10 @@ function class_desc(number) {
 		$('#class-desc').append('<a href="' + classes[number]['u'] + '" target="_blank">More info</a> | ');
 	}
 
+	if (classes[number]['i'] != '') {
+		$('#class-desc').append('<em>Instructors: ' + classes[number]['i'] + '</em><br><br>');
+	}
+
 	$('#class-desc').append('<a href="http://student.mit.edu/catalog/search.cgi?search=' + number +
 		'" target="_blank">Course Catalog</a> | <a href="https://sisapp.mit.edu/ose-rpt/subjectEvaluationSearch.htm?search=Search&subjectCode=' +
 		number + '" target="_blank">Class Evaluations</a>');
