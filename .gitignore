@@ -1,6 +1,8 @@
 password
 chromedriver*
 geckodriver*
+evaluations
+evaluations_IAP
 *~
 #*
 debug.log
