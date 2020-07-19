@@ -1,4 +1,10 @@
+/* 
+WARNING: this code seriously sucks.
+If you're interested, come help at https://github.com/edfan/firehose
+*/
+
 var table;
+var virtual_active = false;
 var hass_active = false;
 var hass_a_active = false;
 var hass_h_active = false;
@@ -6,6 +12,7 @@ var hass_s_active = false;
 var ci_h_active = false;
 var ci_hw_active = false;
 var conflicts_active = false;
+var remote_active = false;
 var no_ci_active = false;
 var rest_active = false;
 var lab_active = false;
@@ -465,6 +472,12 @@ function is_selected(number) {
 	}
 
 	selected = false;
+
+	if (virtual_active) {
+		if (!classes[number]['v']) {
+			return false;
+		}
+	}
 
 	if (ci_h_active || ci_hw_active) {
 		if (ci_h_active) {
@@ -1035,10 +1048,10 @@ function calendar_send(isSignedIn) {
 				}).then();
 			});
 
-			var start_dates = ['2020-02-03', '2020-02-04', '2020-02-05', '2020-02-06', '2020-02-07'];
-			var end_dates = ['20200518', '20200519', '20200513', '20200514', '20200515'];
-			var r_dates = ['20190218', '20180204', '20180205', '20180206', '20180207'];
-			var ex_dates = [['20200217', '20200323', '20200420'], ['20200218', '20200324'], ['20200325'], ['20200326'], ['20200327']];
+			var start_dates = ['2020-09-14', '2020-09-01', '2020-09-02', '2020-09-03', '2020-09-04'];
+			var end_dates = ['20201214', '20201215', '20201216', '20201210', '20201211'];
+			var r_dates = ['20201013', '20200901', '20200902', '20200903', '20200904'];
+			var ex_dates = [['20201012', '20201123'], ['20201124'], ['20201111', '20201125'], ['20201126'], ['20201127']];
 			var batch = gapi.client.newBatch();
 
 			for (var s in gcal_slots) {
