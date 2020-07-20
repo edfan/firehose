@@ -130,6 +130,8 @@ gir_rewrite = {
 }
 
 def parse_prereqs(prereqs):
+    if len(prereqs) == 0:
+        return 'None'
     for gir, gir_rw in gir_rewrite.items():
         prereqs = prereqs.replace(gir, gir_rw)
     return prereqs
@@ -180,7 +182,8 @@ for c in raw_classes:
             'same_as': parse_joint(c['joint_subjects']),
             'meets_with': parse_joint(c['meets_with_subjects']),
             'sat': False,
-            'instructors': ', '.join(c[instructors])}
+            # 'instructors': ', '.join(c[instructors]),
+            'in-charge': c['in-charge']}
 
 for c in raw_classes:
     if c['type'] == 'Class':

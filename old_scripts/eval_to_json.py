@@ -33,6 +33,9 @@ def main():
         json.dump(classes, f)
         f.write(';')
 
+    with open('../new_scripts/evaluations', 'w') as f:
+        json.dump(classes, f)
+
     with open('professors.json', 'w') as f:
         f.write('var professors = ')
         json.dump(list(professors), f)

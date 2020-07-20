@@ -52,7 +52,7 @@ for c in ws:
     classes[c]['pr'] = ws[c]['prereq']
     classes[c]['d'] = ws[c]['desc']
     classes[c]['n'] = ws[c]['name']
-    classes[c]['i'] = ws[c]['instructors']
+    classes[c]['i'] = ws[c]['in-charge']
     classes[c]['v'] = all_virtual(ws[c]['l'] + ws[c]['r'] + ws[c]['b'])
 
     if c in sublist:

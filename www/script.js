@@ -778,7 +778,7 @@ function class_desc(number) {
 	}
 
 	if (classes[number]['i'] != '') {
-		$('#class-desc').append('<em>Instructors: ' + classes[number]['i'] + '</em><br><br>');
+		$('#class-desc').append('<em>In-charge: ' + classes[number]['i'] + '</em><br><br>');
 	}
 
 	$('#class-desc').append('<a href="http://student.mit.edu/catalog/search.cgi?search=' + number +
