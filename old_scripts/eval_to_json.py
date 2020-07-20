@@ -18,8 +18,8 @@ def main():
     professors = set()
 
     # Pull all terms into a single list for each class
-    for term in os.listdir('data/'):
-        with open('data/' + term, 'rb') as f:
+    for term in os.listdir('../../firehose-priv/data/'):
+        with open('../../firehose-priv/data/' + term, 'rb') as f:
             term_dict = pickle.load(f)
         for k, v in term_dict.items():
             if k not in classes:
