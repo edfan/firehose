@@ -3,6 +3,8 @@ chromedriver*
 geckodriver*
 evaluations
 evaluations_IAP
+evaluations.json
+professors.json
 *~
 #*
 debug.log
