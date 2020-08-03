@@ -56,7 +56,21 @@
     <div id="spacer3-div"></div>
     <div id="info-div">
       <img src="../../img/logo.png" height="40px" vspace="2%" />
-      <p style="margin-bottom: 12px;">IAP 2019 | <a href="../s19/spring.html"><span style="font-size: 70%">Spring 2019</span></a> | <a href="/"><span style="font-size: 70%">Fall 2019</span></a></p>
+      <!-- <p style="margin-bottom: 12px;">IAP 2019 | <a href="../s19/spring.html"><span style="font-size: 70%">Spring 2019</span></a> | <a href="/"><span style="font-size: 70%">Fall 2019</span></a></p> -->
+      <form autocomplete=off>
+          <select name="semesters" id="semesters" onchange="location = this.options[this.selectedIndex].value;">
+            <option value="../../index.html">Fall 2020</option>
+            <option value="../s20/spring.html">Spring 2020</option>
+            <!-- <option value="../i20/iap.html">IAP 2020</option> -->
+            <option value="../f19/fall.html">Fall 2019</option>
+            <option value="../s19/spring.html">Spring 2019</option>
+            <option value="../i19/iap.html" selected>IAP 2019</option>
+            <option value="../f18/fall.html">Fall 2018</option>
+            <option value="../s18/spring.html">Spring 2018</option>
+            <option value="../i18/iap.html">IAP 2018</option>
+            <option value="../f17/fall.html">Fall 2017</option>
+          </select>
+        </form>
       <span id="info-line">Note: Many classes only run for part of IAP- check the catalog!</span>
     </div>
     <hr>

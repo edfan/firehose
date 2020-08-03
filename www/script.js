@@ -35,6 +35,7 @@ var activities = [];
 var locked_slots = {};
 var gcal_slots = [];
 var new_css = false;
+var dark_mode = false;
 
 var colors = ["#16A085", "#3E9ED1", "#AE7CB4", "#CA434B", "#E4793C", "#D7AD00", "#27AE60", "#F08E94", "#8FBDD9", "#A2ACB0"];
 var colors_dark = ["#36C0A5", "#5EBEF1", "#CE9CD4", "#EA636B", "#FF995C", "#F7CD20", "#47CE80", "#FFAEB4", "#AFDDF9", "#C2CCD0"];
@@ -408,6 +409,7 @@ function set_option(index) {
 
 	localStorage.setObj('fall20_cur_option', cur_option);
 	set_css(new_css);
+	set_dark_mode(dark_mode);
 }
 
 function conflict_helper(new_sections, old_slots) {
@@ -1155,6 +1157,14 @@ function set_css(css_state) {
 	}
 }
 
+function set_dark_mode(dark_mode) { 
+	$("body, .modal-content").toggleClass("dark-mode-background", dark_mode);
+	$(".fc-unthemed .fc-content, .fc-unthemed .fc-divider, .fc-unthemed .fc-list-heading td, .fc-unthemed .fc-list-view, .fc-unthemed .fc-popover, .fc-unthemed .fc-row, .fc-unthemed tbody, .fc-unthemed td, .fc-unthemed th, .fc-unthemed thead, hr").toggleClass("dark-mode-faint", dark_mode);
+	$(".fc-axis, .fc-day-header, #buttons-div, #right-div, #eval-table_wrapper thead, .modal-body").toggleClass("dark-mode-light", dark_mode);
+	$("#buttons-div button, #semesters, input, .dataTables_scrollBody, img[src^='img/cih'], img[src='img/iap.gif'], \
+		img[src='img/repeat.gif'], img[src='img/rest.gif']").toggleClass("dark-mode", dark_mode);
+}
+
 $(document).ready(function () {
 	Cookies.set('school', 'MIT', { expires: 3650 });
 
@@ -1395,6 +1405,12 @@ $(document).ready(function () {
 		new_css = !new_css
 		set_css(new_css);
 		localStorage.setObj('new_css', new_css);
+	});
+
+	$("#toggle-dark-mode").click(function () {
+		dark_mode = !dark_mode;
+		set_dark_mode(dark_mode)
+		localStorage.setObj('dark_mode', dark_mode);
 	});
 
 	$("#clear-all").click(function () {
@@ -1639,5 +1655,10 @@ $(document).ready(function () {
 	if (localStorage.getObj('new_css')) {
 		new_css = localStorage.getObj('new_css', new_css);
 		set_css(new_css);
+	}
+
+	if (localStorage.getObj('dark_mode')) {
+		dark_mode = localStorage.getObj('dark_mode', dark_mode);
+		set_dark_mode(dark_mode);
 	}
 });

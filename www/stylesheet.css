@@ -68,12 +68,12 @@
     margin: 10 auto 0 auto;
 }
 
-#prereg-link, #calendar-link, #clipboard-link, #toggle-css, #clear-all {
+#export-div span {
     color: #0275d8;
     cursor: pointer;
 }
 
-#prereg-link:hover, #calendar-link:hover, #clipboard-link:hover, #toggle-css:hover, #clear-all:hover {
+#export-div span:hover {
     text-decoration: underline;
 }
 
@@ -217,7 +217,7 @@
 
 .btn-primary, .btn-primary.focus {
     color: #ec5339;
-    background-color: #fff;
+    background-color: transparent;
     border-color: #ec5339;
     background-image: none;
     outline: 0 !important;
@@ -360,6 +360,27 @@
 }
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
     color:    #909090;
+}
+
+.dark-mode {
+    filter: invert(87.45%);
+}
+
+.dark-mode::selection, .dark-mode *::selection { /* fix highlighting issue */
+    background: #ff8800;
+    color: #000000;
+}
+
+.dark-mode-background {
+    background-color: #202020;
+}
+
+.dark-mode-faint {
+    border-color: #303030 !important;
+}
+
+.dark-mode-light {
+    color: #c8c5c3;
 }
 
 /* text boxes */

@@ -33,7 +33,7 @@
 
   <link rel="stylesheet" type="text/css" href="stylesheet.css">
   <script defer src="full.js"></script>
-  <script defer src="script-compiled.js"></script>
+  <script defer src="script.js"></script>
 </head>
 
 <body>
@@ -47,9 +47,9 @@
     <div id="left-int-div">
       <div id='calendar'></div>
     </div>
-    <div id="export-div"><!-- <span id="prereg-link">Preregister these classes!</span> | --><span id="calendar-link" data-toggle="tooltip" data-placement="top" title="Might be broken! I'm working on it." data-trigger="hover"><!--"Make sure popups are enabled!"--> Export to Google Calendar</span> | <span id="clipboard-link">Text form</span> | <span id="toggle-css">Toggle high-contrast</span> | <span id="clear-all">Clear all</span></div>
+    <div id="export-div"><!-- <span id="prereg-link">Preregister these classes!</span> | --><span id="calendar-link" data-toggle="tooltip" data-placement="top" title="Might be broken! I'm working on it." data-trigger="hover"><!--"Make sure popups are enabled!"--> Export to Google Calendar</span> | <span id="clipboard-link">Text form</span> | <span id="toggle-css">Toggle high-contrast</span> | <span id="toggle-dark-mode">Toggle dark-mode</span> | <span id="clear-all">Clear all</span></div>
     <div id="footer-div">
-      &copy; 2020 <a href="mailto:edwardf@alum.mit.edu">Edward Fan</a>. High-contrast theme by Shannon Peng. <br>Subject descriptions and evaluations are &copy; 2014-2020 Massachusetts Institute of Technology.
+      &copy; 2020 <a href="mailto:edwardf@alum.mit.edu">Edward Fan</a>. High-contrast theme by Shannon Peng. Dark-mode by Mindren Lu. <br>Subject descriptions and evaluations are &copy; 2014-2020 Massachusetts Institute of Technology.
     </div>
   </div>
 
@@ -57,7 +57,21 @@
     <div id="spacer3-div"></div>
     <div id="info-div">
       <img src="img/logo.png" height="40px" vspace="2%" />
-      <p style="margin-bottom: 12px;"><a href="semesters/s20/spring.html"><span style="font-size: 70%">Spring 2020</span></a> | Fall 2020</p>
+      <!-- <p style="margin-bottom: 12px;"><a href="semesters/s20/spring.html"><span style="font-size: 70%">Spring 2020</span></a> | Fall 2020</p> -->
+      <form autocomplete=off>
+        <select name="semesters" id="semesters" onchange="location = this.options[this.selectedIndex].value;">
+          <option value="index.html" selected>Fall 2020</option>
+          <option value="semesters/s20/spring.html">Spring 2020</option>
+          <!-- <option value="semesters/i20/iap.html">IAP 2020</option> -->
+          <option value="semesters/f19/fall.html">Fall 2019</option>
+          <option value="semesters/s19/spring.html">Spring 2019</option>
+          <option value="semesters/i19/iap.html">IAP 2019</option>
+          <option value="semesters/f18/fall.html">Fall 2018</option>
+          <option value="semesters/s18/spring.html">Spring 2018</option>
+          <option value="semesters/i18/iap.html">IAP 2018</option>
+          <option value="semesters/f17/fall.html">Fall 2017</option>
+        </select>
+      </form>
       <!-- <span id="info-line">I'll be at Jane Street's booth at Career Fair- come say hi!</span> -->
     </div>
     <hr>
