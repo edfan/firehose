@@ -1159,10 +1159,13 @@ function set_css(css_state) {
 
 function set_dark_mode(dark_mode) { 
 	$("body, .modal-content").toggleClass("dark-mode-background", dark_mode);
+	$(".modal-content").toggleClass("dark-mode-modal-lists", dark_mode);
 	$(".fc-unthemed .fc-content, .fc-unthemed .fc-divider, .fc-unthemed .fc-list-heading td, .fc-unthemed .fc-list-view, .fc-unthemed .fc-popover, .fc-unthemed .fc-row, .fc-unthemed tbody, .fc-unthemed td, .fc-unthemed th, .fc-unthemed thead, hr").toggleClass("dark-mode-faint", dark_mode);
 	$(".fc-axis, .fc-day-header, #buttons-div, #right-div, #eval-table_wrapper thead, .modal-body").toggleClass("dark-mode-light", dark_mode);
-	$("#buttons-div button, #semesters, input, .dataTables_scrollBody, img[src^='img/cih'], img[src='img/iap.gif'], \
-		img[src='img/repeat.gif'], img[src='img/rest.gif']").toggleClass("dark-mode", dark_mode);
+	$(".dataTables_scrollBody").toggleClass("dark-mode-container", dark_mode);
+	$("img[src^='img/cih'], img[src='img/iap.gif'], img[src='img/repeat.gif'], img[src='img/rest.gif']").toggleClass("dark-mode-invert", dark_mode);
+	$("#buttons-div button, #semesters, input").toggleClass("dark-mode-background dark-mode-light dark-mode-faint", dark_mode);
+	$("html").toggleClass("dark-mode-html", dark_mode);
 }
 
 $(document).ready(function () {
