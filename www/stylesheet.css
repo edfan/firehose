@@ -68,12 +68,12 @@
     margin: 10 auto 0 auto;
 }
 
-#prereg-link, #calendar-link, #clipboard-link, #toggle-css, #clear-all {
+#export-div span {
     color: #0275d8;
     cursor: pointer;
 }
 
-#prereg-link:hover, #calendar-link:hover, #clipboard-link:hover, #toggle-css:hover, #clear-all:hover {
+#export-div span:hover {
     text-decoration: underline;
 }
 
@@ -217,7 +217,7 @@
 
 .btn-primary, .btn-primary.focus {
     color: #ec5339;
-    background-color: #fff;
+    background-color: transparent;
     border-color: #ec5339;
     background-image: none;
     outline: 0 !important;
@@ -360,6 +360,65 @@
 }
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
     color:    #909090;
+}
+
+.dataTables_scrollBody {
+    background-color: transparent !important;
+}
+
+.dark-mode-invert {
+    filter: invert(87.45%);
+}
+
+.dark-mode-background {
+    background-color: #202020;
+}
+
+.dark-mode-faint, .dark-mode-container td {
+    border-color: #303030 !important;
+}
+
+.dark-mode-light, .dark-mode-container tr {
+    color: #c8c5c3;
+}
+
+.dark-mode-container .odd, .dark-mode-container .even>.sorting_1 {
+    background-color: #282828 !important;
+}
+
+.dark-mode-container .odd>.sorting_1 {
+    background-color: #303030 !important;
+}
+
+.dark-mode-container .even {
+    background-color: #202020 !important;
+}
+
+::-webkit-scrollbar-corner {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+::-webkit-scrollbar, ::-webkit-scrollbar-track {
+    background-color: #F5F5F5;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #c0c0c0;
+}
+
+.dark-mode-html ::-webkit-scrollbar, .dark-mode-html ::-webkit-scrollbar-track {
+    background-color: #242424;
+}
+
+.dark-mode-html ::-webkit-scrollbar-thumb {
+    background-color: #999999;
+} 
+
+.dark-mode-html .ui-timepicker-list>* {
+    background-color: #202020 !important;
+    color: #c8c5c3 !important;
 }
 
 /* text boxes */
