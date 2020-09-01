@@ -251,6 +251,7 @@
     max-width: 1200px;
     margin: 5 auto 15 auto;
     cursor: pointer;
+    scrollbar-width: 10px;
 }
 
 #eval-loading {
@@ -401,6 +402,8 @@
 ::-webkit-scrollbar, ::-webkit-scrollbar-track {
     background-color: #F5F5F5;
     border-radius: 10px;
+    width: 10px;
+    height: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -419,6 +422,14 @@
 .dark-mode-html .ui-timepicker-list>* {
     background-color: #202020 !important;
     color: #c8c5c3 !important;
+}
+
+.dark-mode-html a, .dark-mode-html #activity-button, .dark-mode-html #expand-button, .dark-mode-html #export-div span, .dark-mode-html .link-span, .dark-mode-html #manual-button {
+    color: #88bbff;
+}
+
+select {
+    border-color: #767676;
 }
 
 /* text boxes */
