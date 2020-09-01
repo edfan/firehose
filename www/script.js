@@ -1097,7 +1097,7 @@ function calendar_send(isSignedIn) {
 			return batch;
 		}).then(function (resp) {
 			window.open('https://calendar.google.com', '_blank');
-			$("#calendar-link").text("Export to Google Calendar");
+			$("#calendar-link").html("<img src=\"img/calendar-button.svg\" />");
 		});
 	}
 }
