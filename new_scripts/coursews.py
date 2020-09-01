@@ -202,6 +202,9 @@ for c in raw_classes:
     cl = classes[number]
     split = c['timeAndPlace'].rsplit(' ', 1)
     t = split[0]
+    if 'ENDS' in t:
+        t = t.split('(')[0].strip()
+
     p = split[1]
 
     if p == 'VIRTUAL':
