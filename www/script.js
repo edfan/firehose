@@ -1022,7 +1022,7 @@ function calendar_send(isSignedIn) {
 		$("#calendar-link").text("Working...");
 
 		gapi.client.calendar.calendarList.list({}).then(function (resp) {
-			var name = "Firehose: Spring 2020";
+			var name = "Firehose: Fall 2020";
 			var ids = [];
 
 			for (var i in resp.result.items) {
