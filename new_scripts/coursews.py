@@ -200,7 +200,11 @@ for c in raw_classes:
     
     number = c['section-of']
     cl = classes[number]
-    split = c['timeAndPlace'].rsplit(' ', 1)
+    if 'EVE' in c['timeAndPlace']:
+        split = c['timeAndPlace'].rsplit(' ', 1)
+    else:
+        split = c['timeAndPlace'].split(' ', 1)
+
     t = split[0]
     if 'ENDS' in t:
         t = t.split('(')[0].strip()
