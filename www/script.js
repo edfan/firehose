@@ -1022,7 +1022,7 @@ function calendar_send(isSignedIn) {
 		$("#calendar-link").text("Working...");
 
 		gapi.client.calendar.calendarList.list({}).then(function (resp) {
-			var name = "Firehose: Fall 2020";
+			var name = "Firehose: Spring 2021";
 			var ids = [];
 
 			for (var i in resp.result.items) {
@@ -1056,10 +1056,10 @@ function calendar_send(isSignedIn) {
 				}).then();
 			});
 
-			var start_dates = ['2020-09-14', '2020-09-01', '2020-09-02', '2020-09-03', '2020-09-04'];
-			var end_dates = ['20201214', '20201215', '20201216', '20201210', '20201211'];
-			var r_dates = ['20201013', '20200901', '20200902', '20200903', '20200904'];
-			var ex_dates = [['20201012', '20201123'], ['20201124'], ['20201111', '20201125'], ['20201126'], ['20201127']];
+			var start_dates = ['2021-02-22', '2021-02-16', '2021-02-17', '2021-02-18', '2021-02-19'];
+			var end_dates = ['20210524', '20210525', '20210526', '20210527', '20210521'];
+			var r_dates = ['20210222', '20210309', '20210217', '20210218', '20210219'];
+			var ex_dates = [['20210308', '20210322', '20210419'], ['20210323', '20200420'], ['20210526'], ['20200527'], ['20210507']];
 			var batch = gapi.client.newBatch();
 
 			for (var s in gcal_slots) {

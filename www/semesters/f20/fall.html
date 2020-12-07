@@ -10,8 +10,8 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/jquery.dataTables.min.css" integrity="sha256-+Z1rYa3ys5OdZNUck5G7lBvb8A13OrYwvf+d8PfEaHQ=" crossorigin="anonymous" />
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js" integrity="sha256-TX6POJQ2u5/aJmHTJ/XUL5vWCbuOw0AQdgUEzk4vYMc=" crossorigin="anonymous"></script>
-  <link rel="stylesheet" type="text/css" href="scroller.dataTables.min.css">
-  <script defer src="dataTables.scroller.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="../../scroller.dataTables.min.css">
+  <script defer src="../../dataTables.scroller.min.js"></script>
 
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js" integrity="sha256-NjbogQqosWgor0UBdCURR5dzcvAgHnfUZMcZ8RCwkk8=" crossorigin="anonymous"></script>
 
@@ -25,14 +25,14 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.6.3/html.sortable.min.js" integrity="sha256-gO90Q7Ekvli89tFc8Tfv/e7Ta4x+YR8pc+ypnHdxBtQ=" crossorigin="anonymous"></script>
 
-  <link rel="stylesheet" href="jquery.timepicker.css" />
-  <script defer src="jquery.timepicker.min.js"></script>
+  <link rel="stylesheet" href="../../jquery.timepicker.css" />
+  <script defer src="../../jquery.timepicker.min.js"></script>
 
   <link href="https://fonts.googleapis.com/css?family=Open+Sans|PT+Serif" rel="stylesheet">
   <script defer src="https://apis.google.com/js/client.js"></script>
 
-  <link rel="stylesheet" type="text/css" href="stylesheet.css">
-  <script defer src="full.js"></script>
+  <link rel="stylesheet" type="text/css" href="../../stylesheet.css">
+  <script defer src="fall.js"></script>
   <script defer src="script-compiled.js"></script>
 </head>
 
@@ -63,20 +63,20 @@
       <!-- <p style="margin-bottom: 12px;"><a href="semesters/s20/spring.html"><span style="font-size: 70%">Spring 2020</span></a> | Fall 2020</p> -->
       <form autocomplete=off>
         <select name="semesters" id="semesters" onchange="location = this.options[this.selectedIndex].value;">
-          <option value="index.html" selected>Spring 2021</option>
-          <option value="semesters/f20/fall.html">Fall 2020</option>
-          <option value="semesters/s20/spring.html">Spring 2020</option>
+          <option value="../../index.html">Spring 2021</option>
+          <option value="../f20/fall.html" selected>Fall 2020</option>
+          <option value="../s20/spring.html">Spring 2020</option>
           <!-- <option value="semesters/i20/iap.html">IAP 2020</option> -->
-          <option value="semesters/f19/fall.html">Fall 2019</option>
-          <option value="semesters/s19/spring.html">Spring 2019</option>
-          <option value="semesters/i19/iap.html">IAP 2019</option>
-          <option value="semesters/f18/fall.html">Fall 2018</option>
-          <option value="semesters/s18/spring.html">Spring 2018</option>
-          <option value="semesters/i18/iap.html">IAP 2018</option>
-          <option value="semesters/f17/fall.html">Fall 2017</option>
+          <option value="../f19/fall.html">Fall 2019</option>
+          <option value="../s19/spring.html">Spring 2019</option>
+          <option value="../i19/iap.html">IAP 2019</option>
+          <option value="../f18/fall.html">Fall 2018</option>
+          <option value="../s18/spring.html">Spring 2018</option>
+          <option value="../i18/iap.html">IAP 2018</option>
+          <option value="../f17/fall.html">Fall 2017</option>
         </select>
       </form>
-      <span id="info-line">Apologies for the delay!</span>
+      <span id="info-line">Google Calendar export is fixed!</span>
     </div>
     <hr>
 
@@ -184,10 +184,10 @@
           class="type-span" id="grad-span" style="display: none"><img height="16" width="16" data-src="img/grad.gif" 
           class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Graduate" data-trigger="hover"/> (</span><span 
           class="type-span" id="fall-span" style="display: none"><img height="16" width="16" data-src="img/fall.gif" 
-          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Fall" data-trigger="hover"/>,</span><span 
+          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Fall" data-trigger="hover"/></span><span 
           class="type-span" id="iap-span" style="display: none">,<img height="16" width="16" data-src="img/iap.gif" 
           class="lazyload-img" data-toggle="tooltip" data-placement="top" title="IAP" data-trigger="hover"/></span><span 
-          class="type-span" id="spring-span" style="display: none"><img height="16" width="16" data-src="img/spring.gif" style="margin-left: -1px"
+          class="type-span" id="spring-span" style="display: none">,<img height="16" width="16" data-src="img/spring.gif" style="margin-left: -1px"
           class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Spring" data-trigger="hover"/></span><span 
           class="type-span" id="summer-span" style="display: none">,<img height="16" width="16" data-src="img/summer.gif" 
           class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Summer" data-trigger="hover"/></span><span 

@@ -2,7 +2,7 @@ import json
 import requests
 import itertools
 
-term = '2021FA'
+term = '2021SP'
 
 # copied from csb.py
 
@@ -245,10 +245,6 @@ for c in raw_classes:
     if typ not in cl['sections']:
         cl['sections'].append(typ)
     cl[typ].append(slots)
-    cl[f'{typ}_raw'].append(t.strip())
-
-# special case 6.849 per request
-classes['6.849']['l'] = [[[[16, 3], [112, 3]], 'Virtual']]
 
 with open('ws', 'w') as f:
     json.dump(classes, f)
