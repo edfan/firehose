@@ -1058,7 +1058,7 @@ function calendar_send(isSignedIn) {
 
 			var start_dates = ['2021-02-22', '2021-02-16', '2021-02-17', '2021-02-18', '2021-02-19'];
 			var end_dates = ['20210524', '20210525', '20210526', '20210527', '20210521'];
-			var r_dates = ['20210309', '20200216', '20210217', '20210218', '20210219'];
+			var r_dates = ['20210309', '20210216', '20210217', '20210218', '20210219'];
 			var ex_dates = [['20210308', '20210322', '20210419'], ['20210323', '20200420'], ['20210526'], ['20200527'], ['20210507']];
 			var batch = gapi.client.newBatch();
 
@@ -1088,7 +1088,7 @@ function calendar_send(isSignedIn) {
 						'recurrence': [
 							'RRULE:FREQ=WEEKLY;UNTIL=' + end_dates[g[0]],
 							'EXDATE;TZID=America/New_York:' + ex_date,
-							// 'RDATE;TZID=America/New_York:' + r_dates[g[0]] + 'T' + g[1].replace(':', '') + '00,'
+							'RDATE;TZID=America/New_York:' + r_dates[g[0]] + 'T' + g[1].replace(':', '') + '00,'
 						]
 					}
 				}));
