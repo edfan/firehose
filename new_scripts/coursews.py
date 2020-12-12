@@ -190,10 +190,13 @@ for c in raw_classes:
         continue
     elif c['type'] == 'LectureSession':
         typ = 'l'
+        typraw = 'l_raw'
     elif c['type'] == 'RecitationSession':
         typ = 'r'
+        typraw = 'r_raw'
     elif c['type'] == 'LabSession':
         typ = 'b'
+        typraw = 'b_raw'
     else:
         print("unknown type", c)
         continue
@@ -244,7 +247,9 @@ for c in raw_classes:
 
     if typ not in cl['sections']:
         cl['sections'].append(typ)
+
     cl[typ].append(slots)
+    cl[typraw].append(t)
 
 with open('ws', 'w') as f:
     json.dump(classes, f)
