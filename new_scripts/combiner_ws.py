@@ -10,6 +10,9 @@ with open('sublist') as f:
 with open('evaluations') as f:
     evals = json.load(f)
 
+    # Special case 6.871 evals.
+    evals['6.871'] = evals['HST.956']
+
 classes = {}
 
 def all_virtual(sections):
