@@ -121,6 +121,12 @@ for c in ['3.155', '6.152']:
             "F9-1",
             "F1-5"]
 
+# Special case 2.008 schedule.
+classes['2.008']['s'] = ['l', 'b']
+classes['2.008']['l'] = [[[[9,3],[69,3]],"Virtual"]]
+classes['2.008']['lr'] = ['MW12.30-2']
+classes['2.008']['r'] = []
+
 """ try:
     # Special case 14.01/14.02 rec-only sections.
     classes['14.01R'] = copy.deepcopy(classes['14.01'])
