@@ -125,6 +125,11 @@ for c in ['3.155', '6.152']:
 classes['2.008']['s'] = ['l', 'b']
 classes['2.008']['r'] = []
 
+# Special case 3.095 lecture.
+classes['3.095']['s'] = ['l', 'b']
+classes['3.095']['l'] = [[[[10,2],[70,2]],"Virtual"]]
+classes['3.095']['lr'] = ["MW1"]
+
 # Special case ES.S90 name / description.
 classes['ES.S90']['n'] = "Designing Adaptive Prison Solutions"
 classes['ES.S90']['d'] = "This course partners with experts within the criminal justice system and with incarcerated individuals with and without disabilities to understand how incarcerated people with disabilities are treated within the system and discuss how that treatment could be improved. We will explore the intersection of disability, accessibility, assistive technology, and the criminal justice system within the United States. By utilizing ethnographic practices and listening to the stories of incarcerated individuals with disabilities, we will explore and possibly desgn and will possible assistive technologies appropriate for use within the American criminal justice system."
