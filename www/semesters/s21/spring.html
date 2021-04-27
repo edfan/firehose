@@ -32,7 +32,7 @@
   <script defer src="https://apis.google.com/js/client.js"></script>
 
   <link rel="stylesheet" type="text/css" href="../../stylesheet.css">
-  <script defer src="fall.js"></script>
+  <script defer src="spring.js"></script>
   <script defer src="script-compiled.js"></script>
 </head>
 
@@ -47,32 +47,37 @@
     <div id="left-int-div">
       <div id='calendar'></div>
     </div>
-    <div id="export-div"><!-- <span id="prereg-link">Preregister these classes!</span> | --><span id="calendar-link" data-toggle="tooltip" data-placement="top" title="Make sure popups are enabled!" data-trigger="hover">Export to Google Calendar</span> | <span id="clipboard-link">Text form</span> | <span id="toggle-css">Toggle new theme</span> | <span id="clear-all">Clear all</span></div>
-    <div id="footer-div">&copy; 2018 <a href="mailto:edwardf@mit.edu">Edward Fan</a>. CSS by Shannon Peng. <br>Subject descriptions and evaluations are &copy; 2014-2018
-      Massachusetts Institute of Technology.</div>
+    <div id="export-div"><!-- <span id="prereg-link">Preregister these classes!</span> | -->
+        <span id="clipboard-link">Text form</span> | <span id="toggle-css">Toggle high-contrast</span> | <span id="toggle-dark-mode">Toggle dark-mode</span> | <span id="clear-all">Clear all</span><br>
+        <span id="calendar-link" data-toggle="tooltip" data-placement="top" title="Make sure popups are enabled!" data-trigger="hover"><img src="../../img/calendar-button.svg" /></span>
+    </div>
+    <div id="footer-div">
+      &copy; 2021 <a href="mailto:edwardf@alum.mit.edu">Edward Fan</a>. High-contrast theme by Shannon Peng. Dark-mode by Mindren Lu. <br>Subject descriptions and evaluations are &copy; 2014-2021 Massachusetts Institute of Technology.
+    </div>
   </div>
 
   <div id="right-div">
     <div id="spacer3-div"></div>
     <div id="info-div">
       <img src="../../img/logo.png" height="40px" vspace="2%" />
-      <!-- <p style="margin-bottom: 12px;">Fall 2018 | <a href="/"><span style="font-size: 70%">Current semester</span></a></p> -->
+      <!-- <p style="margin-bottom: 12px;"><a href="semesters/s20/spring.html"><span style="font-size: 70%">Spring 2020</span></a> | Fall 2020</p> -->
       <form autocomplete=off>
-          <select name="semesters" id="semesters" onchange="location = this.options[this.selectedIndex].value;">
-            <option value="../../index.html">Fall 2021</option>
-            <option value="../s21/spring.html">Spring 2021</option>
-            <option value="../f20/fall.html">Fall 2020</option>
-            <option value="../s20/spring.html">Spring 2020</option>
-            <!-- <option value="../i20/iap.html">IAP 2020</option> -->
-            <option value="../f19/fall.html">Fall 2019</option>
-            <option value="../s19/spring.html">Spring 2019</option>
-            <option value="../i19/iap.html">IAP 2019</option>
-            <option value="../f18/fall.html" selected>Fall 2018</option>
-            <option value="../s18/spring.html">Spring 2018</option>
-            <option value="../i18/iap.html">IAP 2018</option>
-            <option value="../f17/fall.html">Fall 2017</option>
-          </select>
-        </form>
+        <select name="semesters" id="semesters" onchange="location = this.options[this.selectedIndex].value;">
+          <option value="../../index.html">Fall 2021</option>
+          <option value="../s21/spring.html" selected>Spring 2021</option>
+          <option value="../f20/fall.html">Fall 2020</option>
+          <option value="../s20/spring.html">Spring 2020</option>
+          <!-- <option value="../i20/iap.html">IAP 2020</option> -->
+          <option value="../f19/fall.html">Fall 2019</option>
+          <option value="../s19/spring.html">Spring 2019</option>
+          <option value="../i19/iap.html">IAP 2019</option>
+          <option value="../f18/fall.html">Fall 2018</option>
+          <option value="../s18/spring.html">Spring 2018</option>
+          <option value="../i18/iap.html">IAP 2018</option>
+          <option value="../f17/fall.html">Fall 2017</option>
+        </select>
+      </form>
+      <!-- <span id="info-line">Apologies for the delay!</span> -->
     </div>
     <hr>
 
@@ -82,21 +87,6 @@
       <!-- <p id="info3-p">Tip: double-click to quickly add or remove a class.</p> -->
 
       <p id="activity-button">+ Add non-class activity</p>
-
-      <div id="activity-div" style="display: none;">
-        <label id="activity-input-label" for="activity-input">Name:&nbsp;</label>
-        <input type="text" style="width: 30% !important;" id="activity-input" data-toggle="popover" data-placement="left" data-trigger="manual" data-content="Activities can't conflict with class numbers.">&nbsp;&nbsp;&nbsp;
-        <label id="activity-input-label" for="activity-hours-input">Hours:&nbsp;</label>
-        <input type="text" style="width: 50px !important;" id="activity-hours-input" value="0" data-toggle="popover" data-placement="left" data-trigger="manual" data-content="Hours must be a number."><br><br>
-        <label class="checkbox-inline"><input type="checkbox" class="act-day" id="act-mon"> Mon </label>&nbsp;
-        <label class="checkbox-inline"><input type="checkbox" class="act-day" id="act-tue"> Tue </label>&nbsp;
-        <label class="checkbox-inline"><input type="checkbox" class="act-day" id="act-wed"> Wed </label>&nbsp;
-        <label class="checkbox-inline"><input type="checkbox" class="act-day" id="act-thu"> Thu </label>&nbsp;
-        <label class="checkbox-inline"><input type="checkbox" class="act-day" id="act-fri"> Fri </label><br>
-        <input id="start-time" type="text" class="time ui-timepicker-input" autocomplete="off" value="10:00am"> to 
-        <input id="end-time" type="text" class="time ui-timepicker-input" autocomplete="off" value="1:00pm"><br>
-        <button type="button" class="btn btn-primary" id="add-activity-button" disabled>Add/edit activity</button>
-      </div>
 
       <div id="selected-div" class="sortable"></div><br>
 
@@ -108,7 +98,7 @@
 
       <div id="sbuttons-div" class="btn-group" data-toggle="buttons">
         <label class="btn btn-primary selector-button" id="hass">
-          <input type="checkbox" autocomplete="off">Any HASS
+          <input type="checkbox" autocomplete="off">HASS
         </label>
         <label class="btn btn-primary selector-button" id="ci_h">
 	        <input type="checkbox" autocomplete="off">CI-H
@@ -118,6 +108,9 @@
         </label>
         <label class="btn btn-primary selector-button" id="final">
 	        <input type="checkbox" autocomplete="off">No final
+        </label>
+        <label class="btn btn-primary selector-button" id="virtual">
+	        <input type="checkbox" autocomplete="off">Virtual only
         </label>
       </div>
 
@@ -186,40 +179,40 @@
       <div id="flags-div">
       <p id="class-type">
         <span class="type-span" id="nonext-span" style="display: none"><img height="16" width="16" data-src="../../img/nonext.gif" 
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Not offered 2019-2020" data-trigger="hover"/></span><span 
-        class="type-span" id="under-span" style="display: none"><img height="16" width="16" data-src="../../img/under.gif" 
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Undergrad" data-trigger="hover"/> (</span><span 
-        class="type-span" id="grad-span" style="display: none"><img height="16" width="16" data-src="../../img/grad.gif" 
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Graduate" data-trigger="hover"/> (</span><span 
-        class="type-span" id="fall-span" style="display: none"><img height="16" width="16" data-src="../../img/fall.gif" 
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Fall" data-trigger="hover"/></span><span 
-        class="type-span" id="iap-span" style="display: none">,<img height="16" width="16" data-src="../../img/iap.gif" 
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="IAP" data-trigger="hover"/></span><span 
-        class="type-span" id="spring-span" style="display: none">,<img height="16" width="16" data-src="../../img/spring.gif" style="margin-left: -1px"
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Spring" data-trigger="hover"/></span><span 
-        class="type-span" id="summer-span" style="display: none">,<img height="16" width="16" data-src="../../img/summer.gif" 
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Summer" data-trigger="hover"/></span><span 
-        class="type-span" id="end-paren-span" style="display: none">) </span><span 
-        class="type-span" id="repeat-span" style="display: none"> <img height="16" width="16" data-src="../../img/repeat.gif" 
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Can be repeated for credit" data-trigger="hover"/> </span><span 
-        class="type-span" id="rest-span" style="display: none"><img height="16" width="16" data-src="../../img/rest.gif" 
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="REST" data-trigger="hover"/></span><span 
-        class="type-span" id="Lab-span" style="display: none"><img height="16" width="16" data-src="../../img/Lab.gif" 
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Institute Lab" data-trigger="hover"/></span><span 
-        class="type-span" id="PartLab-span" style="display: none"><img height="22" width="22" data-src="../../img/PartLab.gif" 
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Partial Institute Lab" data-trigger="hover"/></span><span 
-        class="type-span" id="hassH-span" style="display: none"><img height="16" width="16" data-src="../../img/hassH.gif" 
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="HASS-H" data-trigger="hover"/></span><span 
-        class="type-span" id="hassA-span" style="display: none"><img height="16" width="16" data-src="../../img/hassA.gif" 
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="HASS-A" data-trigger="hover"/></span><span 
-        class="type-span" id="hassS-span" style="display: none"><img height="16" width="16" data-src="../../img/hassS.gif" 
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="HASS-S" data-trigger="hover"/></span><span 
-        class="type-span" id="hassE-span" style="display: none"><img height="16" width="16" data-src="../../img/hassE.gif" 
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="HASS-E" data-trigger="hover" /></span><span 
-        class="type-span" id="cih1-span" style="display: none"> <img height="16" width="28" data-src="../../img/cih1.gif" 
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="CI-H" data-trigger="hover"/></span><span 
-        class="type-span" id="cihw-span" style="display: none"> <img height="16" width="32" data-src="../../img/cihw.gif" 
-        class="lazyload-img" data-toggle="tooltip" data-placement="top" title="CI-HW" data-trigger="hover"/></span> &nbsp;&nbsp;
+          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Not offered 2021-2022" data-trigger="hover"/></span><span 
+          class="type-span" id="under-span" style="display: none"><img height="16" width="16" data-src="../../img/under.gif" 
+          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Undergrad" data-trigger="hover"/> (</span><span 
+          class="type-span" id="grad-span" style="display: none"><img height="16" width="16" data-src="../../img/grad.gif" 
+          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Graduate" data-trigger="hover"/> (</span><span 
+          class="type-span" id="fall-span" style="display: none"><img height="16" width="16" data-src="../../img/fall.gif" 
+          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Fall" data-trigger="hover"/>,</span><span 
+          class="type-span" id="iap-span" style="display: none">,<img height="16" width="16" data-src="../../img/iap.gif" 
+          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="IAP" data-trigger="hover"/></span><span 
+          class="type-span" id="spring-span" style="display: none"><img height="16" width="16" data-src="../../img/spring.gif" style="margin-left: -1px"
+          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Spring" data-trigger="hover"/></span><span 
+          class="type-span" id="summer-span" style="display: none">,<img height="16" width="16" data-src="../../img/summer.gif" 
+          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Summer" data-trigger="hover"/></span><span 
+          class="type-span" id="end-paren-span" style="display: none">) </span><span 
+          class="type-span" id="repeat-span" style="display: none"> <img height="16" width="16" data-src="../../img/repeat.gif" 
+          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Can be repeated for credit" data-trigger="hover"/> </span><span 
+          class="type-span" id="rest-span" style="display: none"><img height="16" width="16" data-src="../../img/rest.gif" 
+          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="REST" data-trigger="hover"/></span><span 
+          class="type-span" id="Lab-span" style="display: none"><img height="16" width="16" data-src="../../img/Lab.gif" 
+          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Institute Lab" data-trigger="hover"/></span><span 
+          class="type-span" id="PartLab-span" style="display: none"><img height="22" width="22" data-src="../../img/PartLab.gif" 
+          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Partial Institute Lab" data-trigger="hover"/></span><span 
+          class="type-span" id="hassH-span" style="display: none"><img height="16" width="16" data-src="../../img/hassH.gif" 
+          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="HASS-H" data-trigger="hover"/></span><span 
+          class="type-span" id="hassA-span" style="display: none"><img height="16" width="16" data-src="../../img/hassA.gif" 
+          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="HASS-A" data-trigger="hover"/></span><span 
+          class="type-span" id="hassS-span" style="display: none"><img height="16" width="16" data-src="../../img/hassS.gif" 
+          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="HASS-S" data-trigger="hover"/></span><span 
+          class="type-span" id="hassE-span" style="display: none"><img height="16" width="16" data-src="../../img/hassE.gif" 
+          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="HASS-E" data-trigger="hover" /></span><span 
+          class="type-span" id="cih1-span" style="display: none"> <img height="16" width="28" data-src="../../img/cih1.gif" 
+          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="CI-H" data-trigger="hover"/></span><span 
+          class="type-span" id="cihw-span" style="display: none"> <img height="16" width="32" data-src="../../img/cihw.gif" 
+          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="CI-HW" data-trigger="hover"/></span> &nbsp;&nbsp;
         <span id="class-units"></span>
         <span class="type-span" id="final-span" style="display: none">&nbsp;&nbsp;&nbsp;Has final</span><br>
         <span id="class-prereq"></span>
@@ -257,8 +250,9 @@
     <hr>
 
     <div id="info2-div">
-      <p>Questions? Issues? Feedback? <a href="mailto:edwardf@mit.edu">Send me an email!</a></p>
+      <p>Questions? Issues? Feedback? <a href="mailto:edwardf@alum.mit.edu">Send me an email!</a></p>
       <p>Looking for the old Firehose? It's been moved <a href="https://firehose.guide/old_www/evaluations.html" target="_blank">here</a>.</p>
+      <p><a href="https://github.com/edfan/firehose">GitHub</a> | <a href="privacy.html">Privacy Policy</a></p>
     </div>
 
   </div>
@@ -272,6 +266,33 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-sm btn-secondary" id="clipboard-button" data-toggle="tooltip" data-placement="top" title="Copied!" data-trigger="manual">Copy to clipboard</button>
           <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="activity-modal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <label id="activity-input-label" for="activity-input">Name:&nbsp;</label>
+          <input type="text" style="width: 30% !important;" id="activity-input" data-toggle="popover" data-placement="left" data-trigger="manual" data-content="Activities can't conflict with class numbers.">&nbsp;&nbsp;&nbsp;
+          <label id="activity-input-label" for="activity-hours-input">Hours:&nbsp;</label>
+          <input type="text" style="width: 50px !important;" id="activity-hours-input" value="0" data-toggle="popover" data-placement="left" data-trigger="manual" data-content="Hours must be a number.">
+          <hr>
+          <label class="checkbox-inline"><input type="checkbox" class="act-day" id="act-mon"> Mon </label>&nbsp;
+          <label class="checkbox-inline"><input type="checkbox" class="act-day" id="act-tue"> Tue </label>&nbsp;
+          <label class="checkbox-inline"><input type="checkbox" class="act-day" id="act-wed"> Wed </label>&nbsp;
+          <label class="checkbox-inline"><input type="checkbox" class="act-day" id="act-thu"> Thu </label>&nbsp;
+          <label class="checkbox-inline"><input type="checkbox" class="act-day" id="act-fri"> Fri </label>&nbsp;&nbsp;&nbsp;
+          <input id="start-time" type="text" class="time ui-timepicker-input" autocomplete="off" value="10:00am"> to 
+          <input id="end-time" type="text" class="time ui-timepicker-input" autocomplete="off" value="1:00pm"><br>
+          <button type="button" class="btn btn-success btn-sm" id="activity-modal-add-timeslot">Add timeslot</button>
+          <hr>
+          <div id="activity-times"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary btn-sm" id="add-activity-button">Save activity</button>
         </div>
       </div>
     </div>
