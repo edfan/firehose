@@ -97,42 +97,9 @@ for c in ws:
         classes[c]['h'] = 0
         classes[c]['si'] = 0
 
-# Special case 6.152/3.155 schedule.
-for c in ['3.155', '6.152']:
-    if c in classes:
-        classes[c]['s'] = ['l', 'b']
-        classes[c]['r'] = []
-        classes[c]['b'] = [
-            [[[2,8]],"12-3110"], 
-            [[[32,8]],"12-3110"],
-            [[[40,8]],"12-3110"], 
-            [[[62,8]],"12-3110"], 
-            [[[92,8]],"12-3110"], 
-            [[[100,8]],"12-3110"], 
-            [[[122,8]],"12-3110"], 
-            [[[130,8]],"12-3110"]]
-        classes[c]['br'] = [
-            "M9-1",
-            "T9-1",
-            "T1-5",
-            "W9-1",
-            "R9-1",
-            "R1-5",
-            "F9-1",
-            "F1-5"]
-
 # Special case 2.008 schedule.
-classes['2.008']['s'] = ['l', 'b']
-classes['2.008']['r'] = []
-
-# Special case 3.095 lecture.
-classes['3.095']['s'] = ['l', 'b']
-classes['3.095']['l'] = [[[[10,2],[70,2]],"Virtual"]]
-classes['3.095']['lr'] = ["MW1"]
-
-# Special case ES.S90 name / description.
-classes['ES.S90']['n'] = "Designing Adaptive Prison Solutions"
-classes['ES.S90']['d'] = "This course partners with experts within the criminal justice system and with incarcerated individuals with and without disabilities to understand how incarcerated people with disabilities are treated within the system and discuss how that treatment could be improved. We will explore the intersection of disability, accessibility, assistive technology, and the criminal justice system within the United States. By utilizing ethnographic practices and listening to the stories of incarcerated individuals with disabilities, we will explore and possibly desgn and will possible assistive technologies appropriate for use within the American criminal justice system."
+# classes['2.008']['s'] = ['l', 'b']
+# classes['2.008']['r'] = []
 
 """ try:
     # Special case 14.01/14.02 rec-only sections.

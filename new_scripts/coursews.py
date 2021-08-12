@@ -2,7 +2,7 @@ import json
 import requests
 import itertools
 
-term = '2021SP'
+term = '2021FA'
 
 # copied from csb.py
 
@@ -72,7 +72,7 @@ def tsp_eve(t, number):
                 length = 2
             slots.append((days[d] + eve_times[startendtime[0]], length))
     except Exception as e:
-        print(e, t, number)
+        print("tsp_eve", e, t, number)
 
     return slots
 
@@ -99,7 +99,7 @@ def tsp(t, number):
                     length = 2
                 slots.append((days[d] + times[startendtime[0]], length))
     except Exception as e:
-        print(e, t, number)
+        print("tsp", e, t, number)
 
     return slots
 
@@ -202,13 +202,26 @@ for c in raw_classes:
         continue
     
     number = c['section-of']
+
+    if number not in classes:
+        print('section for nonexistent class', number)
+        continue
+
     cl = classes[number]
+
     if 'EVE' in c['timeAndPlace']:
         split = c['timeAndPlace'].rsplit(' ', 1)
+        t = split[0]
     else:
-        split = c['timeAndPlace'].split(' ', 1)
+        # For some reason, a couple classes are totally inconsistent.
+        tp = c['timeAndPlace']
+        if "33-014, " in tp:
+            tp = tp[:-5]
+        if ":00" in tp or ":30" in tp:
+            tp = tp.replace(":00", "").replace(":30", ".30")
+        split = tp.rsplit(' ', 1)
+        t = split[0].replace(' ', '')
 
-    t = split[0]
     if 'ENDS' in t:
         t = t.split('(')[0].strip()
 
@@ -218,7 +231,7 @@ for c in raw_classes:
         p = 'Virtual'
 
     # Check for TBA.
-    if t == '*TO BE ARRANGED' or t == 'null':
+    if t == '*TO BE ARRANGED' or t == 'null' or t.lower() == 'tbd' or t.lower() == 'tba':
         cl['tba'] = True
         continue
 
