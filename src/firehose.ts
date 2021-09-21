@@ -1,3 +1,8 @@
+function formatNumber(n: number, x: number) {
+  const re = "\\d(?=(\\d{" + (x || 3) + "})+" + (n > 0 ? "\\." : "$") + ")";
+  return n.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, "g"), "$&,");
+}
+
 // [start slot, length of slot], e.g. [6, 3]
 type RawTimeslot = [number, number];
 
@@ -53,7 +58,7 @@ type RawClass = {
   // string describing prereqs
   // generally could be anything
   pr: string;
-  
+
   d: string; // description
   n: string; // name
   i: string; // in-charge
@@ -69,3 +74,25 @@ type RawClass = {
   h: number; // hours from evals
   si: number; // size from evals
 };
+
+// "6.036", "5.5", "10.2", "Introduction to Machine Learning"
+type EvalTableRow = [string, string, string, string];
+
+class Firehose {
+  rawClasses: Array<RawClass>;
+  evalTableRows: Array<EvalTableRow>;
+
+  constructor(rawClasses: Array<RawClass>) {
+    this.rawClasses = rawClasses;
+    this.evalTableRows = rawClasses.map((cls) => [
+      cls.no,
+      formatNumber(cls.ra, 1),
+      formatNumber(cls.h, 1),
+      cls.n,
+    ]);
+  }
+
+  fillTable(isSelected: (cls: string) => boolean): Array<EvalTableRow> {
+    return this.evalTableRows.filter(([cls]) => isSelected(cls));
+  }
+}
