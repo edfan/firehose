@@ -76,9 +76,9 @@ type RawClass = {
 };
 
 enum SectionKind {
-  LECTURE,
-  RECITATION,
-  LAB,
+  LECTURE = "l",
+  RECITATION = "r",
+  LAB = "b",
 }
 
 class Timeslot {
@@ -128,6 +128,23 @@ class Class {
       setToUnits,
     };
   }
+
+  get sectionKinds(): Array<SectionKind> {
+    const map = {
+      l: SectionKind.LECTURE,
+      r: SectionKind.RECITATION,
+      b: SectionKind.LAB,
+    };
+    return this.rawClass.s.map((kind) => map[kind]);
+  }
+
+  sectionsOfKind(kind: SectionKind): Array<Section> {
+    return this.rawClass[kind].map((sec) => new Section(this, kind, sec));
+  }
+
+  get sections(): Map<SectionKind, Array<Section>> {
+    return new Map(this.sectionKinds.map((kind) => [kind, this.sectionsOfKind(kind)]));
+  }
 }
 
 // "6.036", "5.5", "10.2", "Introduction to Machine Learning"
@@ -150,5 +167,17 @@ class Firehose {
 
   fillTable(isSelected: (cls: string) => boolean): Array<EvalTableRow> {
     return this.evalTableRows.filter(([cls]) => isSelected(cls));
+  }
+
+  selectSlots(lockedSlots: Map<string, number>): {
+    // [class number, section kind]
+    allSections: Array<[number, string]>;
+    // each entry is e.g. [0, 0, 1], for options 0, 0, 1 of allSections
+    options: Array<Array<number>>;
+  } {
+    return {
+      allSections: [],
+      options: []
+    };
   }
 }
