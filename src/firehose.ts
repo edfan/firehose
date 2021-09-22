@@ -88,6 +88,14 @@ class Timeslot {
   constructor(timeslot: RawTimeslot) {
     [this.startSlot, this.numSlots] = timeslot;
   }
+
+  get endSlot(): number {
+    return this.startSlot + this.numSlots - 1;
+  }
+
+  conflicts(other: Timeslot): boolean {
+    return this.startSlot <= other.endSlot && other.startSlot <= this.endSlot;
+  }
 }
 
 class Section {
@@ -102,6 +110,28 @@ class Section {
     const [rawSlots, room] = section;
     this.timeslots = rawSlots.map((slot) => new Timeslot(slot));
     this.room = room;
+  }
+
+  countConflicts(currentSlots: Array<Timeslot>): number {
+    let conflicts = 0;
+    for (const slot of this.timeslots) {
+      for (const otherSlot of currentSlots) {
+        conflicts += slot.conflicts(otherSlot) ? 1 : 0;
+      }
+    }
+    return conflicts;
+  }
+}
+
+class Sections {
+  cls: Class;
+  kind: SectionKind;
+  sections: Array<Section>;
+
+  constructor(cls: Class, kind: SectionKind, secs: Array<RawSection>) {
+    this.cls = cls;
+    this.kind = kind;
+    this.sections = secs.map((sec) => new Section(cls, kind, sec));
   }
 }
 
@@ -138,12 +168,12 @@ class Class {
     return this.rawClass.s.map((kind) => map[kind]);
   }
 
-  sectionsOfKind(kind: SectionKind): Array<Section> {
-    return this.rawClass[kind].map((sec) => new Section(this, kind, sec));
+  sectionsOfKind(kind: SectionKind): Sections {
+    return new Sections(this, kind, this.rawClass[kind]);
   }
 
-  get sections(): Map<SectionKind, Array<Section>> {
-    return new Map(this.sectionKinds.map((kind) => [kind, this.sectionsOfKind(kind)]));
+  get sections(): Array<Sections> {
+    return this.sectionKinds.map((kind) => this.sectionsOfKind(kind));
   }
 }
 
@@ -167,14 +197,77 @@ class Firehose {
     return this.evalTableRows.filter(([cls]) => isSelected(cls));
   }
 
+  selectHelper(
+    freeSections: Array<Sections>,
+    filledSlots: Array<Timeslot>,
+    foundOptions: Array<Section>,
+    curConflicts: number,
+    foundMinConflicts: number
+  ): {
+    options: Array<Section>;
+    minConflicts: number;
+  } {
+    if (freeSections.length === 0) {
+      return { options: foundOptions, minConflicts: curConflicts };
+    }
+
+    let options: Array<Section> = [];
+    let minConflicts: number = foundMinConflicts;
+
+    const [secs, ...remainingSections] = freeSections;
+
+    for (const sec of secs.sections) {
+      const newConflicts = sec.countConflicts(filledSlots);
+      if (curConflicts + newConflicts > foundMinConflicts) continue;
+
+      const { options: newOptions, minConflicts: newMinConflicts } = this.selectHelper(
+        remainingSections,
+        filledSlots.concat(sec.timeslots),
+        foundOptions.concat(sec),
+        curConflicts + newConflicts,
+        foundMinConflicts
+      );
+
+      if (newMinConflicts < minConflicts) {
+        options = [];
+        minConflicts = newMinConflicts;
+      }
+
+      if (newMinConflicts == minConflicts) {
+        options.push(...newOptions);
+      }
+    }
+
+    return { options, minConflicts };
+  }
+
   selectSlots(
-    lockedSlots: Map<string, number>
+    lockedSlots: Map<string, string | number>
   ): {
     // [class number, section kind]
-    allSections: Array<[number, string]>;
+    allSections: Array<[string, string]>;
     // each entry is e.g. [0, 0, 1], for options 0, 0, 1 of allSections
     options: Array<Array<number>>;
   } {
+    const lockedSections: Array<Sections> = [];
+    const lockedOptions: Array<number> = [];
+    const initialSlots: Array<Section> = [];
+    const freeSections: Array<Sections> = [];
+
+    for (const cls of this.currentClasses) {
+      for (const secs of cls.sections) {
+        const key = `${secs.cls.number},${secs.kind}`;
+        const option = lockedSlots[key];
+        if (option !== "none") {
+          lockedSections.push(secs);
+          lockedOptions.push(option);
+          initialSlots.push(secs.sections[option]);
+        } else {
+          freeSections.push(secs);
+        }
+      }
+    }
+
     return {
       allSections: [],
       options: [],

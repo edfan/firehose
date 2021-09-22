@@ -344,6 +344,7 @@ function select_slots() {
     }
     all_sections = all_sections.concat(auto_sections);
     var tmp = select_helper(auto_sections, init_slots, [], 0, 1000);
+    console.log(tmp, auto_sections, init_slots);
     for (var o = 0; o < tmp[0].length; o++) {
         tmp[0][o] = tmp_options.concat(tmp[0][o]);
     }
