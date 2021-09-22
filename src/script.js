@@ -1,7 +1,7 @@
 // drop in firehose.ts code above
 
-var classesMap = new Map(Object.values(classes).map((cls) => [cls.no, cls]))
-var firehose = new Firehose(classesMap);
+var classes_map = new Map(Object.entries(classes));
+var firehose = new Firehose(classes_map);
 
 var table;
 var virtual_active = false;
@@ -231,97 +231,12 @@ function conflict_check(slot1, slot2) {
 		(slot2[0] < slot1[0] + slot1[1]))
 }
 
-function select_helper(all_sections, chosen_slots, chosen_options, cur_conflicts, min_conflicts) {
-	var chosen = [];
-
-	if (all_sections.length == 0) {
-		return [[chosen_options], cur_conflicts]
-	}
-
-	var slot;
-	var new_conflicts;
-	var out;
-
-	var new_all_sections = all_sections.slice()
-	new_all_sections.shift();  // Yes, this has to be separate.
-
-	var section = all_sections[0];
-	var slots = classes[section[0]][section[1]];
-
-	for (var s = 0; s < slots.length; s++) {
-		slot = slots[s][0];
-		new_conflicts = 0;
-
-		for (var cs = 0; cs < chosen_slots.length; cs++) {
-			for (var ss = 0; ss < slot.length; ss++) {
-				if (conflict_check(slot[ss], chosen_slots[cs])) {
-					new_conflicts++;
-				}
-			}
-		}
-
-		if (cur_conflicts + new_conflicts > min_conflicts) {
-			continue;
-		}
-
-		out = select_helper(new_all_sections,
-			chosen_slots.concat(slot),
-			chosen_options.concat(s),
-			cur_conflicts + new_conflicts,
-			min_conflicts);
-
-		if (out[1] < min_conflicts) {
-			chosen = [];
-			min_conflicts = out[1];
-		}
-
-		if (out[1] == min_conflicts) {
-			chosen = chosen.concat(out[0]);
-		}
-	}
-
-	return [chosen, min_conflicts]
-}
-
-
 function select_slots() {
-	var all_class_sections = [];
-	for (var c = 0; c < cur_classes.length; c++) {
-		for (var s = 0; s < classes[cur_classes[c]]['s'].length; s++) {
-			all_class_sections.push([classes[cur_classes[c]]['no'],
-			classes[cur_classes[c]]['s'][s]])
-		}
-	}
-
-	all_class_sections.sort(function (a, b) {
-		return (classes[a[0]][a[1]].length -
-			classes[b[0]][b[1]].length);
-	});
-
-	all_sections = [];
-	var tmp_options = [];
-	var init_slots = [];
-	var auto_sections = [];
-	for (var i = 0; i < all_class_sections.length; i++) {
-		var section = all_class_sections[i]
-		if (section in locked_slots) {
-			if (locked_slots[section] != "none") {
-				all_sections.push(section);
-				tmp_options.push(locked_slots[section]);
-				init_slots = init_slots.concat(classes[section[0]][section[1]][locked_slots[section]][0]);
-			}
-		} else {
-			auto_sections.push(section);
-		}
-	}
-	all_sections = all_sections.concat(auto_sections);
-
-	var tmp = select_helper(auto_sections, init_slots, [], 0, 1000);
-	for (var o = 0; o < tmp[0].length; o++) {
-		tmp[0][o] = tmp_options.concat(tmp[0][o]);
-	}
-	options = tmp[0];
-	cur_min_conflicts = tmp[1];
+	var locked_map = new Map(Object.entries(locked_slots));
+	firehose.currentClasses = cur_classes.map((cls) => new Class(classes[cls]));
+	var tmp = firehose.selectSlots(locked_map);
+	all_sections = tmp.allSections;
+	options = tmp.options;
 
 	set_option(0);
 	$("#cal-options-2").text(options.length);

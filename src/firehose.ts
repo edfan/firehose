@@ -100,12 +100,14 @@ class Timeslot {
 
 class Section {
   cls: Class;
+  index: number;
   kind: SectionKind;
   timeslots: Array<Timeslot>;
   room: string;
 
-  constructor(cls: Class, kind: SectionKind, section: RawSection) {
+  constructor(cls: Class, index: number, kind: SectionKind, section: RawSection) {
     this.cls = cls;
+    this.index = index;
     this.kind = kind;
     const [rawSlots, room] = section;
     this.timeslots = rawSlots.map((slot) => new Timeslot(slot));
@@ -131,7 +133,7 @@ class Sections {
   constructor(cls: Class, kind: SectionKind, secs: Array<RawSection>) {
     this.cls = cls;
     this.kind = kind;
-    this.sections = secs.map((sec) => new Section(cls, kind, sec));
+    this.sections = secs.map((sec, i) => new Section(cls, i, kind, sec));
   }
 }
 
@@ -144,7 +146,7 @@ class Class {
   }
 
   get number(): string {
-    return this.rawClass.n;
+    return this.rawClass.no;
   }
 
   get units(): number {
@@ -204,14 +206,14 @@ class Firehose {
     curConflicts: number,
     foundMinConflicts: number
   ): {
-    options: Array<Section>;
+    options: Array<Array<Section>>;
     minConflicts: number;
   } {
     if (freeSections.length === 0) {
-      return { options: foundOptions, minConflicts: curConflicts };
+      return { options: [foundOptions], minConflicts: curConflicts };
     }
 
-    let options: Array<Section> = [];
+    let options: Array<Array<Section>> = [];
     let minConflicts: number = foundMinConflicts;
 
     const [secs, ...remainingSections] = freeSections;
@@ -250,27 +252,30 @@ class Firehose {
     options: Array<Array<number>>;
   } {
     const lockedSections: Array<Sections> = [];
-    const lockedOptions: Array<number> = [];
-    const initialSlots: Array<Section> = [];
+    const lockedOptions: Array<Section> = [];
+    const initialSlots: Array<Timeslot> = [];
     const freeSections: Array<Sections> = [];
 
     for (const cls of this.currentClasses) {
       for (const secs of cls.sections) {
-        const key = `${secs.cls.number},${secs.kind}`;
+        const key = `${cls.number},${secs.kind}`;
         const option = lockedSlots[key];
-        if (option !== "none") {
+        if (option !== undefined && option !== "none") {
+          const sec = secs.sections[option];
           lockedSections.push(secs);
-          lockedOptions.push(option);
-          initialSlots.push(secs.sections[option]);
+          lockedOptions.push(sec);
+          initialSlots.push(...sec.timeslots);
         } else {
           freeSections.push(secs);
         }
       }
     }
 
+    const { options } = this.selectHelper(freeSections, initialSlots, [], 0, Infinity);
+
     return {
-      allSections: [],
-      options: [],
+      allSections: [lockedSections, freeSections].flat().map((sec) => [sec.cls.number, sec.kind]),
+      options: options.map((opt) => lockedOptions.concat(opt).map((sec) => sec.index)),
     };
   }
 }
