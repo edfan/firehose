@@ -75,12 +75,68 @@ type RawClass = {
   si: number; // size from evals
 };
 
+enum SectionKind {
+  LECTURE,
+  RECITATION,
+  LAB,
+}
+
+class Timeslot {
+  startSlot: number;
+  numSlots: number;
+
+  constructor(timeslot: RawTimeslot) {
+    [this.startSlot, this.numSlots] = timeslot;
+  }
+}
+
+class Section {
+  cls: Class;
+  kind: SectionKind;
+  timeslots: Array<Timeslot>;
+  room: string;
+
+  constructor(cls: Class, kind: SectionKind, section: RawSection) {
+    this.cls = cls;
+    this.kind = kind;
+    const [rawSlots, room] = section;
+    this.timeslots = rawSlots.map((slot) => new Timeslot(slot));
+    this.room = room;
+  }
+}
+
+// rawClass wraper
+class Class {
+  rawClass: RawClass;
+
+  constructor(rawClass: RawClass) {
+    this.rawClass = rawClass;
+  }
+
+  get number(): string {
+    return this.rawClass.n;
+  }
+
+  get units(): number {
+    return this.rawClass.u1 + this.rawClass.u2 + this.rawClass.u3;
+  }
+
+  get hours(): { hours: number; setToUnits: boolean } {
+    const setToUnits = !this.rawClass.h;
+    return {
+      hours: setToUnits ? this.units : this.rawClass.h,
+      setToUnits,
+    };
+  }
+}
+
 // "6.036", "5.5", "10.2", "Introduction to Machine Learning"
 type EvalTableRow = [string, string, string, string];
 
 class Firehose {
   rawClasses: Array<RawClass>;
   evalTableRows: Array<EvalTableRow>;
+  currentClasses: Array<Class> = [];
 
   constructor(rawClasses: Array<RawClass>) {
     this.rawClasses = rawClasses;
