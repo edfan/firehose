@@ -1,6 +1,6 @@
-function formatNumber(n: number, x: number) {
+function formatNumber(x: number, n: number) {
   const re = "\\d(?=(\\d{" + (x || 3) + "})+" + (n > 0 ? "\\." : "$") + ")";
-  return n.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, "g"), "$&,");
+  return x.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, "g"), "$&,");
 }
 
 // [start slot, length of slot], e.g. [6, 3]
@@ -151,25 +151,25 @@ class Class {
 type EvalTableRow = [string, string, string, string];
 
 class Firehose {
-  rawClasses: Array<RawClass>;
+  rawClasses: Map<string, RawClass>;
   evalTableRows: Array<EvalTableRow>;
   currentClasses: Array<Class> = [];
 
-  constructor(rawClasses: Array<RawClass>) {
+  constructor(rawClasses: Map<string, RawClass>) {
     this.rawClasses = rawClasses;
-    this.evalTableRows = rawClasses.map((cls) => [
-      cls.no,
-      formatNumber(cls.ra, 1),
-      formatNumber(cls.h, 1),
-      cls.n,
-    ]);
+    this.evalTableRows = [];
+    for (const cls of this.rawClasses.values()) {
+      this.evalTableRows.push([cls.no, formatNumber(cls.ra, 1), formatNumber(cls.h, 1), cls.n]);
+    }
   }
 
   fillTable(isSelected: (cls: string) => boolean): Array<EvalTableRow> {
     return this.evalTableRows.filter(([cls]) => isSelected(cls));
   }
 
-  selectSlots(lockedSlots: Map<string, number>): {
+  selectSlots(
+    lockedSlots: Map<string, number>
+  ): {
     // [class number, section kind]
     allSections: Array<[number, string]>;
     // each entry is e.g. [0, 0, 1], for options 0, 0, 1 of allSections
@@ -177,7 +177,7 @@ class Firehose {
   } {
     return {
       allSections: [],
-      options: []
+      options: [],
     };
   }
 }
