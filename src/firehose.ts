@@ -1,3 +1,5 @@
+var render, html; // make tsc accept these types
+
 function formatNumber(x: number, n: number) {
   const re = "\\d(?=(\\d{" + (x || 3) + "})+" + (n > 0 ? "\\." : "$") + ")";
   return x.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, "g"), "$&,");
@@ -98,6 +100,27 @@ class Timeslot {
   }
 }
 
+type Flags = {
+  nonext: boolean;
+  under: boolean;
+  grad: boolean;
+  fall: boolean;
+  iap: boolean;
+  spring: boolean;
+  summer: boolean;
+  repeat: boolean;
+  rest: boolean;
+  Lab: boolean;
+  PartLab: boolean;
+  hassH: boolean;
+  hassA: boolean;
+  hassS: boolean;
+  hassE: boolean;
+  cih1: boolean;
+  cihw: boolean;
+  final: boolean;
+};
+
 class Section {
   cls: Class;
   index: number;
@@ -145,18 +168,26 @@ class Class {
     this.rawClass = rawClass;
   }
 
+  get name(): string {
+    return this.rawClass.n;
+  }
+
   get number(): string {
     return this.rawClass.no;
   }
 
-  get units(): number {
+  get units(): Array<number> {
+    return [this.rawClass.u1, this.rawClass.u2, this.rawClass.u3];
+  }
+
+  get totalUnits(): number {
     return this.rawClass.u1 + this.rawClass.u2 + this.rawClass.u3;
   }
 
   get hours(): { hours: number; setToUnits: boolean } {
     const setToUnits = !this.rawClass.h;
     return {
-      hours: setToUnits ? this.units : this.rawClass.h,
+      hours: setToUnits ? this.totalUnits : this.rawClass.h,
       setToUnits,
     };
   }
@@ -176,6 +207,29 @@ class Class {
 
   get sections(): Array<Sections> {
     return this.sectionKinds.map((kind) => this.sectionsOfKind(kind));
+  }
+
+  get flags(): Flags {
+    return {
+      nonext: this.rawClass.nx,
+      under: this.rawClass.le === "U",
+      grad: this.rawClass.le === "G",
+      fall: this.rawClass.t.includes("FA"),
+      iap: this.rawClass.t.includes("JA"),
+      spring: this.rawClass.t.includes("SP"),
+      summer: this.rawClass.t.includes("SU"),
+      repeat: this.rawClass.rp,
+      rest: this.rawClass.re,
+      Lab: this.rawClass.la,
+      PartLab: this.rawClass.pl,
+      hassH: this.rawClass.hh,
+      hassA: this.rawClass.ha,
+      hassS: this.rawClass.hs,
+      hassE: this.rawClass.he,
+      cih1: this.rawClass.ci,
+      cihw: this.rawClass.cw,
+      final: this.rawClass.f,
+    };
   }
 }
 
@@ -280,10 +334,127 @@ class Firehose {
   }
 
   addClass(number: string): void {
-    this.currentClasses.push(new Class(this.rawClasses[number]));
+    this.currentClasses.push(new Class(this.rawClasses.get(number)));
   }
 
   removeClass(number: string): void {
     this.currentClasses = this.currentClasses.filter((cls) => cls.number !== number);
   }
+
+  classDescription(number: string): void {
+    const cls = new Class(this.rawClasses.get(number));
+    render(
+      html`<${ClassDescription} cls="${cls}" />`,
+      document.getElementById("desc-div"),
+      document.getElementById("desc-div-internal")
+    );
+  }
+}
+
+function TypeSpan(props: { flag: string; title: string }) {
+  const { flag, title } = props;
+
+  return html`
+    <span class="type-span" id="${flag}-span">
+      <img
+        height="16"
+        width="16"
+        src="img/${flag}.gif"
+        data-toggle="tooltip"
+        data-placement="top"
+        title="${title}"
+        data-trigger="hover"
+    /></span>
+  `;
+}
+
+function ClassTypes(props: { cls: Class }) {
+  const { cls } = props;
+  const { flags, totalUnits, units } = cls;
+
+  const makeFlags = (arr) =>
+    arr
+      .filter(([flag, title]) => flags[flag])
+      .map(([flag, title]) => html`<${TypeSpan} key="${flag}" flag="${flag}" title="${title}" />`);
+
+  const types1 = makeFlags([
+    ["nonext", "Not offered 2021-2022"],
+    ["under", "Undergrad"],
+    ["grad", "Graduate"],
+  ]);
+
+  const seasons = makeFlags([
+    ["fall", "Fall"],
+    ["iap", "IAP"],
+    ["spring", "Spring"],
+    ["summer", "Summer"],
+  ])
+    .map((tag) => [tag, ", "])
+    .flat()
+    .slice(0, -1);
+
+  const types2 = makeFlags([
+    ["repeat", "Can be repeated for credit"],
+    ["rest", "REST"],
+    ["Lab", "Institute Lab"],
+    ["PartLab", "Partial Institute Lab"],
+    ["hassH", "HASS-H"],
+    ["hassA", "HASS-A"],
+    ["hassS", "HASS-S"],
+    ["hassE", "HASS-E"],
+    ["cih1", "CI-H"],
+    ["cihw", "CI-HW"],
+  ]);
+
+  return html`
+    <p id="class-type">
+      ${types1} (${seasons}) ${types2} ${totalUnits} units: ${units.join("-")}
+      <span id="class-units"></span>
+      <span class="type-span" id="final-span" style="display: none"> Has final</span><br />
+      <span id="class-prereq"></span>
+      <span id="class-same"></span>
+      <span id="class-meets"></span>
+    </p>
+  `;
+}
+
+function ClassDescription(props: { cls: Class }) {
+  const { cls } = props;
+
+  return html`
+    <p id="class-name">${cls.number}: ${cls.name}</p>
+    <div id="flags-div">
+      <${ClassTypes} cls=${cls} />
+      <p id="class-eval" style="display: none">
+        Rating: <span id="class-rating"></span><span id="out-of-rating">/7.0</span> Hours:
+        <span id="class-hours"></span> Avg # of students: <span id="class-people"></span>
+      </p>
+    </div>
+    <div id="class-buttons-div"></div>
+    <p id="manual-button" style="display: none">+ Manually set sections</p>
+    <div id="manual-div" style="display: none">
+      <div id="man-lec-div">
+        Lecture:<br />
+        <input type="radio" class="man-button" id="lec-auto" name="lec" value="auto" /> Auto
+        (default)<br />
+        <input type="radio" class="man-button" id="lec-none" name="lec" value="none" /> None<br />
+        <div id="spec-man-lec-div"></div>
+      </div>
+      <div id="man-rec-div">
+        Recitation:<br />
+        <input type="radio" class="man-button" id="rec-auto" name="rec" value="auto" /> Auto
+        (default)<br />
+        <input type="radio" class="man-button" id="rec-none" name="rec" value="none" /> None<br />
+        <div id="spec-man-rec-div"></div>
+      </div>
+      <div id="man-lab-div">
+        Lab:<br />
+        <input type="radio" class="man-button" id="lab-auto" name="lab" value="auto" /> Auto
+        (default)<br />
+        <input type="radio" class="man-button" id="lab-none" name="lab" value="none" /> None<br />
+        <div id="spec-man-lab-div"></div>
+      </div>
+    </div>
+    <p id="class-desc"></p>
+  `;
 }

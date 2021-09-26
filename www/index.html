@@ -180,76 +180,7 @@
     </div>
 
     <div id="desc-div">
-      <p id="class-name"></p>
-      <div id="flags-div">
-      <p id="class-type">
-        <span class="type-span" id="nonext-span" style="display: none"><img height="16" width="16" data-src="img/nonext.gif" 
-          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Not offered 2021-2022" data-trigger="hover"/></span><span 
-          class="type-span" id="under-span" style="display: none"><img height="16" width="16" data-src="img/under.gif" 
-          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Undergrad" data-trigger="hover"/> (</span><span 
-          class="type-span" id="grad-span" style="display: none"><img height="16" width="16" data-src="img/grad.gif" 
-          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Graduate" data-trigger="hover"/> (</span><span 
-          class="type-span" id="fall-span" style="display: none"><img height="16" width="16" data-src="img/fall.gif" 
-          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Fall" data-trigger="hover"/></span><span 
-          class="type-span" id="iap-span" style="display: none">,<img height="16" width="16" data-src="img/iap.gif" 
-          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="IAP" data-trigger="hover"/></span><span 
-          class="type-span" id="spring-span" style="display: none">,<img height="16" width="16" data-src="img/spring.gif" style="margin-left: -1px"
-          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Spring" data-trigger="hover"/></span><span 
-          class="type-span" id="summer-span" style="display: none">,<img height="16" width="16" data-src="img/summer.gif" 
-          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Summer" data-trigger="hover"/></span><span 
-          class="type-span" id="end-paren-span" style="display: none">) </span><span 
-          class="type-span" id="repeat-span" style="display: none"> <img height="16" width="16" data-src="img/repeat.gif" 
-          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Can be repeated for credit" data-trigger="hover"/> </span><span 
-          class="type-span" id="rest-span" style="display: none"><img height="16" width="16" data-src="img/rest.gif" 
-          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="REST" data-trigger="hover"/></span><span 
-          class="type-span" id="Lab-span" style="display: none"><img height="16" width="16" data-src="img/Lab.gif" 
-          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Institute Lab" data-trigger="hover"/></span><span 
-          class="type-span" id="PartLab-span" style="display: none"><img height="22" width="22" data-src="img/PartLab.gif" 
-          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Partial Institute Lab" data-trigger="hover"/></span><span 
-          class="type-span" id="hassH-span" style="display: none"><img height="16" width="16" data-src="img/hassH.gif" 
-          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="HASS-H" data-trigger="hover"/></span><span 
-          class="type-span" id="hassA-span" style="display: none"><img height="16" width="16" data-src="img/hassA.gif" 
-          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="HASS-A" data-trigger="hover"/></span><span 
-          class="type-span" id="hassS-span" style="display: none"><img height="16" width="16" data-src="img/hassS.gif" 
-          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="HASS-S" data-trigger="hover"/></span><span 
-          class="type-span" id="hassE-span" style="display: none"><img height="16" width="16" data-src="img/hassE.gif" 
-          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="HASS-E" data-trigger="hover" /></span><span 
-          class="type-span" id="cih1-span" style="display: none"> <img height="16" width="28" data-src="img/cih1.gif" 
-          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="CI-H" data-trigger="hover"/></span><span 
-          class="type-span" id="cihw-span" style="display: none"> <img height="16" width="32" data-src="img/cihw.gif" 
-          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="CI-HW" data-trigger="hover"/></span> &nbsp;&nbsp;
-        <span id="class-units"></span>
-        <span class="type-span" id="final-span" style="display: none">&nbsp;&nbsp;&nbsp;Has final</span><br>
-        <span id="class-prereq"></span>
-        <span id="class-same"></span>
-        <span id="class-meets"></span>
-      </p>
-      <p id="class-eval" style="display: none;">Rating: <span id="class-rating"></span><span id="out-of-rating">/7.0</span> &nbsp;&nbsp; Hours: <span id="class-hours"></span> &nbsp;&nbsp; Avg # of
-        students: <span id="class-people"></span></p>
-      </div>
-      <div id="class-buttons-div"></div>
-      <p id="manual-button" style="display: none;">+ Manually set sections</p>
-      <div id="manual-div" style="display: none;">
-        <div id="man-lec-div">
-          Lecture:<br>
-          <input type="radio" class="man-button" id="lec-auto" name="lec" value="auto"> Auto (default)<br>
-          <input type="radio" class="man-button" id="lec-none" name="lec" value="none"> None<br>
-          <div id="spec-man-lec-div"></div>
-        </div>
-        <div id="man-rec-div">
-          Recitation:<br>
-          <input type="radio" class="man-button" id="rec-auto" name="rec" value="auto"> Auto (default)<br>
-          <input type="radio" class="man-button" id="rec-none" name="rec" value="none"> None<br>
-          <div id="spec-man-rec-div"></div>
-        </div>
-        <div id="man-lab-div">
-          Lab:<br>
-          <input type="radio" class="man-button" id="lab-auto" name="lab" value="auto"> Auto (default)<br>
-          <input type="radio" class="man-button" id="lab-none" name="lab" value="none"> None<br>
-          <div id="spec-man-lab-div"></div>
-        </div>
-      </div>
-      <p id="class-desc"></p>
+      <div id="desc-div-internal"></div>
     </div>
 
     <hr>

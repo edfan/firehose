@@ -565,78 +565,7 @@ function link_classes(text, type) {
 }
 
 function class_desc(number) {
-	$('#class-name').text(classes[number]['no'] + ': ' + classes[number]['n']);
-	$('.type-span').hide();
-
-	if (classes[number]['nx']) {
-		$('#nonext-span').show();
-	}
-
-	if (classes[number]['le'] == 'U') {
-		$('#under-span').show();
-	}
-	else if (classes[number]['le'] == 'G') {
-		$('#grad-span').show();
-	}
-
-	if (classes[number]['t'].indexOf('FA') != - 1) {
-		$('#fall-span').show();
-	}
-	if (classes[number]['t'].indexOf('JA') != - 1) {
-		$('#iap-span').show();
-	}
-	if (classes[number]['t'].indexOf('SP') != - 1) {
-		$('#spring-span').show();
-	}
-	if (classes[number]['t'].indexOf('SU') != - 1) {
-		$('#summer-span').show();
-	}
-
-	$('#end-paren-span').show();
-
-	if (classes[number]['rp']) {
-		$('#repeat-span').show();
-	}
-
-	if (classes[number]['re']) {
-		$('#rest-span').show();
-	}
-
-	if (classes[number]['la']) {
-		$('#Lab-span').show();
-	}
-
-	if (classes[number]['pl']) {
-		$('#PartLab-span').show();
-	}
-
-	if (classes[number]['hh']) {
-		$('#hassH-span').show();
-	}
-
-	if (classes[number]['ha']) {
-		$('#hassA-span').show();
-	}
-
-	if (classes[number]['hs']) {
-		$('#hassS-span').show();
-	}
-
-	if (classes[number]['he']) {
-		$('#hassE-span').show();
-	}
-
-	if (classes[number]['ci']) {
-		$('#cih1-span').show();
-	}
-
-	if (classes[number]['cw']) {
-		$('#cihw-span').show();
-	}
-
-	var u1 = classes[number]['u1'];
-	var u2 = classes[number]['u2'];
-	var u3 = classes[number]['u3'];
+	firehose.classDescription(number);
 
 	if (classes[number]['f']) {
 		$('#final-span').show();
@@ -665,8 +594,6 @@ function class_desc(number) {
 		$('#class-same').hide();
 		$('#class-meets').hide();
 	}
-
-	$('#class-units').text((u1 + u2 + u3) + ' units: ' + u1 + '-' + u2 + '-' + u3);
 
 	if (classes[number]['ra'] != 0) {
 		$('#class-rating').text((classes[number]['ra']).format(1));
