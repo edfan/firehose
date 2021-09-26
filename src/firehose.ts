@@ -278,4 +278,12 @@ class Firehose {
       options: options.map((opt) => lockedOptions.concat(opt).map((sec) => sec.index)),
     };
   }
+
+  addClass(number: string): void {
+    this.currentClasses.push(new Class(this.rawClasses[number]));
+  }
+
+  removeClass(number: string): void {
+    this.currentClasses = this.currentClasses.filter((cls) => cls.number !== number);
+  }
 }

@@ -233,7 +233,6 @@ function conflict_check(slot1, slot2) {
 
 function select_slots() {
 	var locked_map = new Map(Object.entries(locked_slots));
-	firehose.currentClasses = cur_classes.map((cls) => new Class(classes[cls]));
 	var tmp = firehose.selectSlots(locked_map);
 	all_sections = tmp.allSections;
 	options = tmp.options;
@@ -745,6 +744,8 @@ function class_desc(number) {
 }
 
 function add_class(number) {
+	firehose.addClass(number);
+
 	var n_number = id_sanitize(number);
 
 	$('#selected-div').append('<button type="button" class="btn btn-primary" id=' + n_number + '-button>' + number + '</button>');
@@ -767,6 +768,8 @@ function add_class(number) {
 }
 
 function remove_class(number) {
+	firehose.removeClass(number);
+
 	var n_number = id_sanitize(number);
 
 	$('#' + n_number + '-button').remove();
