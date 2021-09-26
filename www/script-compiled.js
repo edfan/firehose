@@ -138,7 +138,18 @@ class Firehose {
             options: options.map((opt) => lockedOptions.concat(opt).map((sec) => sec.index)),
         };
     }
+    addClass(number) {
+        this.currentClasses.push(new Class(this.rawClasses[number]));
+    }
+    removeClass(number) {
+        this.currentClasses = this.currentClasses.filter((cls) => cls.number !== number);
+    }
 }
+var render, html;
+function App(props) {
+    return html `<h1>Hello ${props.name}!</h1>`;
+}
+render(html `<${App} name="World" />`, document.body);
 // drop in firehose.ts code above
 var classes_map = new Map(Object.entries(classes));
 var firehose = new Firehose(classes_map);
@@ -344,7 +355,6 @@ function conflict_check(slot1, slot2) {
 }
 function select_slots() {
     var locked_map = new Map(Object.entries(locked_slots));
-    firehose.currentClasses = cur_classes.map((cls) => new Class(classes[cls]));
     var tmp = firehose.selectSlots(locked_map);
     all_sections = tmp.allSections;
     options = tmp.options;
@@ -760,6 +770,7 @@ function class_desc(number) {
     }
 }
 function add_class(number) {
+    firehose.addClass(number);
     var n_number = id_sanitize(number);
     $('#selected-div').append('<button type="button" class="btn btn-primary" id=' + n_number + '-button>' + number + '</button>');
     sortable('.sortable');
@@ -779,6 +790,7 @@ function add_class(number) {
     $("#units-div").show();
 }
 function remove_class(number) {
+    firehose.removeClass(number);
     var n_number = id_sanitize(number);
     $('#' + n_number + '-button').remove();
     cur_classes.splice(cur_classes.indexOf(number), 1);

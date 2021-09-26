@@ -33,6 +33,11 @@
 
   <link rel="stylesheet" type="text/css" href="stylesheet.css">
   <script defer src="full.js"></script>
+  <script type="module">
+    import { html, render } from "https://unpkg.com/htm/preact/index.mjs?module";
+    window.html = html;
+    window.render = render;
+  </script>
   <script defer src="script-compiled.js"></script>
 </head>
 
