@@ -527,86 +527,8 @@ function fill_table() {
 	table.draw();
 }
 
-function link_classes(text, type) {
-	var to_append;
-	var lp;
-	var n_number;
-	var split = text.split(" ");
-
-	for (var p in split) {
-		lp = split[p];
-		to_append = '';
-
-		if (lp.indexOf(',') != -1) {
-			to_append += ',';
-			lp = lp.replace(',', '');
-		}
-
-		if (lp.indexOf(';') != -1) {
-			to_append += ';'
-			lp = lp.replace(';', '');
-		}
-
-
-		if (lp in classes) {
-			n_number = id_sanitize(lp);
-			$('#class-' + type).append('<span class="link-span" id="' + type + '-' + n_number + '">' + lp + '</span>' + to_append + ' ');
-
-			(function () {
-				var tmp_str = lp;
-				$('#' + type + '-' + n_number).click(function () {
-					class_desc(tmp_str);
-				});
-			})();
-		} else {
-			$('#class-' + type).append(lp + to_append + ' ');
-		}
-	}
-}
-
 function class_desc(number) {
 	firehose.classDescription(number);
-
-	if (classes[number]['f']) {
-		$('#final-span').show();
-	}
-
-	$('#class-prereq').html('Prereq: ');
-	link_classes(classes[number]['pr'], 'prereq');
-
-	try {
-		$('#class-same').html('<br>Same class as ');
-		if (classes[number]['sa'] != '') {
-			link_classes(classes[number]['sa'], 'same');
-			$('#class-same').show();
-		} else {
-			$('#class-same').hide();
-		}
-
-		$('#class-meets').html('<br>Meets with ');
-		if (classes[number]['mw'] != '') {
-			link_classes(classes[number]['mw'], 'meets');
-			$('#class-meets').show();
-		} else {
-			$('#class-meets').hide();
-		}
-	} catch (err) {
-		$('#class-same').hide();
-		$('#class-meets').hide();
-	}
-
-	if (classes[number]['ra'] != 0) {
-		$('#class-rating').text((classes[number]['ra']).format(1));
-		$('#class-hours').text((classes[number]['h']).format(1));
-		$('#class-people').text((classes[number]['si']).format(1));
-		$('#out-of-rating').show();
-	} else {
-		$('#class-rating').text("N/A");
-		$('#class-hours').text("N/A");
-		$('#class-people').text("N/A");
-		$('#out-of-rating').hide();
-	}
-	$('#class-eval').show();
 
 	$('#class-desc').html(classes[number]['d'] + '<br><br>');
 

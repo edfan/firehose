@@ -231,6 +231,38 @@ class Class {
       final: this.rawClass.f,
     };
   }
+
+  get evals(): {
+    rating: string;
+    hours: string;
+    people: string;
+  } {
+    if (this.rawClass.ra === 0) {
+      return {
+        rating: "N/A",
+        hours: "N/A",
+        people: "N/A",
+      };
+    } else {
+      return {
+        rating: `${formatNumber(this.rawClass.ra, 1)}/7.0`,
+        hours: `${formatNumber(this.rawClass.h, 1)}`,
+        people: `${formatNumber(this.rawClass.si, 1)}`,
+      };
+    }
+  }
+
+  get related(): {
+    prereq: string;
+    same: string;
+    meets: string;
+  } {
+    return {
+      prereq: this.rawClass.pr,
+      same: this.rawClass.sa,
+      meets: this.rawClass.mw,
+    };
+  }
 }
 
 // "6.036", "5.5", "10.2", "Introduction to Machine Learning"
@@ -368,6 +400,26 @@ function TypeSpan(props: { flag: string; title: string }) {
   `;
 }
 
+function LinkedClass(props: { number: string }) {
+  const { number } = props;
+  // @ts-ignore class_desc is some global from script.js
+  return html`<span class="link-span" onClick=${(e) => class_desc(number)}>${number}</span>`;
+}
+
+function ClassRelated(props: { cls: Class }) {
+  const { cls } = props;
+  const { prereq, same, meets } = cls.related;
+
+  const linkClasses = (str: string) =>
+    str
+      .split(/([ ,;\[\]\(\)])/)
+      .map((text) => (text.includes(".") ? html`<${LinkedClass} number=${text} />` : text));
+
+  return html`<span id="class-prereq">Prereq: ${linkClasses(prereq)}</span>
+    ${same ? html`<span id="class-same"><br />Same class as: ${linkClasses(same)}</span>` : null}
+    ${meets ? html`<span id="class-meets"><br />Meets with: ${linkClasses(meets)}</span>` : null}`;
+}
+
 function ClassTypes(props: { cls: Class }) {
   const { cls } = props;
   const { flags, totalUnits, units } = cls;
@@ -409,13 +461,19 @@ function ClassTypes(props: { cls: Class }) {
   return html`
     <p id="class-type">
       ${types1} (${seasons}) ${types2} ${totalUnits} units: ${units.join("-")}
-      <span id="class-units"></span>
-      <span class="type-span" id="final-span" style="display: none"> Has final</span><br />
-      <span id="class-prereq"></span>
-      <span id="class-same"></span>
-      <span id="class-meets"></span>
+      ${flags.final ? html`<span class="type-span" id="final-span"> Has final</span>` : null}<br />
+      <${ClassRelated} cls=${cls} />
     </p>
   `;
+}
+
+function ClassEval(props: { cls: Class }) {
+  const { cls } = props;
+  const { rating, hours, people } = cls.evals;
+
+  return html`<p id="class-eval">
+    Rating: ${rating} Hours: ${hours} Avg # of students: ${people}
+  </p>`;
 }
 
 function ClassDescription(props: { cls: Class }) {
@@ -425,10 +483,7 @@ function ClassDescription(props: { cls: Class }) {
     <p id="class-name">${cls.number}: ${cls.name}</p>
     <div id="flags-div">
       <${ClassTypes} cls=${cls} />
-      <p id="class-eval" style="display: none">
-        Rating: <span id="class-rating"></span><span id="out-of-rating">/7.0</span> Hours:
-        <span id="class-hours"></span> Avg # of students: <span id="class-people"></span>
-      </p>
+      <${ClassEval} cls=${cls} />
     </div>
     <div id="class-buttons-div"></div>
     <p id="manual-button" style="display: none">+ Manually set sections</p>

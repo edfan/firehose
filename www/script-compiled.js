@@ -106,6 +106,29 @@ class Class {
             final: this.rawClass.f,
         };
     }
+    get evals() {
+        if (this.rawClass.ra === 0) {
+            return {
+                rating: "N/A",
+                hours: "N/A",
+                people: "N/A",
+            };
+        }
+        else {
+            return {
+                rating: `${formatNumber(this.rawClass.ra, 1)}/7.0`,
+                hours: `${formatNumber(this.rawClass.h, 1)}`,
+                people: `${formatNumber(this.rawClass.si, 1)}`,
+            };
+        }
+    }
+    get related() {
+        return {
+            prereq: this.rawClass.pr,
+            same: this.rawClass.sa,
+            meets: this.rawClass.mw,
+        };
+    }
 }
 class Firehose {
     constructor(rawClasses) {
@@ -193,6 +216,20 @@ function TypeSpan(props) {
     /></span>
   `;
 }
+function LinkedClass(props) {
+    const { number } = props;
+    return html `<span class="link-span" onClick=${(e) => window.class_desc(number)}>${number}</span>`;
+}
+function ClassRelated(props) {
+    const { cls } = props;
+    const { prereq, same, meets } = cls.related;
+    const linkClasses = (str) => str
+        .split(/([ ,;\[\]\(\)])/)
+        .map((text) => (text.includes(".") ? html `<${LinkedClass} number=${text} />` : text));
+    return html `<span id="class-prereq">Prereq: ${linkClasses(prereq)}</span>
+    ${same ? html `<span id="class-same"><br />Same class as: ${linkClasses(same)}</span>` : null}
+    ${meets ? html `<span id="class-meets"><br />Meets with: ${linkClasses(meets)}</span>` : null}`;
+}
 function ClassTypes(props) {
     const { cls } = props;
     const { flags, totalUnits, units } = cls;
@@ -228,13 +265,17 @@ function ClassTypes(props) {
     return html `
     <p id="class-type">
       ${types1} (${seasons}) ${types2} ${totalUnits} units: ${units.join("-")}
-      <span id="class-units"></span>
-      <span class="type-span" id="final-span" style="display: none"> Has final</span><br />
-      <span id="class-prereq"></span>
-      <span id="class-same"></span>
-      <span id="class-meets"></span>
+      ${flags.final ? html `<span class="type-span" id="final-span"> Has final</span>` : null}<br />
+      <${ClassRelated} cls=${cls} />
     </p>
   `;
+}
+function ClassEval(props) {
+    const { cls } = props;
+    const { rating, hours, people } = cls.evals;
+    return html `<p id="class-eval">
+    Rating: ${rating} Hours: ${hours} Avg # of students: ${people}
+  </p>`;
 }
 function ClassDescription(props) {
     const { cls } = props;
@@ -242,10 +283,7 @@ function ClassDescription(props) {
     <p id="class-name">${cls.number}: ${cls.name}</p>
     <div id="flags-div">
       <${ClassTypes} cls=${cls} />
-      <p id="class-eval" style="display: none">
-        Rating: <span id="class-rating"></span><span id="out-of-rating">/7.0</span> Hours:
-        <span id="class-hours"></span> Avg # of students: <span id="class-people"></span>
-      </p>
+      <${ClassEval} cls=${cls} />
     </div>
     <div id="class-buttons-div"></div>
     <p id="manual-button" style="display: none">+ Manually set sections</p>
@@ -746,50 +784,6 @@ function link_classes(text, type) {
 }
 function class_desc(number) {
     firehose.classDescription(number);
-    var u1 = classes[number]['u1'];
-    var u2 = classes[number]['u2'];
-    var u3 = classes[number]['u3'];
-    if (classes[number]['f']) {
-        $('#final-span').show();
-    }
-    $('#class-prereq').html('Prereq: ');
-    link_classes(classes[number]['pr'], 'prereq');
-    try {
-        $('#class-same').html('<br>Same class as ');
-        if (classes[number]['sa'] != '') {
-            link_classes(classes[number]['sa'], 'same');
-            $('#class-same').show();
-        }
-        else {
-            $('#class-same').hide();
-        }
-        $('#class-meets').html('<br>Meets with ');
-        if (classes[number]['mw'] != '') {
-            link_classes(classes[number]['mw'], 'meets');
-            $('#class-meets').show();
-        }
-        else {
-            $('#class-meets').hide();
-        }
-    }
-    catch (err) {
-        $('#class-same').hide();
-        $('#class-meets').hide();
-    }
-    $('#class-units').text((u1 + u2 + u3) + ' units: ' + u1 + '-' + u2 + '-' + u3);
-    if (classes[number]['ra'] != 0) {
-        $('#class-rating').text((classes[number]['ra']).format(1));
-        $('#class-hours').text((classes[number]['h']).format(1));
-        $('#class-people').text((classes[number]['si']).format(1));
-        $('#out-of-rating').show();
-    }
-    else {
-        $('#class-rating').text("N/A");
-        $('#class-hours').text("N/A");
-        $('#class-people').text("N/A");
-        $('#out-of-rating').hide();
-    }
-    $('#class-eval').show();
     $('#class-desc').html(classes[number]['d'] + '<br><br>');
     if (classes[number]['u'] != '') {
         $('#class-desc').append('<a href="' + classes[number]['u'] + '" target="_blank">More info</a> | ');
