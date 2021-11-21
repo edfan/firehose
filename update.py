@@ -180,7 +180,7 @@ for line in lines:
         if new_term.sem == "f":  # add comma
             line = line.replace("><", ">,<")
         elif new_term.sem == "s":  # remove comma
-            line = line.replace(">,<", "/><")
+            line = line.replace(">,<", "><")
     new_lines.append(line)
 lines = new_lines[:]
 
