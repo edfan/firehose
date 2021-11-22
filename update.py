@@ -4,8 +4,8 @@ import shutil
 import subprocess
 
 # i dont think this actually works for e.g. 2022JA
-OLD_TERM = "2022FA"
-NEW_TERM = "2022JA"
+OLD_TERM = "2021SP"
+NEW_TERM = "2022FA"
 
 START_DATE = "2022-01-03"
 END_DATE = "2022-01-28"
@@ -87,7 +87,8 @@ with open(old_term_file, "r") as file:
 
 # in old_term_file, replace src=" to src="../../
 # exception: should not start with src="http
-# exception: should not be src="full.js"
+# exception: should not be src="full.js",
+#            in this case, replace with "fall/spring.js"
 # exception: should not be src="script-compiled.js"
 new_lines = []
 for line in lines:
@@ -95,6 +96,8 @@ for line in lines:
         s in line for s in ['src="http', 'src="full.js"', 'src="script-compiled.js"']
     ):
         line = line.replace('src="', 'src="../../')
+    if 'src="full.js"' in line:
+        line = line.replace("full.js", f"{old_term.sem_full}.js")
     new_lines.append(line)
 lines = new_lines[:]
 
@@ -102,7 +105,7 @@ new_lines = []
 # in old_term_file, replace href=" to href="../../
 # exception: should not start with href="http or href="mailto
 for line in lines:
-    if not any(s in line for s in ['href="http', 'href="mailto"']):
+    if not any(s in line for s in ['href="http', 'href="mailto']):
         line = line.replace('href="', 'href="../../')
     new_lines.append(line)
 lines = new_lines[:]
@@ -126,11 +129,10 @@ def update_dropdown(lines, replace_selected=False):
         elif flag == "seen":
             # it's already been added i guess
             if new_term.full_name in line:
-                continue
-            if old_term.full_name in line:
+                new_lines.append(line)
                 flag = "done"
                 continue
-            # ignore this line
+            # otherwise, ignore this line
             new_lines.append(new_index)
             if replace_selected:
                 new_lines.append(new_option.replace('">', '" selected>'))
@@ -150,10 +152,10 @@ with open(old_term_file, "w") as file:
 for folder in os.scandir("./www/semesters"):
     if not folder.is_dir():
         continue
+    if old_term.sem_year in folder.path:
+        continue
     for path in os.scandir(folder):
         if not path.name.endswith(".html"):
-            continue
-        if path.name.endswith(f"{old_term.sem_full}.html"):
             continue
         with open(path, "r") as file:
             lines = file.readlines()
