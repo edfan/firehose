@@ -7,10 +7,10 @@ import subprocess
 OLD_TERM = "2022FA"
 NEW_TERM = "2022JA"
 
-START_DATE = "2021-09-08"
-END_DATE = "2021-12-16"
+START_DATE = "2022-01-03"
+END_DATE = "2022-01-28"
 MONDAY_SCHEDULE = ""
-HOLIDAYS = ["2021-10-11", "2021-11-11", "2021-11-25", "2021-11-26"]
+HOLIDAYS = ["2022-01-17"]
 
 def compute_dates(start, end, monday, holidays):
     DELTA_DAY = timedelta(days=1)
@@ -48,11 +48,14 @@ class Term:
         self.sem = name[4].lower()
         if self.sem == "f":
             self.sem_full = "fall"
+            self.sem_full_caps = "Fall"
         elif self.sem == "s":
             self.sem_full = "spring"
+            self.sem_full_caps = "Spring"
         elif self.sem == "j":
             self.sem = "i"
             self.sem_full = "iap"
+            self.sem_full_caps = "IAP"
 
         self.name_year = name[:4]
         self.actual_year = self.name_year
@@ -61,7 +64,7 @@ class Term:
 
         self.sem_year = f"{self.sem}{self.actual_year[-2:]}"
         self.sem_full_year = f"{self.sem_full}{self.actual_year[-2:]}"
-        self.full_name = f"{self.sem_full.capitalize()} {self.actual_year}"
+        self.full_name = f"{self.sem_full_caps} {self.actual_year}"
 
 
 old_term = Term(OLD_TERM)
@@ -121,6 +124,12 @@ def update_dropdown(lines, replace_selected=False):
             if 'select name="semesters"' in line:
                 flag = "seen"
         elif flag == "seen":
+            # it's already been added i guess
+            if new_term.full_name in line:
+                continue
+            if old_term.full_name in line:
+                flag = "done"
+                continue
             # ignore this line
             new_lines.append(new_index)
             if replace_selected:
@@ -240,7 +249,7 @@ for line in lines:
 lines = new_lines[:]
 
 # update the mit schedule for gcal export in script.js
-start_dates, end_dates, r_dates, ex_dates = compute_dates(START_DATE, END_DATE, OTHER_SCHEDULE, HOLIDAYS)
+start_dates, end_dates, r_dates, ex_dates = compute_dates(START_DATE, END_DATE, MONDAY_SCHEDULE, HOLIDAYS)
 new_lines = []
 indent = "\t"*3
 for line in lines:
