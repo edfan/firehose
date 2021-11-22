@@ -2,7 +2,7 @@ import json
 import requests
 import itertools
 
-term = '2022FA'
+term = '2022SP'
 
 # copied from csb.py
 

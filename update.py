@@ -3,14 +3,13 @@ import os
 import shutil
 import subprocess
 
-# i dont think this actually works for e.g. 2022JA
-OLD_TERM = "2021SP"
-NEW_TERM = "2022FA"
+OLD_TERM = "2022JA"
+NEW_TERM = "2022SP"
 
-START_DATE = "2022-01-03"
-END_DATE = "2022-01-28"
-MONDAY_SCHEDULE = ""
-HOLIDAYS = ["2022-01-17"]
+START_DATE = "2022-01-31"
+END_DATE = "2022-05-10"
+MONDAY_SCHEDULE = "2022-02-22"
+HOLIDAYS = ["2022-02-21", "2022-03-21", "2022-03-22", "2022-03-23", "2022-03-24", "2022-03-25", "2022-04-18"]
 
 def compute_dates(start, end, monday, holidays):
     DELTA_DAY = timedelta(days=1)
@@ -103,9 +102,9 @@ lines = new_lines[:]
 
 new_lines = []
 # in old_term_file, replace href=" to href="../../
-# exception: should not start with href="http or href="mailto
+# exception: should not start with href="http or href="mailto or href="data
 for line in lines:
-    if not any(s in line for s in ['href="http', 'href="mailto']):
+    if not any(s in line for s in ['href="http', 'href="mailto', 'href="data']):
         line = line.replace('href="', 'href="../../')
     new_lines.append(line)
 lines = new_lines[:]
