@@ -84,6 +84,8 @@ def tsp(t, number):
         return tsp_eve(t, number)
 
     t = t.split()[0]
+    # remove trailing parens e.g. MWF2(LIMITEDTO15)
+    t = t.split("(")[0]
     slots = []
     
     try:

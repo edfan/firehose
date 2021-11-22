@@ -1,19 +1,45 @@
-import fileinput
+from datetime import datetime, timedelta
 import os
 import shutil
 import subprocess
-import sys
 
 # i dont think this actually works for e.g. 2022JA
-OLD_TERM = "2021SP"
-NEW_TERM = "2022FA"
+OLD_TERM = "2022FA"
+NEW_TERM = "2022JA"
 
-# sorry, you have to update these manually for now
-START_DATES = ["2021-09-13", "2021-09-14", "2021-09-08", "2021-09-09", "2021-09-10"]
-END_DATES = ["20211213", "20211214", "20211215", "20211216", "20211210"]
-R_DATES = ["20210913", "20210914", "20210915", "20210916", "20210917"]
-EX_DATES = [["20211011"], [], [], ["20211111", "20211125"], ["20211126"]]
+START_DATE = "2021-09-08"
+END_DATE = "2021-12-16"
+MONDAY_SCHEDULE = ""
+HOLIDAYS = ["2021-10-11", "2021-11-11", "2021-11-25", "2021-11-26"]
 
+def compute_dates(start, end, monday, holidays):
+    DELTA_DAY = timedelta(days=1)
+    start_dates = [None]*5
+    end_dates = [None]*5
+    r_dates = [None]*5
+    ex_dates = [[] for _ in range(5)]
+    start = datetime.fromisoformat(start)
+    while any(d is None for d in start_dates):
+        weekday = start.weekday()
+        if 0 <= weekday <= 4:
+            # yes, this is correct
+            start_dates[weekday] = start.strftime("%Y-%m-%d")
+            r_dates[weekday] = start.strftime("%Y%m%d")
+        start += DELTA_DAY
+    end = datetime.fromisoformat(end)
+    while any(d is None for d in end_dates):
+        weekday = end.weekday()
+        if 0 <= weekday <= 4:
+            end_dates[weekday] = end.strftime("%Y%m%d")
+        end -= DELTA_DAY
+    if monday:
+        # the only possibility is that a tuesday becomes a monday
+        date = datetime.fromisoformat(monday)
+        r_dates[1] = date.strftime("%Y%m%d")
+    for d in holidays:
+        date = datetime.fromisoformat(d)
+        ex_dates[date.weekday()].append(date.strftime("%Y%m%d"))
+    return start_dates, end_dates, r_dates, ex_dates
 
 class Term:
     def __init__(self, name):
@@ -118,6 +144,8 @@ for folder in os.scandir("./www/semesters"):
     for path in os.scandir(folder):
         if not path.name.endswith(".html"):
             continue
+        if path.name.endswith(f"{old_term.sem_full}.html"):
+            continue
         with open(path, "r") as file:
             lines = file.readlines()
         with open(path, "w") as file:
@@ -140,6 +168,7 @@ with open(coursews_path, "w") as file:
 
 # run normal update process
 # something something some classes need special casing
+print("this might not work, if it fails run new_scripts/update_schedule.sh manually:")
 subprocess.run("./new_scripts/update_schedule.sh", shell=True)
 
 # in (new) index.html:
@@ -211,21 +240,23 @@ for line in lines:
 lines = new_lines[:]
 
 # update the mit schedule for gcal export in script.js
+start_dates, end_dates, r_dates, ex_dates = compute_dates(START_DATE, END_DATE, OTHER_SCHEDULE, HOLIDAYS)
 new_lines = []
 indent = "\t"*3
 for line in lines:
     if "var start_dates =" in line:
-        line = f'{indent}var start_dates = {repr(START_DATES)};\n'
+        line = f'{indent}var start_dates = {repr(start_dates)};\n'
     elif "var end_dates =" in line:
-        line = f'{indent}var end_dates = {repr(END_DATES)};\n'
+        line = f'{indent}var end_dates = {repr(end_dates)};\n'
     elif "var r_dates =" in line:
-        line = f'{indent}var r_dates = {repr(R_DATES)};\n'
+        line = f'{indent}var r_dates = {repr(r_dates)};\n'
     elif "var ex_dates =" in line:
-        line = f'{indent}var ex_dates = {repr(EX_DATES)};\n'
+        line = f'{indent}var ex_dates = {repr(ex_dates)};\n'
     new_lines.append(line)
 
 with open(script_js, "w") as file:
     file.writelines(new_lines)
 
 # recompile using new_scripts/compile.sh
+print("this might not work, if it fails run new_scripts/compile.sh manually:")
 subprocess.run("./new_scripts/compile.sh", shell=True)
