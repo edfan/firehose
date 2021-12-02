@@ -790,6 +790,9 @@ function class_desc(number) {
 	if (classes[number]['co'] === '6') {
 		$('#class-desc').append(' | <a href="https://underground-guide.mit.edu/search?q=' + number + '" target="_blank">HKN Underground Guide</a>')
 	}
+	if (classes[number]['co'] === '18') {
+		$('#class-desc').append(' | <a href="http://course18.guide/' + number + '-spring-2021.html" target="_blank">Course 18 Underground Guide</a>')
+	}
 
 	cur_class = number;
 
