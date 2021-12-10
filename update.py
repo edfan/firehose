@@ -13,10 +13,11 @@ HOLIDAYS = ["2022-02-21", "2022-03-21", "2022-03-22", "2022-03-23", "2022-03-24"
 
 def compute_dates(start, end, monday, holidays):
     DELTA_DAY = timedelta(days=1)
-    start_dates = [None]*5
-    end_dates = [None]*5
-    r_dates = [None]*5
-    ex_dates = [[] for _ in range(5)]
+    start_dates = [""]*5
+    end_dates = [""]*5
+    r_dates = [""]*5
+    # ex_dates cannot be empty, so add a random date
+    ex_dates = [["20000101"] for _ in range(5)]
     start = datetime.fromisoformat(start)
     while any(d is None for d in start_dates):
         weekday = start.weekday()
@@ -25,11 +26,12 @@ def compute_dates(start, end, monday, holidays):
             start_dates[weekday] = start.strftime("%Y-%m-%d")
             r_dates[weekday] = start.strftime("%Y%m%d")
         start += DELTA_DAY
-    end = datetime.fromisoformat(end)
+    # due to inclusivity issues, we actually move the end_dates up one
+    end = datetime.fromisoformat(end) + DELTA_DAY
     while any(d is None for d in end_dates):
         weekday = end.weekday()
-        if 0 <= weekday <= 4:
-            end_dates[weekday] = end.strftime("%Y%m%d")
+        if 1 <= weekday <= 5:
+            end_dates[weekday - 1] = end.strftime("%Y%m%d")
         end -= DELTA_DAY
     if monday:
         # the only possibility is that a tuesday becomes a monday
