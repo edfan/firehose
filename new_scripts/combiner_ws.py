@@ -1,5 +1,6 @@
 import json
 import copy
+import datetime
 
 with open('ws') as f:
     ws = json.load(f)
@@ -129,6 +130,7 @@ except Exception as e:
     print(e) """
 
 with open('full.json', 'w') as f:
+    f.write('var last_update = "' + datetime.datetime.now().strftime('%Y-%m-%d%l:%M %p') + '";\n')
     f.write('var classes = ')
     json.dump(classes, f, separators=(',', ':'))
     f.write(';')

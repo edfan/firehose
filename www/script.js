@@ -1667,4 +1667,8 @@ $(document).ready(function () {
 		dark_mode = localStorage.getObj('dark_mode', dark_mode);
 		set_dark_mode(dark_mode);
 	}
+
+  if (last_update) {
+    $("#info2-div").prepend('<p>Last updated: ' + last_update + '.</p>')
+  }
 });

@@ -84,13 +84,13 @@ def tsp(t, number):
     
     if 'EVE' in t:
         return tsp_eve(t, number)
-
-    t = t.split()[0]
-    # remove trailing parens e.g. MWF2(LIMITEDTO15)
-    t = t.split("(")[0]
-    slots = []
     
+    slots = []
     try:
+        t = t.split()[0]
+        # remove trailing parens e.g. MWF2(LIMITEDTO15)
+        t = t.split("(")[0]
+
         for t in t.split(','):
 
             split = [''.join(x) for _, x in itertools.groupby(t, key=str.isalpha)]
