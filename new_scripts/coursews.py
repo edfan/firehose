@@ -211,6 +211,10 @@ for c in raw_classes:
         print('section for nonexistent class', number)
         continue
 
+    # manual fix: 21G.612
+    if number == "21G.612":
+        c['timeAndPlace'] = "MTRF 16-668"
+
     cl = classes[number]
 
     if 'EVE' in c['timeAndPlace']:

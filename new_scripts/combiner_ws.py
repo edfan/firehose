@@ -129,6 +129,7 @@ for c in ws:
 except Exception as e:
     print(e) """
 
+# manual fix: 6.s978
 classes['6.S978']['n'] = "Data Science: The Breadth of Challenges"
 classes['6.S978']['d'] = "Comprehensively presents the breadth of considerations needed to apply data science successfully. Students will learn the landscape of challenges, a unique rubric for systematically evaluating them, and then see the rubric’s application to a variety of case studies. Through a combination of lectures, student presentations, and in-class discussions, students will delve deeply into seven sets of implementation- and requirements-oriented challenges: from data gathering to meeting ethical, legal, and societal needs. Students (in groups of two) will have the opportunity to zoom in on specific problem areas via oral presentations and one short and one long paper. While the topic of this course is broadly data science, much of the class will discuss applications of machine learning/AI. Students will develop skills to lead data science efforts to successful completion and will better understand future research/commercial opportunities and public policy trade-offs."
 classes['6.S978']['s'] = ['l']
