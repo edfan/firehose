@@ -671,17 +671,30 @@ function class_desc(number) {
 		$('#grad-span').show();
 	}
 
+	// class hours disclaimer, see #28
+	var disclaimer = [0, 0];
 	if (classes[number]['t'].indexOf('FA') != - 1) {
 		$('#fall-span').show();
+		disclaimer[0] = 1;
 	}
 	if (classes[number]['t'].indexOf('JA') != - 1) {
 		$('#iap-span').show();
+		disclaimer[1] = 1;
 	}
 	if (classes[number]['t'].indexOf('SP') != - 1) {
 		$('#spring-span').show();
+		disclaimer[0] = 1;
 	}
 	if (classes[number]['t'].indexOf('SU') != - 1) {
 		$('#summer-span').show();
+		disclaimer[1] = 1;
+	}
+
+	var show_disclaimer = disclaimer[0] && disclaimer[1];
+	if (show_disclaimer) {
+		$('#class-hours-disclaimer').show();
+	} else {
+		$('#class-hours-disclaimer').hide();
 	}
 
 	$('#end-paren-span').show();
@@ -762,12 +775,15 @@ function class_desc(number) {
 
 	if (classes[number]['ra'] != 0) {
 		$('#class-rating').text((classes[number]['ra']).format(1));
-		$('#class-hours').text((classes[number]['h']).format(1));
+		var class_hours = (classes[number]['h']).format(1);
+		if (show_disclaimer) class_hours += "*";
+		$('#class-hours').text(class_hours);
 		$('#class-people').text((classes[number]['si']).format(1));
 		$('#out-of-rating').show();
 	} else {
 		$('#class-rating').text("N/A");
 		$('#class-hours').text("N/A");
+		$('#class-hours-disclaimer').hide();
 		$('#class-people').text("N/A");
 		$('#out-of-rating').hide();
 	}
