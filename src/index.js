@@ -530,24 +530,6 @@ function fill_table() {
 function class_desc(number) {
 	firehose.classDescription(number);
 
-	$('#class-desc').html(classes[number]['d'] + '<br><br>');
-
-	if (classes[number]['u'] != '') {
-		$('#class-desc').append('<a href="' + classes[number]['u'] + '" target="_blank">More info</a> | ');
-	}
-
-	if (classes[number]['i'] != '') {
-		$('#class-desc').append('<em>In-charge: ' + classes[number]['i'] + '</em><br><br>');
-	}
-
-	$('#class-desc').append('<a href="http://student.mit.edu/catalog/search.cgi?search=' + number +
-		'" target="_blank">Course Catalog</a> | <a href="https://sisapp.mit.edu/ose-rpt/subjectEvaluationSearch.htm?search=Search&subjectCode=' +
-		number + '" target="_blank">Class Evaluations</a>');
-
-	if (classes[number]['co'] === '6') {
-		$('#class-desc').append(' | <a href="https://underground-guide.mit.edu/search?q=' + number + '" target="_blank">HKN Underground Guide</a>')
-	}
-
 	cur_class = number;
 
 	var n_number = id_sanitize(number);

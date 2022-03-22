@@ -13,7 +13,7 @@ doing a refactor on src/firehose.ts. the ideal is to be able to compile and drop
 
 **refactoring**:
 
-- split firehose.tsx
+- fix manually set sections
 - remove jquery timepicker (is it even used?)
 - remove rest of jquery (glhf)
 - put dataTables as an npm dependency (or use something better?)

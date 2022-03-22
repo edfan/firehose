@@ -1,5 +1,6 @@
-import * as React from "react";
 import * as ReactDOM from "react-dom";
+
+import { ClassDescription } from "./ClassDescription";
 
 function formatNumber(x: number, n: number) {
   const re = "\\d(?=(\\d{" + (x || 3) + "})+" + (n > 0 ? "\\." : "$") + ")";
@@ -13,6 +14,12 @@ type RawTimeslot = [number, number];
 // e.g. [[[6, 3], [66, 3]], "34-101"
 type RawSection = [Array<RawTimeslot>, string];
 
+enum SectionKind {
+  LECTURE = "l",
+  RECITATION = "r",
+  LAB = "b",
+}
+
 // following combiner_ws.py
 type RawClass = {
   // no: "6.036", co: "6", cl: "036"
@@ -21,7 +28,7 @@ type RawClass = {
   cl: string;
   tb: boolean; // tba
 
-  s: Array<"l" | "r" | "b">; // subset of ["l", "r", "b"]
+  s: Array<SectionKind>; // subset of ["l", "r", "b"]
   l: Array<RawSection>; // lecture
   r: Array<RawSection>; // recitation
   b: Array<RawSection>; // lab
@@ -78,12 +85,6 @@ type RawClass = {
   si: number; // size from evals
 };
 
-enum SectionKind {
-  LECTURE = "l",
-  RECITATION = "r",
-  LAB = "b",
-}
-
 class Timeslot {
   startSlot: number;
   numSlots: number;
@@ -101,7 +102,7 @@ class Timeslot {
   }
 }
 
-type Flags = {
+export type Flags = {
   nonext: boolean;
   under: boolean;
   grad: boolean;
@@ -162,7 +163,7 @@ class Sections {
 }
 
 // rawClass wraper
-class Class {
+export class Class {
   rawClass: RawClass;
 
   constructor(rawClass: RawClass) {
@@ -175,6 +176,10 @@ class Class {
 
   get number(): string {
     return this.rawClass.no;
+  }
+
+  get course(): string {
+    return this.rawClass.co;
   }
 
   get units(): Array<number> {
@@ -262,6 +267,45 @@ class Class {
       prereq: this.rawClass.pr,
       same: this.rawClass.sa,
       meets: this.rawClass.mw,
+    };
+  }
+
+  get description(): {
+    description: string;
+    inCharge: string;
+    extraUrls: Array<{ label: string, url: string }>;
+  } {
+    const extraUrls = [
+      {
+        label: "Course Catalog",
+        url: `http://student.mit.edu/catalog/search.cgi?search=${this.number}`,
+      },
+      {
+        label: "Class Evaluations",
+        url: `https://sisapp.mit.edu/ose-rpt/subjectEvaluationSearch.htm?search=Search&subjectCode=${this.number}`,
+      },
+    ];
+
+    if (this.rawClass.u) {
+      extraUrls.unshift({ label: "More Info", url: this.rawClass.u });
+    }
+    if (this.course === "6") {
+      extraUrls.push({
+        label: "HKN Underground Guide",
+        url: `https://underground-guide.mit.edu/search?q=${this.number}`,
+      });
+    }
+    if (this.course === "18") {
+      extraUrls.push({
+        label: "Course 18 Undeground Guide",
+        url: `http://course18.guide/${this.number}-spring-2021.html`,
+      });
+    }
+
+    return {
+      description: this.rawClass.d,
+      inCharge: this.rawClass.i,
+      extraUrls: extraUrls,
     };
   }
 }
@@ -381,137 +425,4 @@ export class Firehose {
       document.getElementById("desc-div")
     );
   }
-}
-
-function TypeSpan(props: { flag: string; title: string }) {
-  const { flag, title } = props;
-  return (
-    <span className="type-span" id={`${flag}-span`}>
-      <img
-        alt={title}
-        height="16"
-        width="16"
-        src={`img/${flag}.gif`}
-        data-toggle="tooltip"
-        data-placement="top"
-        title={title}
-        data-trigger="hover"
-    /></span>
-  );
-}
-
-function LinkedClass(props: { number: string }) {
-  const { number } = props;
-  // @ts-ignore class_desc is some global from script.js
-  return <span className="link-span" onClick={() => class_desc(number)}>{number}</span>;
-}
-
-function ClassRelated(props: { cls: Class }) {
-  const { cls } = props;
-  const { prereq, same, meets } = cls.related;
-
-  const linkClasses = (str: string) =>
-    str
-      .split(/([ ,;[\]()])/)
-      .map((text) => (text.includes(".") ? <LinkedClass number={text} /> : text));
-
-  return <>
-    <span id="class-prereq">Prereq: {linkClasses(prereq)}</span>
-    {same ? <span id="class-same"><br />Same class as: {linkClasses(same)}</span> : null}
-    {meets ? <span id="class-meets"><br />Meets with: {linkClasses(meets)}</span> : null}
-  </>;
-}
-
-function ClassTypes(props: { cls: Class }) {
-  const { cls } = props;
-  const { flags, totalUnits, units } = cls;
-
-  const makeFlags = (arr: Array<[keyof Flags, string]>) =>
-    arr
-      .filter(([flag, _]) => flags[flag])
-      .map(([flag, title]) => <TypeSpan key={flag} flag={flag} title={title} />);
-
-  const types1 = makeFlags([
-    ["nonext", "Not offered 2021-2022"],
-    ["under", "Undergrad"],
-    ["grad", "Graduate"],
-  ]);
-
-  const seasons = makeFlags([
-    ["fall", "Fall"],
-    ["iap", "IAP"],
-    ["spring", "Spring"],
-    ["summer", "Summer"],
-  ])
-    .map((tag) => [tag, ", "])
-    .flat()
-    .slice(0, -1);
-
-  const types2 = makeFlags([
-    ["repeat", "Can be repeated for credit"],
-    ["rest", "REST"],
-    ["Lab", "Institute Lab"],
-    ["PartLab", "Partial Institute Lab"],
-    ["hassH", "HASS-H"],
-    ["hassA", "HASS-A"],
-    ["hassS", "HASS-S"],
-    ["hassE", "HASS-E"],
-    ["cih1", "CI-H"],
-    ["cihw", "CI-HW"],
-  ]);
-
-  return (
-    <p id="class-type">
-      {types1} ({seasons}) {types2} {totalUnits} units: {units.join("-")}
-      {flags.final ? <span className="type-span" id="final-span"> Has final</span> : null}<br />
-      <ClassRelated cls={cls} />
-    </p>
-  );
-}
-
-function ClassEval(props: { cls: Class }) {
-  const { cls } = props;
-  const { rating, hours, people } = cls.evals;
-
-  return <p id="class-eval">
-    Rating: {rating} Hours: {hours} Avg # of students: {people}
-  </p>;
-}
-
-function ClassDescription(props: { cls: Class }): React.ReactElement {
-  const { cls } = props;
-
-  return <>
-    <p id="class-name">{cls.number}: {cls.name}</p>
-    <div id="flags-div">
-      <ClassTypes cls={cls} />
-      <ClassEval cls={cls} />
-    </div>
-    <div id="class-buttons-div"></div>
-    <p id="manual-button" style={{"display": "none"}}>+ Manually set sections</p>
-    <div id="manual-div" style={{"display": "none"}}>
-      <div id="man-lec-div">
-        Lecture:<br />
-        <input type="radio" className="man-button" id="lec-auto" name="lec" value="auto" /> Auto
-        (default)<br />
-        <input type="radio" className="man-button" id="lec-none" name="lec" value="none" /> None<br />
-        <div id="spec-man-lec-div"></div>
-      </div>
-      <div id="man-rec-div">
-        Recitation:<br />
-        <input type="radio" className="man-button" id="rec-auto" name="rec" value="auto" /> Auto
-        (default)<br />
-        <input type="radio" className="man-button" id="rec-none" name="rec" value="none" /> None<br />
-        <div id="spec-man-rec-div"></div>
-      </div>
-      <div id="man-lab-div">
-        Lab:<br />
-        <input type="radio" className="man-button" id="lab-auto" name="lab" value="auto" /> Auto
-        (default)<br />
-        <input type="radio" className="man-button" id="lab-none" name="lab" value="none" /> None<br />
-        <div id="spec-man-lab-div"></div>
-      </div>
-    </div>
-    <p id="class-desc"></p>
-  </>;
 }
