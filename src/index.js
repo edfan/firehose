@@ -1,4 +1,4 @@
-// drop in firehose.ts code above
+import { Firehose } from "./firehose";
 
 var classes_map = new Map(Object.entries(classes));
 var firehose = new Firehose(classes_map);
@@ -104,8 +104,8 @@ function class_sort_internal(a, b) {
 		}
 	}
 	*/
-	cr_a = course_rank[a];
-	cr_b = course_rank[b];
+	var cr_a = course_rank[a];
+	var cr_b = course_rank[b];
 
 	if (cr_a < cr_b || cr_b === undefined) {
 		return -1;
@@ -131,7 +131,7 @@ function class_sort_internal2(a, b) {
 		len = a.length;
 	}
 
-	for (i = 0; i < len; i++) {
+	for (var i = 0; i < len; i++) {
 		if (a.charAt(i) < b.charAt(i)) {
 			return -1;
 		}
@@ -550,7 +550,7 @@ function class_desc(number) {
 
 	cur_class = number;
 
-	n_number = id_sanitize(number);
+	var n_number = id_sanitize(number);
 
 	if (cur_classes.indexOf(number) == -1) {
 		$('#class-buttons-div').html('<button type="button" class="btn btn-primary" id=' + n_number + '-add-button>Add class</button>');

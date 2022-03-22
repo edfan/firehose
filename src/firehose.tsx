@@ -322,7 +322,7 @@ export class Firehose {
         minConflicts = newMinConflicts;
       }
 
-      if (newMinConflicts == minConflicts) {
+      if (newMinConflicts === minConflicts) {
         options.push(...newOptions);
       }
     }
@@ -385,10 +385,10 @@ export class Firehose {
 
 function TypeSpan(props: { flag: string; title: string }) {
   const { flag, title } = props;
-
   return (
     <span className="type-span" id={`${flag}-span`}>
       <img
+        alt={title}
         height="16"
         width="16"
         src={`img/${flag}.gif`}
@@ -403,7 +403,7 @@ function TypeSpan(props: { flag: string; title: string }) {
 function LinkedClass(props: { number: string }) {
   const { number } = props;
   // @ts-ignore class_desc is some global from script.js
-  return html`<span class="link-span" onClick=${() => class_desc(number)}>${number}</span>`;
+  return <span className="link-span" onClick={() => class_desc(number)}>{number}</span>;
 }
 
 function ClassRelated(props: { cls: Class }) {
@@ -412,7 +412,7 @@ function ClassRelated(props: { cls: Class }) {
 
   const linkClasses = (str: string) =>
     str
-      .split(/([ ,;\[\]\(\)])/)
+      .split(/([ ,;[\]()])/)
       .map((text) => (text.includes(".") ? <LinkedClass number={text} /> : text));
 
   return <>
