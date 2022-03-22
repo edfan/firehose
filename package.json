@@ -23,6 +23,9 @@
       "react-app"
     ]
   },
+  "eslintIgnore": [
+    "index.js"
+  ],
   "browserslist": {
     "production": [
       ">0.2%",

@@ -269,7 +269,7 @@ class Class {
 // "6.036", "5.5", "10.2", "Introduction to Machine Learning"
 type EvalTableRow = [string, string, string, string];
 
-class Firehose {
+export class Firehose {
   rawClasses: Map<string, RawClass>;
   evalTableRows: Array<EvalTableRow>;
   currentClasses: Array<Class> = [];
