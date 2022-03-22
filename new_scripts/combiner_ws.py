@@ -1,5 +1,6 @@
 import json
 import copy
+import datetime
 
 with open('ws') as f:
     ws = json.load(f)
@@ -128,7 +129,18 @@ for c in ws:
 except Exception as e:
     print(e) """
 
+# manual fix: 6.s978
+classes['6.S978']['n'] = "Data Science: The Breadth of Challenges"
+classes['6.S978']['d'] = "Comprehensively presents the breadth of considerations needed to apply data science successfully. Students will learn the landscape of challenges, a unique rubric for systematically evaluating them, and then see the rubric’s application to a variety of case studies. Through a combination of lectures, student presentations, and in-class discussions, students will delve deeply into seven sets of implementation- and requirements-oriented challenges: from data gathering to meeting ethical, legal, and societal needs. Students (in groups of two) will have the opportunity to zoom in on specific problem areas via oral presentations and one short and one long paper. While the topic of this course is broadly data science, much of the class will discuss applications of machine learning/AI. Students will develop skills to lead data science efforts to successful completion and will better understand future research/commercial opportunities and public policy trade-offs."
+classes['6.S978']['s'] = ['l']
+classes['6.S978']['l'] = [[[[14,4]],"36-153"]]
+classes['6.S978']['lr'] = ['M3-5']
+classes['6.S978']['u1'] = 2
+classes['6.S978']['u3'] = 4
+classes['6.S978']['pr'] = "6.034, 6.036, 15.085, 15.077, 15.286, 15.386, or permission of instructor"
+
 with open('full.json', 'w') as f:
+    f.write('var last_update = "' + datetime.datetime.now().strftime('%Y-%m-%d %l:%M %p') + '";\n')
     f.write('var classes = ')
     json.dump(classes, f, separators=(',', ':'))
     f.write(';')

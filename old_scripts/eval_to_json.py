@@ -24,7 +24,6 @@ def main():
         for k, v in term_dict.items():
             if k not in classes:
                 classes[k] = []
-            classes[k].append(v)
             for prof in v['professors']:
                 professors.add(prof['name'])
             

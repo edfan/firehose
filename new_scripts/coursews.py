@@ -2,7 +2,7 @@ import json
 import requests
 import itertools
 
-term = '2022FA'
+term = '2022SP'
 
 # copied from csb.py
 
@@ -37,7 +37,9 @@ times = {'8': 0,
          '7': 22,
          '7.30': 23}
 
-eve_times = {'1': 10,
+eve_times = {'12': 8,
+             '12.30': 9,
+             '1': 10,
              '1.30': 11,
              '2': 12,
              '2.30': 13,
@@ -82,11 +84,13 @@ def tsp(t, number):
     
     if 'EVE' in t:
         return tsp_eve(t, number)
-
-    t = t.split()[0]
-    slots = []
     
+    slots = []
     try:
+        t = t.split()[0]
+        # remove trailing parens e.g. MWF2(LIMITEDTO15)
+        t = t.split("(")[0]
+
         for t in t.split(','):
 
             split = [''.join(x) for _, x in itertools.groupby(t, key=str.isalpha)]
@@ -206,6 +210,10 @@ for c in raw_classes:
     if number not in classes:
         print('section for nonexistent class', number)
         continue
+
+    # manual fix: 21G.612
+    if number == "21G.612":
+        c['timeAndPlace'] = "MTRF 16-668"
 
     cl = classes[number]
 

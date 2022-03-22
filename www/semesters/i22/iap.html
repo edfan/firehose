@@ -32,7 +32,7 @@
   <script defer src="https://apis.google.com/js/client.js"></script>
 
   <link rel="stylesheet" type="text/css" href="../../stylesheet.css">
-  <script defer src="spring.js"></script>
+  <script defer src="iap.js"></script>
   <script defer src="script-compiled.js"></script>
 </head>
 
@@ -47,9 +47,12 @@
     <div id="left-int-div">
       <div id='calendar'></div>
     </div>
-    <div id="export-div"><!-- <span id="prereg-link">Preregister these classes!</span> | --><span id="calendar-link" data-toggle="tooltip" data-placement="top" title="Make sure popups are enabled!" data-trigger="hover">Export to Google Calendar</span> | <span id="clipboard-link">Text form</span> | <span id="toggle-css">Toggle high-contrast</span> | <span id="clear-all">Clear all</span></div>
+    <div id="export-div"><!-- <span id="prereg-link">Preregister these classes!</span> | -->
+        <span id="clipboard-link">Text form</span> | <span id="toggle-css">Toggle high-contrast</span> | <span id="toggle-dark-mode">Toggle dark-mode</span> | <span id="clear-all">Clear all</span><br>
+        <span id="calendar-link" data-toggle="tooltip" data-placement="top" title="Make sure popups are enabled!" data-trigger="hover"><img src="../../img/calendar-button.svg" /></span>
+    </div>
     <div id="footer-div">
-      &copy; 2020 <a href="mailto:edwardf@alum.mit.edu">Edward Fan</a>. High-contrast theme by Shannon Peng. <br>Subject descriptions and evaluations are &copy; 2014-2020 Massachusetts Institute of Technology.
+      &copy; 2021 <a href="mailto:edwardf@alum.mit.edu">Edward Fan</a>. High-contrast theme by Shannon Peng. Dark-mode by Mindren Lu. <br>Subject descriptions and evaluations are &copy; 2014-2021 Massachusetts Institute of Technology.
     </div>
   </div>
 
@@ -57,26 +60,26 @@
     <div id="spacer3-div"></div>
     <div id="info-div">
       <img src="../../img/logo.png" height="40px" vspace="2%" />
-      <!-- <p style="margin-bottom: 12px;">Spring 2020 | <a href="/"><span style="font-size: 70%">Fall 2020</span></a></p> -->
+      <p style="margin-bottom: 12px;">IAP 2022 | <a href="../../index.html">Spring 2022</a></p>
       <form autocomplete=off>
-          <select name="semesters" id="semesters" onchange="location = this.options[this.selectedIndex].value;">
+        <select name="semesters" id="semesters" onchange="location = this.options[this.selectedIndex].value;">
             <option value="../../index.html">Spring 2022</option>
-            <option value="../i22/iap.html">IAP 2022</option>
+            <option value="../i22/iap.html" selected>IAP 2022</option>
             <option value="../f21/fall.html">Fall 2021</option>
             <option value="../s21/spring.html">Spring 2021</option>
-            <option value="../f20/fall.html">Fall 2020</option>
-            <option value="../s20/spring.html" selected>Spring 2020</option>
-            <!-- <option value="../i20/iap.html">IAP 2020</option> -->
-            <option value="../f19/fall.html">Fall 2019</option>
-            <option value="../s19/spring.html">Spring 2019</option>
-            <option value="../i19/iap.html">IAP 2019</option>
-            <option value="../f18/fall.html">Fall 2018</option>
-            <option value="../s18/spring.html">Spring 2018</option>
-            <option value="../i18/iap.html">IAP 2018</option>
-            <option value="../f17/fall.html">Fall 2017</option>
-          </select>
-        </form>
-      <!-- <span id="info-line">I'll be at Jane Street's booth at Career Fair- come say hi!</span> -->
+          <option value="../f20/fall.html">Fall 2020</option>
+          <option value="../s20/spring.html">Spring 2020</option>
+          <!-- <option value="../i20/iap.html">IAP 2020</option> -->
+          <option value="../f19/fall.html">Fall 2019</option>
+          <option value="../s19/spring.html">Spring 2019</option>
+          <option value="../i19/iap.html">IAP 2019</option>
+          <option value="../f18/fall.html">Fall 2018</option>
+          <option value="../s18/spring.html">Spring 2018</option>
+          <option value="../i18/iap.html">IAP 2018</option>
+          <option value="../f17/fall.html">Fall 2017</option>
+        </select>
+      </form>
+      <span id="info-line">Note: Many classes only run for part of IAP- check the catalog!<br/>Note that ratings reflect class evals prior to Spring 2020.</span>
     </div>
     <hr>
 
@@ -97,7 +100,7 @@
 
       <div id="sbuttons-div" class="btn-group" data-toggle="buttons">
         <label class="btn btn-primary selector-button" id="hass">
-          <input type="checkbox" autocomplete="off">Any HASS
+          <input type="checkbox" autocomplete="off">HASS
         </label>
         <label class="btn btn-primary selector-button" id="ci_h">
 	        <input type="checkbox" autocomplete="off">CI-H
@@ -107,6 +110,9 @@
         </label>
         <label class="btn btn-primary selector-button" id="final">
 	        <input type="checkbox" autocomplete="off">No final
+        </label>
+        <label class="btn btn-primary selector-button" id="virtual">
+	        <input type="checkbox" autocomplete="off">Virtual only
         </label>
       </div>
 
@@ -175,7 +181,7 @@
       <div id="flags-div">
       <p id="class-type">
         <span class="type-span" id="nonext-span" style="display: none"><img height="16" width="16" data-src="../../img/nonext.gif" 
-          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Not offered 2020-2021" data-trigger="hover"/></span><span 
+          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Not offered 2022-2023" data-trigger="hover"/></span><span
           class="type-span" id="under-span" style="display: none"><img height="16" width="16" data-src="../../img/under.gif" 
           class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Undergrad" data-trigger="hover"/> (</span><span 
           class="type-span" id="grad-span" style="display: none"><img height="16" width="16" data-src="../../img/grad.gif" 
@@ -183,8 +189,8 @@
           class="type-span" id="fall-span" style="display: none"><img height="16" width="16" data-src="../../img/fall.gif" 
           class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Fall" data-trigger="hover"/>,</span><span 
           class="type-span" id="iap-span" style="display: none"><img height="16" width="16" data-src="../../img/iap.gif" 
-          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="IAP" data-trigger="hover"/>,</span><span 
-          class="type-span" id="spring-span" style="display: none"><img height="16" width="16" data-src="../../img/spring.gif" style="margin-left: -1px"
+          class="lazyload-img" data-toggle="tooltip" data-placement="top" title="IAP" data-trigger="hover"/></span><span 
+          class="type-span" id="spring-span" style="display: none">,<img height="16" width="16" data-src="../../img/spring.gif" style="margin-left: -1px"
           class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Spring" data-trigger="hover"/></span><span 
           class="type-span" id="summer-span" style="display: none">,<img height="16" width="16" data-src="../../img/summer.gif" 
           class="lazyload-img" data-toggle="tooltip" data-placement="top" title="Summer" data-trigger="hover"/></span><span 
@@ -246,8 +252,9 @@
     <hr>
 
     <div id="info2-div">
-      <p>Questions? Issues? Feedback? <a href="mailto:edwardf@alum.mit.edu">Send me an email!</a></p>
+      <p>Questions? Issues? Feedback? <a href="mailto:cjq@mit.edu">Send me an email!</a></p>
       <p>Looking for the old Firehose? It's been moved <a href="https://firehose.guide/old_www/evaluations.html" target="_blank">here</a>.</p>
+      <p><a href="https://github.com/edfan/firehose">GitHub</a> | <a href="privacy.html">Privacy Policy</a></p>
     </div>
 
   </div>

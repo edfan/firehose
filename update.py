@@ -1,19 +1,46 @@
-import fileinput
+from datetime import datetime, timedelta
 import os
 import shutil
 import subprocess
-import sys
 
-# i dont think this actually works for e.g. 2022JA
-OLD_TERM = "2021SP"
-NEW_TERM = "2022FA"
+OLD_TERM = "2022JA"
+NEW_TERM = "2022SP"
 
-# sorry, you have to update these manually for now
-START_DATES = ["2021-09-13", "2021-09-14", "2021-09-08", "2021-09-09", "2021-09-10"]
-END_DATES = ["20211213", "20211214", "20211215", "20211216", "20211210"]
-R_DATES = ["20210913", "20210914", "20210915", "20210916", "20210917"]
-EX_DATES = [["20211011"], [], [], ["20211111", "20211125"], ["20211126"]]
+START_DATE = "2022-01-31"
+END_DATE = "2022-05-10"
+MONDAY_SCHEDULE = "2022-02-22"
+HOLIDAYS = ["2022-02-21", "2022-03-21", "2022-03-22", "2022-03-23", "2022-03-24", "2022-03-25", "2022-04-18"]
 
+def compute_dates(start, end, monday, holidays):
+    DELTA_DAY = timedelta(days=1)
+    start_dates = [""]*5
+    end_dates = [""]*5
+    r_dates = [""]*5
+    # ex_dates cannot be empty, so add a random date
+    ex_dates = [["20000101"] for _ in range(5)]
+    start = datetime.fromisoformat(start)
+    while any(d is None for d in start_dates):
+        weekday = start.weekday()
+        if 0 <= weekday <= 4:
+            # yes, this is correct
+            start_dates[weekday] = start.strftime("%Y-%m-%d")
+            r_dates[weekday] = start.strftime("%Y%m%d")
+        start += DELTA_DAY
+    # due to inclusivity issues, we actually move the end_dates up one
+    end = datetime.fromisoformat(end) + DELTA_DAY
+    while any(d is None for d in end_dates):
+        weekday = end.weekday()
+        if 1 <= weekday <= 5:
+            end_dates[weekday - 1] = end.strftime("%Y%m%d")
+        end -= DELTA_DAY
+    if monday:
+        # the only possibility is that a tuesday becomes a monday
+        date = datetime.fromisoformat(monday)
+        r_dates[1] = date.strftime("%Y%m%d")
+    for d in holidays:
+        date = datetime.fromisoformat(d)
+        ex_dates[date.weekday()].append(date.strftime("%Y%m%d"))
+    return start_dates, end_dates, r_dates, ex_dates
 
 class Term:
     def __init__(self, name):
@@ -22,11 +49,14 @@ class Term:
         self.sem = name[4].lower()
         if self.sem == "f":
             self.sem_full = "fall"
+            self.sem_full_caps = "Fall"
         elif self.sem == "s":
             self.sem_full = "spring"
+            self.sem_full_caps = "Spring"
         elif self.sem == "j":
             self.sem = "i"
             self.sem_full = "iap"
+            self.sem_full_caps = "IAP"
 
         self.name_year = name[:4]
         self.actual_year = self.name_year
@@ -35,7 +65,7 @@ class Term:
 
         self.sem_year = f"{self.sem}{self.actual_year[-2:]}"
         self.sem_full_year = f"{self.sem_full}{self.actual_year[-2:]}"
-        self.full_name = f"{self.sem_full.capitalize()} {self.actual_year}"
+        self.full_name = f"{self.sem_full_caps} {self.actual_year}"
 
 
 old_term = Term(OLD_TERM)
@@ -58,7 +88,8 @@ with open(old_term_file, "r") as file:
 
 # in old_term_file, replace src=" to src="../../
 # exception: should not start with src="http
-# exception: should not be src="full.js"
+# exception: should not be src="full.js",
+#            in this case, replace with "fall/spring.js"
 # exception: should not be src="script-compiled.js"
 new_lines = []
 for line in lines:
@@ -66,14 +97,16 @@ for line in lines:
         s in line for s in ['src="http', 'src="full.js"', 'src="script-compiled.js"']
     ):
         line = line.replace('src="', 'src="../../')
+    if 'src="full.js"' in line:
+        line = line.replace("full.js", f"{old_term.sem_full}.js")
     new_lines.append(line)
 lines = new_lines[:]
 
 new_lines = []
 # in old_term_file, replace href=" to href="../../
-# exception: should not start with href="http or href="mailto
+# exception: should not start with href="http or href="mailto or href="data
 for line in lines:
-    if not any(s in line for s in ['href="http', 'href="mailto"']):
+    if not any(s in line for s in ['href="http', 'href="mailto', 'href="data']):
         line = line.replace('href="', 'href="../../')
     new_lines.append(line)
 lines = new_lines[:]
@@ -95,7 +128,12 @@ def update_dropdown(lines, replace_selected=False):
             if 'select name="semesters"' in line:
                 flag = "seen"
         elif flag == "seen":
-            # ignore this line
+            # it's already been added i guess
+            if new_term.full_name in line:
+                new_lines.append(line)
+                flag = "done"
+                continue
+            # otherwise, ignore this line
             new_lines.append(new_index)
             if replace_selected:
                 new_lines.append(new_option.replace('">', '" selected>'))
@@ -114,6 +152,8 @@ with open(old_term_file, "w") as file:
 # replace with the new index line, then add the line for e.g. Fall 2021
 for folder in os.scandir("./www/semesters"):
     if not folder.is_dir():
+        continue
+    if old_term.sem_year in folder.path:
         continue
     for path in os.scandir(folder):
         if not path.name.endswith(".html"):
@@ -140,6 +180,7 @@ with open(coursews_path, "w") as file:
 
 # run normal update process
 # something something some classes need special casing
+print("this might not work, if it fails run new_scripts/update_schedule.sh manually:")
 subprocess.run("./new_scripts/update_schedule.sh", shell=True)
 
 # in (new) index.html:
@@ -180,7 +221,7 @@ for line in lines:
         if new_term.sem == "f":  # add comma
             line = line.replace("><", ">,<")
         elif new_term.sem == "s":  # remove comma
-            line = line.replace(">,<", "/><")
+            line = line.replace(">,<", "><")
     new_lines.append(line)
 lines = new_lines[:]
 
@@ -211,21 +252,23 @@ for line in lines:
 lines = new_lines[:]
 
 # update the mit schedule for gcal export in script.js
+start_dates, end_dates, r_dates, ex_dates = compute_dates(START_DATE, END_DATE, MONDAY_SCHEDULE, HOLIDAYS)
 new_lines = []
 indent = "\t"*3
 for line in lines:
     if "var start_dates =" in line:
-        line = f'{indent}var start_dates = {repr(START_DATES)};\n'
+        line = f'{indent}var start_dates = {repr(start_dates)};\n'
     elif "var end_dates =" in line:
-        line = f'{indent}var end_dates = {repr(END_DATES)};\n'
+        line = f'{indent}var end_dates = {repr(end_dates)};\n'
     elif "var r_dates =" in line:
-        line = f'{indent}var r_dates = {repr(R_DATES)};\n'
+        line = f'{indent}var r_dates = {repr(r_dates)};\n'
     elif "var ex_dates =" in line:
-        line = f'{indent}var ex_dates = {repr(EX_DATES)};\n'
+        line = f'{indent}var ex_dates = {repr(ex_dates)};\n'
     new_lines.append(line)
 
 with open(script_js, "w") as file:
     file.writelines(new_lines)
 
 # recompile using new_scripts/compile.sh
+print("this might not work, if it fails run new_scripts/compile.sh manually:")
 subprocess.run("./new_scripts/compile.sh", shell=True)

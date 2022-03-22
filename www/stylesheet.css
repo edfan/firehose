@@ -37,6 +37,7 @@
 #info-line {
     margin-top: 5px;
     font-size: 80%;
+    line-height: 1.2;
 }
 
 #info2-div {
@@ -284,6 +285,11 @@
 }
 
 #class-eval {
+    font-size: 80%;
+}
+
+#class-hours-disclaimer {
+    display: none;
     font-size: 80%;
 }
 
