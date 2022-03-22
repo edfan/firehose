@@ -1,4 +1,5 @@
-var render, html; // make tsc accept these types
+import * as React from "react";
+import * as ReactDOM from "react-dom";
 
 function formatNumber(x: number, n: number) {
   const re = "\\d(?=(\\d{" + (x || 3) + "})+" + (n > 0 ? "\\." : "$") + ")";
@@ -20,7 +21,7 @@ type RawClass = {
   cl: string;
   tb: boolean; // tba
 
-  s: Array<string>; // subset of ["l", "r", "b"]
+  s: Array<"l" | "r" | "b">; // subset of ["l", "r", "b"]
   l: Array<RawSection>; // lecture
   r: Array<RawSection>; // recitation
   b: Array<RawSection>; // lab
@@ -276,9 +277,9 @@ class Firehose {
   constructor(rawClasses: Map<string, RawClass>) {
     this.rawClasses = rawClasses;
     this.evalTableRows = [];
-    for (const cls of this.rawClasses.values()) {
+    this.rawClasses.forEach((cls) => {
       this.evalTableRows.push([cls.no, formatNumber(cls.ra, 1), formatNumber(cls.h, 1), cls.n]);
-    }
+    })
   }
 
   fillTable(isSelected: (cls: string) => boolean): Array<EvalTableRow> {
@@ -345,9 +346,9 @@ class Firehose {
     for (const cls of this.currentClasses) {
       for (const secs of cls.sections) {
         const key = `${cls.number},${secs.kind}`;
-        const option = lockedSlots[key];
+        const option = lockedSlots.get(key);
         if (option !== undefined && option !== "none") {
-          const sec = secs.sections[option];
+          const sec = secs.sections[option as number];
           lockedSections.push(secs);
           lockedOptions.push(sec);
           initialSlots.push(...sec.timeslots);
@@ -366,7 +367,7 @@ class Firehose {
   }
 
   addClass(number: string): void {
-    this.currentClasses.push(new Class(this.rawClasses.get(number)));
+    this.currentClasses.push(new Class(this.rawClasses.get(number)!));
   }
 
   removeClass(number: string): void {
@@ -374,11 +375,10 @@ class Firehose {
   }
 
   classDescription(number: string): void {
-    const cls = new Class(this.rawClasses.get(number));
-    render(
-      html`<${ClassDescription} cls="${cls}" />`,
-      document.getElementById("desc-div"),
-      document.getElementById("desc-div-internal")
+    const cls = new Class(this.rawClasses.get(number)!);
+    ReactDOM.render(
+      <ClassDescription cls={cls} />,
+      document.getElementById("desc-div")
     );
   }
 }
@@ -386,24 +386,24 @@ class Firehose {
 function TypeSpan(props: { flag: string; title: string }) {
   const { flag, title } = props;
 
-  return html`
-    <span class="type-span" id="${flag}-span">
+  return (
+    <span className="type-span" id={`${flag}-span`}>
       <img
         height="16"
         width="16"
-        src="img/${flag}.gif"
+        src={`img/${flag}.gif`}
         data-toggle="tooltip"
         data-placement="top"
-        title="${title}"
+        title={title}
         data-trigger="hover"
     /></span>
-  `;
+  );
 }
 
 function LinkedClass(props: { number: string }) {
   const { number } = props;
   // @ts-ignore class_desc is some global from script.js
-  return html`<span class="link-span" onClick=${(e) => class_desc(number)}>${number}</span>`;
+  return html`<span class="link-span" onClick=${() => class_desc(number)}>${number}</span>`;
 }
 
 function ClassRelated(props: { cls: Class }) {
@@ -413,21 +413,23 @@ function ClassRelated(props: { cls: Class }) {
   const linkClasses = (str: string) =>
     str
       .split(/([ ,;\[\]\(\)])/)
-      .map((text) => (text.includes(".") ? html`<${LinkedClass} number=${text} />` : text));
+      .map((text) => (text.includes(".") ? <LinkedClass number={text} /> : text));
 
-  return html`<span id="class-prereq">Prereq: ${linkClasses(prereq)}</span>
-    ${same ? html`<span id="class-same"><br />Same class as: ${linkClasses(same)}</span>` : null}
-    ${meets ? html`<span id="class-meets"><br />Meets with: ${linkClasses(meets)}</span>` : null}`;
+  return <>
+    <span id="class-prereq">Prereq: {linkClasses(prereq)}</span>
+    {same ? <span id="class-same"><br />Same class as: {linkClasses(same)}</span> : null}
+    {meets ? <span id="class-meets"><br />Meets with: {linkClasses(meets)}</span> : null}
+  </>;
 }
 
 function ClassTypes(props: { cls: Class }) {
   const { cls } = props;
   const { flags, totalUnits, units } = cls;
 
-  const makeFlags = (arr) =>
+  const makeFlags = (arr: Array<[keyof Flags, string]>) =>
     arr
-      .filter(([flag, title]) => flags[flag])
-      .map(([flag, title]) => html`<${TypeSpan} key="${flag}" flag="${flag}" title="${title}" />`);
+      .filter(([flag, _]) => flags[flag])
+      .map(([flag, title]) => <TypeSpan key={flag} flag={flag} title={title} />);
 
   const types1 = makeFlags([
     ["nonext", "Not offered 2021-2022"],
@@ -458,58 +460,58 @@ function ClassTypes(props: { cls: Class }) {
     ["cihw", "CI-HW"],
   ]);
 
-  return html`
+  return (
     <p id="class-type">
-      ${types1} (${seasons}) ${types2} ${totalUnits} units: ${units.join("-")}
-      ${flags.final ? html`<span class="type-span" id="final-span"> Has final</span>` : null}<br />
-      <${ClassRelated} cls=${cls} />
+      {types1} ({seasons}) {types2} {totalUnits} units: {units.join("-")}
+      {flags.final ? <span className="type-span" id="final-span"> Has final</span> : null}<br />
+      <ClassRelated cls={cls} />
     </p>
-  `;
+  );
 }
 
 function ClassEval(props: { cls: Class }) {
   const { cls } = props;
   const { rating, hours, people } = cls.evals;
 
-  return html`<p id="class-eval">
-    Rating: ${rating} Hours: ${hours} Avg # of students: ${people}
-  </p>`;
+  return <p id="class-eval">
+    Rating: {rating} Hours: {hours} Avg # of students: {people}
+  </p>;
 }
 
-function ClassDescription(props: { cls: Class }) {
+function ClassDescription(props: { cls: Class }): React.ReactElement {
   const { cls } = props;
 
-  return html`
-    <p id="class-name">${cls.number}: ${cls.name}</p>
+  return <>
+    <p id="class-name">{cls.number}: {cls.name}</p>
     <div id="flags-div">
-      <${ClassTypes} cls=${cls} />
-      <${ClassEval} cls=${cls} />
+      <ClassTypes cls={cls} />
+      <ClassEval cls={cls} />
     </div>
     <div id="class-buttons-div"></div>
-    <p id="manual-button" style="display: none">+ Manually set sections</p>
-    <div id="manual-div" style="display: none">
+    <p id="manual-button" style={{"display": "none"}}>+ Manually set sections</p>
+    <div id="manual-div" style={{"display": "none"}}>
       <div id="man-lec-div">
         Lecture:<br />
-        <input type="radio" class="man-button" id="lec-auto" name="lec" value="auto" /> Auto
+        <input type="radio" className="man-button" id="lec-auto" name="lec" value="auto" /> Auto
         (default)<br />
-        <input type="radio" class="man-button" id="lec-none" name="lec" value="none" /> None<br />
+        <input type="radio" className="man-button" id="lec-none" name="lec" value="none" /> None<br />
         <div id="spec-man-lec-div"></div>
       </div>
       <div id="man-rec-div">
         Recitation:<br />
-        <input type="radio" class="man-button" id="rec-auto" name="rec" value="auto" /> Auto
+        <input type="radio" className="man-button" id="rec-auto" name="rec" value="auto" /> Auto
         (default)<br />
-        <input type="radio" class="man-button" id="rec-none" name="rec" value="none" /> None<br />
+        <input type="radio" className="man-button" id="rec-none" name="rec" value="none" /> None<br />
         <div id="spec-man-rec-div"></div>
       </div>
       <div id="man-lab-div">
         Lab:<br />
-        <input type="radio" class="man-button" id="lab-auto" name="lab" value="auto" /> Auto
+        <input type="radio" className="man-button" id="lab-auto" name="lab" value="auto" /> Auto
         (default)<br />
-        <input type="radio" class="man-button" id="lab-none" name="lab" value="none" /> None<br />
+        <input type="radio" className="man-button" id="lab-none" name="lab" value="none" /> None<br />
         <div id="spec-man-lab-div"></div>
       </div>
     </div>
     <p id="class-desc"></p>
-  `;
+  </>;
 }

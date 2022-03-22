@@ -9,3 +9,7 @@ old_scripts/professors.json
 #*
 debug.log
 .DS_Store
+
+# node
+/node_modules
+/build
