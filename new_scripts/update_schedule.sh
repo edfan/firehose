@@ -6,4 +6,4 @@ echo "=== sublist_ws.py ==="
 python3 sublist_ws.py
 echo "=== combiner_ws.py ==="
 python3 combiner_ws.py
-cp full.json ../www/full.js
+cp full.json ../public/full.js

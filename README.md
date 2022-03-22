@@ -2,6 +2,47 @@
 
 doing a refactor on src/firehose.ts. the ideal is to be able to compile and drop-in replace most of the functionality while having stronger types and stuff.
 
+## todo
+
+**blocking**:
+
+- drop semester dependencies on `src/index.js` and `public/index.html` (cf. `update.py`)
+- factor out semester dropdown information
+- `update.py` needs to work with new semester format
+  - having the same script rather than running using `script-compiled.js` over and over
+
+**refactoring**:
+
+- split firehose.tsx
+- remove jquery timepicker (is it even used?)
+- remove rest of jquery (glhf)
+- put dataTables as an npm dependency (or use something better?)
+- move rest of index.html ui to react
+- remove images from public folder
+
+## development
+
+you need **node 16** and **python 3**. run:
+
+- `npm start` for development
+- `npm build` to build, then upload the `build` folder
+- `./new_scripts/update_schedule.sh` to update schedule
+
+## notes on tooling
+
+introduce as few dependencies as possible so future maintainers won't die.
+
+node is version-locked to 16 for now, but should be able to upgrade to 18 when it's in lts.
+
+- we're using create-react-app
+  - this is assuming it's familiar to people from web.lab, and so will have a lifetime of at least a few years.
+  - a bit unusual to use create-react-app in a project this late, but it still works mostly well.
+- we're using typescript, cf. firehose.tsx.
+  - this is assuming it's familiar to people from 6.031, and so will have a lifetime of at least a few years.
+  - much of the type shenanigans (e.g. RawClass) is bad, but fixing it will involve fixing the python scrapers themselves.
+- scrapers are still largely the same
+  - they're written in python 3, which is likely to live for a few years.
+
 ## notes on script.js
 
 all_sections
