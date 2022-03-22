@@ -13,7 +13,13 @@ doing a refactor on src/firehose.ts. the ideal is to be able to compile and drop
 
 **refactoring**:
 
-- fix manually set sections
+- split much more cleanly...
+  - factor out logic for table feature, search, and filtering (all globals when it's local)
+    - see #class-input in src/index.js
+  - logic for slot selection, option selection (complicated logic, move out)
+  - view for class description, buttons for adding/removing classes (bubble up)
+    - put locked slots on the firehose object
+    - likely blocked on not having so many globals (class_desc, select_slots...)
 - remove jquery timepicker (is it even used?)
 - remove rest of jquery (glhf)
 - put dataTables as an npm dependency (or use something better?)
