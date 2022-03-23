@@ -18,6 +18,7 @@ doing a refactor on src/firehose.ts. the ideal is to be able to compile and drop
     - see #class-input in src/index.js
   - logic for slot selection, option selection (complicated logic, move out)
   - view for class description, buttons for adding/removing classes (bubble up)
+    - cur_class is a global that isn't global (so linked class doesn't bubble up too much)
     - put locked slots on the firehose object
     - likely blocked on not having so many globals (class_desc, select_slots...)
 - remove jquery timepicker (is it even used?)

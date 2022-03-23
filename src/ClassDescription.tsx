@@ -1,4 +1,4 @@
-import { Class, Flags } from "./firehose";
+import { Class, Flags } from "./class";
 
 function TypeSpan(props: { flag: string; title: string }) {
   const { flag, title } = props;

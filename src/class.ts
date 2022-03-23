@@ -1,11 +1,4 @@
-import * as ReactDOM from "react-dom";
-
-import { ClassDescription } from "./ClassDescription";
-
-function formatNumber(x: number, n: number) {
-  const re = "\\d(?=(\\d{" + (x || 3) + "})+" + (n > 0 ? "\\." : "$") + ")";
-  return x.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, "g"), "$&,");
-}
+import { formatNumber } from "./firehose";
 
 // [start slot, length of slot], e.g. [6, 3]
 type RawTimeslot = [number, number];
@@ -21,7 +14,7 @@ enum SectionKind {
 }
 
 // following combiner_ws.py
-type RawClass = {
+export type RawClass = {
   // no: "6.036", co: "6", cl: "036"
   no: string;
   co: string;
@@ -85,7 +78,7 @@ type RawClass = {
   si: number; // size from evals
 };
 
-class Timeslot {
+export class Timeslot {
   startSlot: number;
   numSlots: number;
 
@@ -123,7 +116,7 @@ export type Flags = {
   final: boolean;
 };
 
-class Section {
+export class Section {
   cls: Class;
   index: number;
   kind: SectionKind;
@@ -150,7 +143,7 @@ class Section {
   }
 }
 
-class Sections {
+export class Sections {
   cls: Class;
   kind: SectionKind;
   sections: Array<Section>;
@@ -307,122 +300,5 @@ export class Class {
       inCharge: this.rawClass.i,
       extraUrls: extraUrls,
     };
-  }
-}
-
-// "6.036", "5.5", "10.2", "Introduction to Machine Learning"
-type EvalTableRow = [string, string, string, string];
-
-export class Firehose {
-  rawClasses: Map<string, RawClass>;
-  evalTableRows: Array<EvalTableRow>;
-  currentClasses: Array<Class> = [];
-
-  constructor(rawClasses: Map<string, RawClass>) {
-    this.rawClasses = rawClasses;
-    this.evalTableRows = [];
-    this.rawClasses.forEach((cls) => {
-      this.evalTableRows.push([cls.no, formatNumber(cls.ra, 1), formatNumber(cls.h, 1), cls.n]);
-    })
-  }
-
-  fillTable(isSelected: (cls: string) => boolean): Array<EvalTableRow> {
-    return this.evalTableRows.filter(([cls]) => isSelected(cls));
-  }
-
-  selectHelper(
-    freeSections: Array<Sections>,
-    filledSlots: Array<Timeslot>,
-    foundOptions: Array<Section>,
-    curConflicts: number,
-    foundMinConflicts: number
-  ): {
-    options: Array<Array<Section>>;
-    minConflicts: number;
-  } {
-    if (freeSections.length === 0) {
-      return { options: [foundOptions], minConflicts: curConflicts };
-    }
-
-    let options: Array<Array<Section>> = [];
-    let minConflicts: number = foundMinConflicts;
-
-    const [secs, ...remainingSections] = freeSections;
-
-    for (const sec of secs.sections) {
-      const newConflicts = sec.countConflicts(filledSlots);
-      if (curConflicts + newConflicts > foundMinConflicts) continue;
-
-      const { options: newOptions, minConflicts: newMinConflicts } = this.selectHelper(
-        remainingSections,
-        filledSlots.concat(sec.timeslots),
-        foundOptions.concat(sec),
-        curConflicts + newConflicts,
-        foundMinConflicts
-      );
-
-      if (newMinConflicts < minConflicts) {
-        options = [];
-        minConflicts = newMinConflicts;
-      }
-
-      if (newMinConflicts === minConflicts) {
-        options.push(...newOptions);
-      }
-    }
-
-    return { options, minConflicts };
-  }
-
-  selectSlots(
-    lockedSlots: Map<string, string | number>
-  ): {
-    // [class number, section kind]
-    allSections: Array<[string, string]>;
-    // each entry is e.g. [0, 0, 1], for options 0, 0, 1 of allSections
-    options: Array<Array<number>>;
-  } {
-    const lockedSections: Array<Sections> = [];
-    const lockedOptions: Array<Section> = [];
-    const initialSlots: Array<Timeslot> = [];
-    const freeSections: Array<Sections> = [];
-
-    for (const cls of this.currentClasses) {
-      for (const secs of cls.sections) {
-        const key = `${cls.number},${secs.kind}`;
-        const option = lockedSlots.get(key);
-        if (option !== undefined && option !== "none") {
-          const sec = secs.sections[option as number];
-          lockedSections.push(secs);
-          lockedOptions.push(sec);
-          initialSlots.push(...sec.timeslots);
-        } else {
-          freeSections.push(secs);
-        }
-      }
-    }
-
-    const { options } = this.selectHelper(freeSections, initialSlots, [], 0, Infinity);
-
-    return {
-      allSections: [lockedSections, freeSections].flat().map((sec) => [sec.cls.number, sec.kind]),
-      options: options.map((opt) => lockedOptions.concat(opt).map((sec) => sec.index)),
-    };
-  }
-
-  addClass(number: string): void {
-    this.currentClasses.push(new Class(this.rawClasses.get(number)!));
-  }
-
-  removeClass(number: string): void {
-    this.currentClasses = this.currentClasses.filter((cls) => cls.number !== number);
-  }
-
-  classDescription(number: string): void {
-    const cls = new Class(this.rawClasses.get(number)!);
-    ReactDOM.render(
-      <ClassDescription cls={cls} />,
-      document.getElementById("desc-div")
-    );
   }
 }
