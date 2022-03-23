@@ -1,10 +1,8 @@
 import { formatNumber } from "./firehose";
-
-// [start slot, length of slot], e.g. [6, 3]
+/** Raw timeslot format: [start slot, length of timeslot]. */
 type RawTimeslot = [number, number];
 
-// list of timeslots, room
-// e.g. [[[6, 3], [66, 3]], "34-101"
+/** Raw section format: [[[10, 2], [70, 2]], "34-101". */
 type RawSection = [Array<RawTimeslot>, string];
 
 enum SectionKind {
@@ -13,71 +11,103 @@ enum SectionKind {
   LAB = "b",
 }
 
-// following combiner_ws.py
+/** The raw class format produced by combiner_ws.py. */
 export type RawClass = {
-  // no: "6.036", co: "6", cl: "036"
+  /** Class number, e.g. "6.036" */
   no: string;
+  /** Course number, e.g. "6" */
   co: string;
+  /** Class number without course, e.g. "036" */
   cl: string;
-  tb: boolean; // tba
+  /** True if some section is not scheduled yet */
+  tb: boolean;
 
-  s: Array<SectionKind>; // subset of ["l", "r", "b"]
-  l: Array<RawSection>; // lecture
-  r: Array<RawSection>; // recitation
-  b: Array<RawSection>; // lab
-  // raw strings, e.g. T9.30-11 or TR1,F2
+  /** Kinds of sections (among LECTURE, RECITATION, LAB) that exist */
+  s: Array<SectionKind>;
+  /** Possible lecture sections */
+  l: Array<RawSection>;
+  /** Possible recitation sections */
+  r: Array<RawSection>;
+  /** Possible lab sections */
+  b: Array<RawSection>;
+  /** Raw lecture times, e.g. T9.301-11 or TR1,F2 */
   lr: string;
+  /** Raw recitation times, e.g. T9.301-11 or TR1,F2 */
   rr: string;
+  /** Raw lab times, e.g. T9.301-11 or TR1,F2 */
   br: string;
 
-  // hass-h, hass-a, hass-s, hass-e
+  /** True if HASS-H */
   hh: boolean;
+  /** True if HASS-A */
   ha: boolean;
+  /** True if HASS-S */
   hs: boolean;
+  /** True if HASS-E */
   he: boolean;
-  // ci-h, ci-hw
+  /** True if CI-H */
   ci: boolean;
+  /** True if CI-HW */
   cw: boolean;
-  // rest, lab, partial institute lab
+  /** True if REST */
   re: boolean;
+  /** True if institute lab */
   la: boolean;
+  /** True if partial institute lab */
   pl: boolean;
 
-  // units of lecture, recitation, lab e.g. 5-0-7
+  /** Lecture or recitation units */
   u1: number;
+  /** Lab or field work units */
   u2: number;
+  /** Outside class units */
   u3: number;
 
-  // level: undergrad or grad
+  /** Level: "U" undergrad, "G" grad */
   le: "U" | "G";
-  // comma-separated list of same classes
-  // e.g. "21A.103, WGS.225"
+  /** Comma-separated list of classes with same number, e.g.
+   * "21A.103, WGS.225" */
   sa: string;
-  // comma-separated list of meets with classes
+  /** Comma-separated list of classes it meets with */
   mw: string;
 
-  // subset of ["FA", "JA", "SP", "SU"]
-  t: Array<string>;
-  // string describing prereqs
-  // generally could be anything
+  /** Terms class is offered */
+  t: Array<"FA" | "JA" | "SP" | "SU">;
+  /** Prereqs, no specific format (but usually contains class numbers) */
   pr: string;
 
-  d: string; // description
-  n: string; // name
-  i: string; // in-charge
+  /** Description (~paragraph that appears in catalog) */
+  d: string;
+  /** Name of class e.g. "Algebra I" */
+  n: string;
+  /** (Person) in-charge, e.g. "Alyssa Hacker" */
+  i: string;
 
-  v: boolean; // virtual
+  /** True if meeting virtually */
+  v: boolean;
 
-  nx: boolean; // true if NOT offered next year
-  rp: boolean; // can be repeated for credit
-  u: string; // class url
-  f: boolean; // has final
+  /** True if NOT offered next year */
+  nx: boolean;
+  /** True if can be repeated for credit */
+  rp: boolean;
+  /** Class website */
+  u: string;
+  /** True if has final */
+  f: boolean;
 
-  ra: number; // rating from evals
-  h: number; // hours from evals
-  si: number; // size from evals
+  /** Rating (out of 7.0) from evals */
+  ra: number;
+  /** Hours per week from evals */
+  h: number;
+  /** Class size from evals */
+  si: number;
 };
 
+/**
+ * A timeslot is a period of time, spanning several thirty-minute slots. Each
+ * day has 30 thirty-minute slots from 8 AM to 11 PM, times five days a week.
+ * Thus, Monday slots are 0 to 29, Tuesday are 30 to 59, etc.
+ */
 export class Timeslot {
   startSlot: number;
   numSlots: number;
@@ -90,11 +120,18 @@ export class Timeslot {
     return this.startSlot + this.numSlots - 1;
   }
 
+  /**
+   * @param other - timeslot to compare to
+   * @returns True if this timeslot conflicts with the other timeslot
+   */
   conflicts(other: Timeslot): boolean {
     return this.startSlot <= other.endSlot && other.startSlot <= this.endSlot;
   }
 }
 
+/**
+ * Flags.
+ */
 export type Flags = {
   nonext: boolean;
   under: boolean;
@@ -116,14 +153,34 @@ export type Flags = {
   final: boolean;
 };
 
+/**
+ * A section is an array of timeslots that meet in the same room for the same
+ * purpose. Sections can be lectures, recitations, or labs, for a given class.
+ */
 export class Section {
+  /** Class this section belongs to */
   cls: Class;
+  /** Index among sections of the same kind, e.g. 0th LAB, 1st LAB, etc. */
   index: number;
+  /** Is it LECTURE, RECITATION, or LAB? */
   kind: SectionKind;
+  /** Timeslots this section meets */
   timeslots: Array<Timeslot>;
+  /** Room this section meets in */
   room: string;
 
-  constructor(cls: Class, index: number, kind: SectionKind, section: RawSection) {
+  /**
+   * @param cls - Class this section belongs to
+   * @param index - Index among sections of the same kind
+   * @param kind - LECTURE, RECITATION, or LAB
+   * @param section - raw section info (timeslot and room)
+   */
+  constructor(
+    cls: Class,
+    index: number,
+    kind: SectionKind,
+    section: RawSection
+  ) {
     this.cls = cls;
     this.index = index;
     this.kind = kind;
@@ -132,6 +189,10 @@ export class Section {
     this.room = room;
   }
 
+  /**
+   * @param currentSlots - array of timeslots currently occupied
+   * @returns number of conflicts this section has with currentSlots
+   */
   countConflicts(currentSlots: Array<Timeslot>): number {
     let conflicts = 0;
     for (const slot of this.timeslots) {
@@ -143,6 +204,7 @@ export class Section {
   }
 }
 
+/** Wrapper for an array of {@link Section}s, all the same kind. */
 export class Sections {
   cls: Class;
   kind: SectionKind;
@@ -155,7 +217,7 @@ export class Sections {
   }
 }
 
-// rawClass wraper
+/** An entire class, e.g. 6.036. Wrapper for {@link RawClass}. */
 export class Class {
   rawClass: RawClass;
 
@@ -163,26 +225,32 @@ export class Class {
     this.rawClass = rawClass;
   }
 
+  /** Name, e.g. "Introduction to Machine Learning". */
   get name(): string {
     return this.rawClass.n;
   }
 
+  /** Number, e.g. "6.036". */
   get number(): string {
     return this.rawClass.no;
   }
 
+  /** Course, e.g. "6". */
   get course(): string {
     return this.rawClass.co;
   }
 
+  /** Units [in class, lab, out of class]. */
   get units(): Array<number> {
     return [this.rawClass.u1, this.rawClass.u2, this.rawClass.u3];
   }
 
+  /** Total class units, usually 12. */
   get totalUnits(): number {
     return this.rawClass.u1 + this.rawClass.u2 + this.rawClass.u3;
   }
 
+  /** Hours per week, taking from evals if exists, or units if not. */
   get hours(): { hours: number; setToUnits: boolean } {
     const setToUnits = !this.rawClass.h;
     return {
@@ -191,6 +259,7 @@ export class Class {
     };
   }
 
+  /** Array of section kinds: [LECTURE, RECITATION, LAB]. */
   get sectionKinds(): Array<SectionKind> {
     const map = {
       l: SectionKind.LECTURE,
@@ -200,14 +269,20 @@ export class Class {
     return this.rawClass.s.map((kind) => map[kind]);
   }
 
+  /**
+   * @param kind - LECTURE, RECITATION, or LAB
+   * @returns all sections with that kind
+   */
   sectionsOfKind(kind: SectionKind): Sections {
     return new Sections(this, kind, this.rawClass[kind]);
   }
 
+  /** All class sections */
   get sections(): Array<Sections> {
     return this.sectionKinds.map((kind) => this.sectionsOfKind(kind));
   }
 
+  /** Object of boolean properties of class. */
   get flags(): Flags {
     return {
       nonext: this.rawClass.nx,
@@ -231,6 +306,7 @@ export class Class {
     };
   }
 
+  /** Evals, or N/A if non-existent. */
   get evals(): {
     rating: string;
     hours: string;
@@ -251,6 +327,8 @@ export class Class {
     }
   }
 
+  /** Related classes, in unspecified format, but likely to contain class
+   * numbers as substrings.*/
   get related(): {
     prereq: string;
     same: string;
@@ -263,10 +341,13 @@ export class Class {
     };
   }
 
+  /** Class description and (person) in-charge. Extra URLs are labels and URLs
+   * that should appear after the class description, like "Course Catalog" or
+   * "Class Evaluations". */
   get description(): {
     description: string;
     inCharge: string;
-    extraUrls: Array<{ label: string, url: string }>;
+    extraUrls: Array<{ label: string; url: string }>;
   } {
     const extraUrls = [
       {

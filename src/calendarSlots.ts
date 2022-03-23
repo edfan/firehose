@@ -1,5 +1,17 @@
 import { Section, Timeslot, Sections, Class } from "./class";
 
+/**
+ * Helper function for selectSlots. Implements backtracking: we try to place
+ * freeSections while counting the number of conflicts, returning all options
+ * with the minimum number of conflicts.
+ *
+ * @param freeSections - Remaining sections to schedule
+ * @param filledSlots - Timeslots that have been scheduled
+ * @param foundOptions - Option currently being built
+ * @param curConflicts - Current number of conflicts of foundOptions
+ * @param foundMinConflicts - Best number of conflicts so far
+ * @returns Object with best options found so far and number of conflicts
+ */
 function selectHelper(
   freeSections: Array<Sections>,
   filledSlots: Array<Timeslot>,
@@ -44,13 +56,21 @@ function selectHelper(
   return { options, minConflicts };
 }
 
+/**
+ * Find best options for choosing sections among classes. Returns list of
+ * sections, and list of options for which sections to pick.
+ *
+ * @param currentClasses - Current classes to schedule
+ * @param lockedSlots - Locked class slots
+ * @returns Object with
+ *    allSections - e.g. [["6.036", LECTURE], ["6.036", LAB], ...]
+ *    options - e.g. [[2, 0, ...]] for 2nd 6.036 LECTURE, 0th 6.036 LAB, etc.
+ */
 export function selectSlots(
   currentClasses: Array<Class>,
   lockedSlots: Map<string, string | number>
 ): {
-  // [class number, section kind]
   allSections: Array<[string, string]>;
-  // each entry is e.g. [0, 0, 1], for options 0, 0, 1 of allSections
   options: Array<Array<number>>;
 } {
   const lockedSections: Array<Sections> = [];
@@ -76,7 +96,11 @@ export function selectSlots(
   const { options } = selectHelper(freeSections, initialSlots, [], 0, Infinity);
 
   return {
-    allSections: [lockedSections, freeSections].flat().map((sec) => [sec.cls.number, sec.kind]),
-    options: options.map((opt) => lockedOptions.concat(opt).map((sec) => sec.index)),
+    allSections: [lockedSections, freeSections]
+      .flat()
+      .map((sec) => [sec.cls.number, sec.kind]),
+    options: options.map((opt) =>
+      lockedOptions.concat(opt).map((sec) => sec.index)
+    ),
   };
 }
