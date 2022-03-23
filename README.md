@@ -41,13 +41,17 @@ introduce as few dependencies as possible so future maintainers won't die.
 
 node is version-locked to 16 for now, but should be able to upgrade to 18 when it's in lts.
 
-- we're using create-react-app
+- we're using create-react-app.
   - this is assuming it's familiar to people from web.lab, and so will have a lifetime of at least a few years.
   - a bit unusual to use create-react-app in a project this late, but it still works mostly well.
+- we're using fullcalendar for the schedule and ag grid for the list of classes.
+  - library use is unavoidable, even old firehose had it, but we try to pick libraries that will last.
+  - fullcalendar, for example, was used in old firehose (back in v3) and we still use it now.
+  - it's unclear how long ag grid will last, but given its popularity right now, it'll probably last decently long.
 - we're using typescript, cf. firehose.tsx.
   - this is assuming it's familiar to people from 6.031, and so will have a lifetime of at least a few years.
   - much of the type shenanigans (e.g. RawClass) is bad, but fixing it will involve fixing the python scrapers themselves.
-- scrapers are still largely the same
+- scrapers are still largely the same.
   - they're written in python 3, which is likely to live for a few years.
 
 ## notes on script.js
