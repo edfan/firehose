@@ -1,4 +1,5 @@
-import { formatNumber } from "./firehose";
+import { formatNumber } from "./utils";
+
 /** Raw timeslot format: [start slot, length of timeslot]. */
 type RawTimeslot = [number, number];
 

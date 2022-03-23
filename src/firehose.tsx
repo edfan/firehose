@@ -1,16 +1,8 @@
 import * as ReactDOM from "react-dom";
 import { ClassDescription } from "./ClassDescription";
+import { ClassTable } from "./ClassTable";
 import { RawClass, Class } from "./class";
 import { selectSlots } from "./calendarSlots";
-
-/** Rounds {@param x} to {@param n} decimal places? */
-export function formatNumber(x: number, n: number) {
-  const re = "\\d(?=(\\d{" + (x || 3) + "})+" + (n > 0 ? "\\." : "$") + ")";
-  return x.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, "g"), "$&,");
-}
-
-/** Row in the class list table, [number, rating, hour, name]. */
-type EvalTableRow = [string, string, string, string];
 
 /**
  * Global Firehose object. Maintains global program state (selected classes,
@@ -22,8 +14,6 @@ export class Firehose {
    * TODO: Make a function to get Class object from class number?
    */
   rawClasses: Map<string, RawClass>;
-  /** Rows in the class list table. */
-  evalTableRows: Array<EvalTableRow>;
   /**
    * Classes currently selected.
    * TODO: persist in localStorage.
@@ -32,25 +22,16 @@ export class Firehose {
 
   constructor(rawClasses: Map<string, RawClass>) {
     this.rawClasses = rawClasses;
-    this.evalTableRows = [];
-    this.rawClasses.forEach((cls) => {
-      this.evalTableRows.push([
-        cls.no,
-        formatNumber(cls.ra, 1),
-        formatNumber(cls.h, 1),
-        cls.n,
-      ]);
-    });
   }
 
   /**
-   * TODO: this is not the right way to do this; right now the filters of class
-   *       number and flags are all separate.
-   * @param isSelected - filter function
-   * @returns Rows of class list table, filtered with isSelected.
+   * TODO: document
    */
-  fillTable(isSelected: (cls: string) => boolean): Array<EvalTableRow> {
-    return this.evalTableRows.filter(([cls]) => isSelected(cls));
+  fillTable(): void {
+    ReactDOM.render(
+      <ClassTable rawClasses={this.rawClasses} />,
+      document.getElementById("eval-table-div")
+    );
   }
 
   /** @param number - Class number to add. */
@@ -82,7 +63,7 @@ export class Firehose {
   classDescription(number: string): void {
     const cls = new Class(this.rawClasses.get(number)!);
     ReactDOM.render(
-      ClassDescription({ cls }),
+      <ClassDescription cls={cls} />,
       document.getElementById("desc-div")
     );
   }
