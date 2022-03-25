@@ -1,5 +1,7 @@
-/** Rounds {@param x} to {@param n} decimal places? */
-export function formatNumber(x: number, n: number) {
+/** Rounds {@param x} to {@param n} decimal places? */ export function formatNumber(
+  x: number,
+  n: number
+) {
   const re = "\\d(?=(\\d{" + (x || 3) + "})+" + (n > 0 ? "\\." : "$") + ")";
   return x.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, "g"), "$&,");
 }
@@ -9,14 +11,16 @@ export function formatNumber(x: number, n: number) {
  * courseDigits ("6", "21"), courseLetters ("", "W"), and classNumber ("042J",
  * "THU").
  */
-const CLASS_REGEX = new RegExp([
-  `^`,
-  `(?<courseDigits>[0-9]*)`,
-  `(?<courseLetters>[A-Z]*)`,
-  `\.`,
-  `(?<classNumber>[0-9A-Z]*)`,
-  `$`,
-].join(""));
+const CLASS_REGEX = new RegExp(
+  [
+    "^",
+    "(?<courseDigits>[0-9]*)",
+    "(?<courseLetters>[A-Z]*)",
+    "\\.",
+    "(?<classNumber>[0-9A-Z]*)",
+    "$",
+  ].join("")
+);
 
 /** Three-way comparison for class numbers. */
 export function classSort(a: string, b: string) {
@@ -32,4 +36,10 @@ export function classSort(a: string, b: string) {
   if (aGroups.classNumber > bGroups.classNumber) return 1;
   if (aGroups.classNumber < bGroups.classNumber) return -1;
   return 0;
+}
+
+/** Case- and punctuation-insensitive class number matching. */
+export function classNumberMatch(searchString: string, classNumber: string) {
+  const simplify = (s: string) => s.toLowerCase().replaceAll(/[^a-z0-9]/g, "");
+  return simplify(classNumber).includes(simplify(searchString));
 }

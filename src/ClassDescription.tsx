@@ -157,11 +157,7 @@ function ClassBody(props: { cls: Class }) {
         </>
       ) : null}
       {extraUrls
-        .map<React.ReactNode>(({ label, url }) => (
-          <a href={url} target="_blank">
-            {label}
-          </a>
-        ))
+        .map<React.ReactNode>(({ label, url }) => <a href={url}>{label}</a>)
         .reduce((acc, cur) => [acc, " | ", cur])}
     </p>
   );
