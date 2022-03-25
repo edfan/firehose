@@ -211,12 +211,12 @@ function fill_table() {
 }
 
 function class_desc(number) {
-	firehose.classDescription(number);
+	firehose.classDescription_(number);
 	cur_class = number;
 }
 
 function add_class(number) {
-	firehose.addClass(number);
+	firehose.addClass_(number);
 
 	var n_number = id_sanitize(number);
 
@@ -240,7 +240,7 @@ function add_class(number) {
 }
 
 function remove_class(number) {
-	firehose.removeClass(number);
+	firehose.removeClass_(number);
 
 	var n_number = id_sanitize(number);
 

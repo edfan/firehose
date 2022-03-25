@@ -21,7 +21,7 @@ function TypeSpan(props: { flag: string; title: string }) {
 
 /**
  * A link to a class number.
- * TODO: Figure out how to make this work without the class_desc global.
+ * TODO: change setCurrentClass api?
  */
 function LinkedClass(props: {
   number: string;

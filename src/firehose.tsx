@@ -31,21 +31,21 @@ export class Firehose {
     ReactDOM.render(
       <ClassTable
         classes={this.classes}
-        setCurrentClass={(number: string) => this.classDescription(number)}
+        setCurrentClass={this.classDescription.bind(this)}
       />,
       document.getElementById("eval-table-div")
     );
   }
 
-  /** @param number - Class number to add. */
-  addClass(number: string): void {
-    this.currentClasses.push(this.classes.get(number)!);
+  /** @param cls - Class to add. */
+  addClass(cls: Class): void {
+    this.currentClasses.push(cls);
   }
 
-  /** @param number - Class number to remove. */
-  removeClass(number: string): void {
+  /** @param cls - Class to remove. */
+  removeClass(cls: Class): void {
     this.currentClasses = this.currentClasses.filter(
-      (cls) => cls.number !== number
+      (cls_) => cls_.number !== cls.number
     );
   }
 
@@ -59,19 +59,30 @@ export class Firehose {
     return selectSlots(this.currentClasses, lockedSlots);
   }
 
-  /**
-   * Render the class description for a given number.
-   * TODO: this should be component state, not a global function.
-   */
-  classDescription(number: string): void {
-    this.currentClass = this.classes.get(number);
-    if (!this.currentClass) return;
+  /** Render the class description for a given class. */
+  classDescription(cls: Class): void {
+    this.currentClass = cls;
     ReactDOM.render(
       <ClassDescription
         cls={this.currentClass}
-        setCurrentClass={(number: string) => this.classDescription(number)}
+        setCurrentClass={this.classDescription_.bind(this)}
       />,
       document.getElementById("desc-div")
     );
+  }
+
+  classDescription_(number: string): void {
+    const cls = this.classes.get(number);
+    cls && this.classDescription(cls);
+  }
+
+  addClass_(number: string): void {
+    const cls = this.classes.get(number);
+    cls && this.addClass(cls);
+  }
+
+  removeClass_(number: string): void {
+    const cls = this.classes.get(number);
+    cls && this.removeClass(cls);
   }
 }

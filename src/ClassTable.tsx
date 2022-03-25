@@ -139,7 +139,7 @@ function ClassFlags(props: { setFlagsFilter: SetClassFilter }) {
 
 export function ClassTable(props: {
   classes: Map<string, Class>;
-  setCurrentClass: (number: string) => void;
+  setCurrentClass: (cls: Class) => void;
 }) {
   const gridRef = useRef<AgGridReact>(null);
 
@@ -192,7 +192,7 @@ export function ClassTable(props: {
   }, [inputFilter, flagsFilter]);
 
   const onRowClicked = (e: AgGrid.RowClickedEvent) => {
-    props.setCurrentClass(e.node.data.class.number);
+    props.setCurrentClass(e.node.data.class);
   };
 
   return (
