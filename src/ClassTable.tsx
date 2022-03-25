@@ -8,8 +8,8 @@ import Fuse from "fuse.js";
 import "@ag-grid-community/core/dist/styles/ag-grid.css";
 import "@ag-grid-community/core/dist/styles/ag-theme-alpine.css";
 
-import { RawClass } from "./class";
-import { formatNumber, classSort, classNumberMatch } from "./utils";
+import { Class } from "./class";
+import { classSort, classNumberMatch } from "./utils";
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -30,7 +30,7 @@ type ClassTableRow = {
  * TODO: add loading?
  */
 
-export function ClassTable(props: { rawClasses: Map<string, RawClass> }) {
+export function ClassTable(props: { classes: Map<string, Class> }) {
   const gridRef = useRef<AgGridReact>(null);
 
   const columnDefs = useMemo(() => {
@@ -52,16 +52,17 @@ export function ClassTable(props: { rawClasses: Map<string, RawClass> }) {
 
   const rowData = useMemo(() => {
     const rows: Array<ClassTableRow> = [];
-    props.rawClasses.forEach((cls) =>
+    props.classes.forEach((cls) => {
+      const { number, evals, name } = cls;
       rows.push({
-        class: cls.no,
-        rating: formatNumber(cls.ra, 1),
-        hours: formatNumber(cls.h, 1),
-        name: cls.n,
-      })
-    );
+        class: number,
+        rating: evals.rating.slice(0, 3), // remove the "/7.0" if exists
+        hours: evals.hours,
+        name: name,
+      });
+    });
     return rows;
-  }, [props.rawClasses]);
+  }, [props.classes]);
 
   const [classInput, setClassInput] = useState("");
 

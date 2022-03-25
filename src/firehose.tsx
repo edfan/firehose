@@ -9,11 +9,8 @@ import { selectSlots } from "./calendarSlots";
  * schedule options selected, activities, etc.).
  */
 export class Firehose {
-  /**
-   * Map from class number to RawClass object.
-   * TODO: Make a function to get Class object from class number?
-   */
-  rawClasses: Map<string, RawClass>;
+  /** Map from class number to Class object. */
+  classes: Map<string, Class>;
   /**
    * Classes currently selected.
    * TODO: persist in localStorage.
@@ -21,22 +18,23 @@ export class Firehose {
   currentClasses: Array<Class> = [];
 
   constructor(rawClasses: Map<string, RawClass>) {
-    this.rawClasses = rawClasses;
+    this.classes = new Map();
+    rawClasses.forEach((cls, number) => {
+      this.classes.set(number, new Class(cls));
+    });
   }
 
-  /**
-   * TODO: document
-   */
+  /** Render the table listing all the classes. */
   fillTable(): void {
     ReactDOM.render(
-      <ClassTable rawClasses={this.rawClasses} />,
+      <ClassTable classes={this.classes} />,
       document.getElementById("eval-table-div")
     );
   }
 
   /** @param number - Class number to add. */
   addClass(number: string): void {
-    this.currentClasses.push(new Class(this.rawClasses.get(number)!));
+    this.currentClasses.push(this.classes.get(number)!);
   }
 
   /** @param number - Class number to remove. */
@@ -61,9 +59,8 @@ export class Firehose {
    * TODO: this should be component state, not a global function.
    */
   classDescription(number: string): void {
-    const cls = new Class(this.rawClasses.get(number)!);
     ReactDOM.render(
-      <ClassDescription cls={cls} />,
+      <ClassDescription cls={this.classes.get(number)!} />,
       document.getElementById("desc-div")
     );
   }
