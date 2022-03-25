@@ -17,7 +17,7 @@ export class Firehose {
    */
   currentClasses: Array<Class> = [];
   /** Class description currently being viewed. */
-  currentClass: Class | null = null;
+  currentClass: Class | undefined;
 
   constructor(rawClasses: Map<string, RawClass>) {
     this.classes = new Map();
@@ -29,7 +29,10 @@ export class Firehose {
   /** Render the table listing all the classes. */
   fillTable(): void {
     ReactDOM.render(
-      <ClassTable classes={this.classes} />,
+      <ClassTable
+        classes={this.classes}
+        setCurrentClass={(number: string) => this.classDescription(number)}
+      />,
       document.getElementById("eval-table-div")
     );
   }
@@ -61,8 +64,13 @@ export class Firehose {
    * TODO: this should be component state, not a global function.
    */
   classDescription(number: string): void {
+    this.currentClass = this.classes.get(number);
+    if (!this.currentClass) return;
     ReactDOM.render(
-      <ClassDescription cls={this.classes.get(number)!} />,
+      <ClassDescription
+        cls={this.currentClass}
+        setCurrentClass={(number: string) => this.classDescription(number)}
+      />,
       document.getElementById("desc-div")
     );
   }

@@ -137,7 +137,10 @@ function ClassFlags(props: { setFlagsFilter: SetClassFilter }) {
  * TODO: add loading?
  */
 
-export function ClassTable(props: { classes: Map<string, Class> }) {
+export function ClassTable(props: {
+  classes: Map<string, Class>;
+  setCurrentClass: (number: string) => void;
+}) {
   const gridRef = useRef<AgGridReact>(null);
 
   const columnDefs = useMemo(() => {
@@ -189,9 +192,8 @@ export function ClassTable(props: { classes: Map<string, Class> }) {
   }, [inputFilter, flagsFilter]);
 
   const onRowClicked = (e: AgGrid.RowClickedEvent) => {
-    // @ts-ignore class_desc is some global from script.js
-    class_desc(e.node.data.class);
-  }
+    props.setCurrentClass(e.node.data.class.number);
+  };
 
   return (
     <>

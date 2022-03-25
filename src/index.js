@@ -212,49 +212,7 @@ function fill_table() {
 
 function class_desc(number) {
 	firehose.classDescription(number);
-
 	cur_class = number;
-
-	var n_number = id_sanitize(number);
-
-	if (cur_classes.indexOf(number) == -1) {
-		$('#class-buttons-div').html('<button type="button" class="btn btn-primary" id=' + n_number + '-add-button>Add class</button>');
-
-		$('#' + n_number + '-add-button').click(function () {
-			add_class(number);
-		});
-
-		$("#manual-button").hide();
-		$("#manual-div").hide();
-	} else {
-		$('#class-buttons-div').html('<button type="button" class="btn btn-primary" id=' + n_number + '-remove-button>Remove class</button>');
-		$('#' + n_number + '-remove-button').click(function () {
-			remove_class(number);
-		});
-
-		if (classes[number]['s'].length == 1 && classes[number]['s'][0] == 'a') {
-			$('#class-buttons-div').append('<button type="button" class="btn btn-primary" id=' + n_number + '-edit-button>Edit activity</button>')
-			$('#' + n_number + '-edit-button').click(function () {
-				activity_times = classes[number]['at']
-				activity_times_raw = classes[number]['atr']
-				activity_timeslot_close();
-				$("#activity-input").val(classes[number]['no']);
-				$("#activity-hours-input").val(classes[number]['h']);
-				$("#activity-modal").modal('show');
-			});
-		}
-
-		$("#manual-button").text("+ Manually set sections");
-		$("#manual-button").show();
-		$("#manual-div").hide();
-	}
-
-	if (classes[number]['s'].indexOf('a') != -1) {
-		$('#flags-div').hide();
-		$('#class-name').text(classes[number]['no']);
-	} else {
-		$('#flags-div').show();
-	}
 }
 
 function add_class(number) {

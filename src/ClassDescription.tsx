@@ -23,18 +23,23 @@ function TypeSpan(props: { flag: string; title: string }) {
  * A link to a class number.
  * TODO: Figure out how to make this work without the class_desc global.
  */
-function LinkedClass(props: { number: string }) {
+function LinkedClass(props: {
+  number: string;
+  setCurrentClass: (number: string) => void;
+}) {
   const { number } = props;
   return (
-    // @ts-ignore class_desc is some global from script.js
-    <span className="link-span" onClick={() => class_desc(number)}>
+    <span className="link-span" onClick={() => props.setCurrentClass(number)}>
       {number}
     </span>
   );
 }
 
 /** List of related classes, appears after flags and before description. */
-function ClassRelated(props: { cls: Class }) {
+function ClassRelated(props: {
+  cls: Class;
+  setCurrentClass: (number: string) => void;
+}) {
   const { cls } = props;
   const { prereq, same, meets } = cls.related;
 
@@ -43,7 +48,15 @@ function ClassRelated(props: { cls: Class }) {
     str
       .split(/([ ,;[\]()])/)
       .map((text) =>
-        text.includes(".") ? <LinkedClass number={text} /> : text
+        text.includes(".") ? (
+          <LinkedClass
+            key={text}
+            number={text}
+            setCurrentClass={props.setCurrentClass}
+          />
+        ) : (
+          text
+        )
       );
 
   return (
@@ -66,7 +79,10 @@ function ClassRelated(props: { cls: Class }) {
 }
 
 /** Header for class description; contains flags and related classes. */
-function ClassTypes(props: { cls: Class }) {
+function ClassTypes(props: {
+  cls: Class;
+  setCurrentClass: (number: string) => void;
+}) {
   const { cls } = props;
   const { flags, totalUnits, units } = cls;
 
@@ -121,7 +137,7 @@ function ClassTypes(props: { cls: Class }) {
         </span>
       ) : null}
       <br />
-      <ClassRelated cls={cls} />
+      <ClassRelated cls={cls} setCurrentClass={props.setCurrentClass} />
     </p>
   );
 }
@@ -157,7 +173,7 @@ function ClassBody(props: { cls: Class }) {
         </>
       ) : null}
       {extraUrls
-        .map<React.ReactNode>(({ label, url }) => <a href={url}>{label}</a>)
+        .map<React.ReactNode>(({ label, url }) => <a key={label} href={url}>{label}</a>)
         .reduce((acc, cur) => [acc, " | ", cur])}
     </p>
   );
@@ -166,8 +182,12 @@ function ClassBody(props: { cls: Class }) {
 /**
  * Full class description, from title to URLs at the end.
  * TODO: make the class buttons work nicely.
+ * TODO: denest some things
  */
-export function ClassDescription(props: { cls: Class }) {
+export function ClassDescription(props: {
+  cls: Class;
+  setCurrentClass: (number: string) => void;
+}) {
   const { cls } = props;
 
   return (
@@ -176,7 +196,7 @@ export function ClassDescription(props: { cls: Class }) {
         {cls.number}: {cls.name}
       </p>
       <div id="flags-div">
-        <ClassTypes cls={cls} />
+        <ClassTypes cls={cls} setCurrentClass={props.setCurrentClass} />
         <ClassEval cls={cls} />
       </div>
       <div id="class-buttons-div"></div>
