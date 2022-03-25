@@ -60,6 +60,8 @@ function selectHelper(
  * Find best options for choosing sections among classes. Returns list of
  * sections, and list of options for which sections to pick.
  *
+ * TODO: there should be a *much* better interface for this
+ *
  * @param currentClasses - Current classes to schedule
  * @param lockedSlots - Locked class slots
  * @returns Object with

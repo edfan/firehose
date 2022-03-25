@@ -107,7 +107,7 @@ function ClassTypes(props: { cls: Class }) {
     ["hassA", "HASS-A"],
     ["hassS", "HASS-S"],
     ["hassE", "HASS-E"],
-    ["cih1", "CI-H"],
+    ["cih", "CI-H"],
     ["cihw", "CI-HW"],
   ]);
 
@@ -167,7 +167,7 @@ function ClassBody(props: { cls: Class }) {
  * Full class description, from title to URLs at the end.
  * TODO: make the class buttons work nicely.
  */
-export function ClassDescription(props: { cls: Class }): React.ReactElement {
+export function ClassDescription(props: { cls: Class }) {
   const { cls } = props;
 
   return (

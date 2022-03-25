@@ -4,23 +4,6 @@ import { classSort } from "./utils";
 var classes_map = new Map(Object.entries(classes));
 var firehose = new Firehose(classes_map);
 
-var table;
-var virtual_active = false;
-var hass_active = false;
-var hass_a_active = false;
-var hass_h_active = false;
-var hass_s_active = false;
-var ci_h_active = false;
-var ci_hw_active = false;
-var conflicts_active = false;
-var remote_active = false;
-var no_ci_active = false;
-var rest_active = false;
-var lab_active = false;
-var final_active = false;
-var under_active = false;
-var grad_active = false;
-var units_active = false;
 var cur_class;
 var cur_classes = [];
 var options;
@@ -66,13 +49,6 @@ Storage.prototype.setObj = function (key, obj) {
 Storage.prototype.getObj = function (key) {
 	return JSON.parse(this.getItem(key))
 }
-
-var course_rank = {"1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10,
-				   "11": 11, "12": 12, "14": 14, "15": 15, "16": 16, "17": 17, "18": 18, "20": 20,
-				   "21": 21, "21A": 22, "21G": 23, "21H": 24, "21L": 25, "21M": 26, "21W": 27,
-				   "22": 30, "24": 31, "AS": 32, "CC": 33, "CMS": 34, "CSB": 35, "EC": 36, "EM": 37,
-				   "ES": 38, "ESD": 39, "HST": 40, "IDS": 41, "MS": 42, "MAS": 43, "NS": 44, "OR": 45, 
-				   "RED": 46, "SCM": 47, "SP": 48, "STS": 49, "WGS": 50};
 
 function id_sanitize(str) {
 	return str.replace(/\W/g, '');
@@ -714,17 +690,6 @@ $(document).ready(function () {
 		$('#add-activity-button').prop('disabled', true);
 	});
 	*/	
-
-	$(".selector-button").click(function () {
-		window[this.id + '_active'] = !window[this.id + '_active'];
-		fill_table();
-	});
-
-	$("#hass_a, #hass_h, #hass_s").click(function () {
-		if (hass_active) {
-			$('#hass').trigger('click');
-		}
-	});
 
 	$(function () {
 		$('[data-toggle="tooltip"]').tooltip();

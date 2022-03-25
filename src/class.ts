@@ -145,13 +145,17 @@ export type Flags = {
   rest: boolean;
   Lab: boolean;
   PartLab: boolean;
+  hass: boolean;
   hassH: boolean;
   hassA: boolean;
   hassS: boolean;
   hassE: boolean;
-  cih1: boolean;
+  cih: boolean;
   cihw: boolean;
+  notcih: boolean;
   final: boolean;
+  nofinal: boolean;
+  le9units: boolean;
 };
 
 /**
@@ -283,7 +287,7 @@ export class Class {
     return this.sectionKinds.map((kind) => this.sectionsOfKind(kind));
   }
 
-  /** Object of boolean properties of class. */
+  /** Object of boolean properties of class, used for filtering. */
   get flags(): Flags {
     return {
       nonext: this.rawClass.nx,
@@ -297,13 +301,21 @@ export class Class {
       rest: this.rawClass.re,
       Lab: this.rawClass.la,
       PartLab: this.rawClass.pl,
+      hass:
+        this.rawClass.hh ||
+        this.rawClass.ha ||
+        this.rawClass.hs ||
+        this.rawClass.he,
       hassH: this.rawClass.hh,
       hassA: this.rawClass.ha,
       hassS: this.rawClass.hs,
       hassE: this.rawClass.he,
-      cih1: this.rawClass.ci,
+      cih: this.rawClass.ci,
       cihw: this.rawClass.cw,
+      notcih: !this.rawClass.ci && !this.rawClass.cw,
       final: this.rawClass.f,
+      nofinal: !this.rawClass.f,
+      le9units: this.totalUnits <= 9,
     };
   }
 

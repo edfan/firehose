@@ -16,6 +16,8 @@ export class Firehose {
    * TODO: persist in localStorage.
    */
   currentClasses: Array<Class> = [];
+  /** Class description currently being viewed. */
+  currentClass: Class | null = null;
 
   constructor(rawClasses: Map<string, RawClass>) {
     this.classes = new Map();

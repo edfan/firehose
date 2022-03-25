@@ -38,8 +38,16 @@ export function classSort(a: string, b: string) {
   return 0;
 }
 
-/** Case- and punctuation-insensitive class number matching. */
+/**
+ * Smart class number matching. Case-insensitive. Punctuation-insensitive when
+ * the searchString has no punctuation, but cares otherwise.
+ */
 export function classNumberMatch(searchString: string, classNumber: string) {
-  const simplify = (s: string) => s.toLowerCase().replaceAll(/[^a-z0-9]/g, "");
-  return simplify(classNumber).includes(simplify(searchString));
+  const lower = (s: string) => s.toLowerCase();
+  const simplify = (s: string) => lower(s).replaceAll(/[^a-z0-9]/g, "");
+  if (searchString.includes(".")) {
+    return lower(classNumber).startsWith(lower(searchString));
+  } else {
+    return simplify(classNumber).startsWith(simplify(searchString));
+  }
 }

@@ -21,6 +21,7 @@ doing a refactor on src/firehose.ts. the ideal is to be able to compile and drop
     - cur_class is a global that isn't global (so linked class doesn't bubble up too much)
     - put locked slots on the firehose object
     - likely blocked on not having so many globals (class_desc, select_slots...)
+- handle activities correctly (not just "special classes")
 - remove jquery timepicker (is it even used?)
 - remove rest of jquery (glhf)
 - put dataTables as an npm dependency (or use something better?)
