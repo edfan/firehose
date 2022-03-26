@@ -1,4 +1,5 @@
 import { Class, Flags } from "./class";
+import { Firehose } from "./firehose";
 
 /** A small image indicating a flag, like Spring or CI-H. */
 function TypeSpan(props: { flag: string; title: string }) {
@@ -80,21 +81,17 @@ function ClassTypes(props: { cls: Class }) {
 }
 
 /** List of related classes, appears after flags and before description. */
-function ClassRelated(props: {
-  cls: Class;
-  getClass: (number: string) => Class | undefined;
-  setCurrentClass: (cls: Class) => void;
-}) {
-  const { cls } = props;
+function ClassRelated(props: { cls: Class; firehose: Firehose }) {
+  const { cls, firehose } = props;
   const { prereq, same, meets } = cls.related;
 
   /** Wrapper to link all classes in a given string. */
   const linkClasses = (str: string) =>
     str.split(/([ ,;[\]()])/).map((text) => {
-      const cls = props.getClass(text);
+      const cls = firehose.classes.get(text);
       if (!cls) return text;
       return (
-        <span key={text} onClick={() => props.setCurrentClass(cls)}>
+        <span key={text} onClick={() => firehose.classDescription(cls)}>
           {text}
         </span>
       );
@@ -160,16 +157,115 @@ function ClassBody(props: { cls: Class }) {
   );
 }
 
+function ClassButtons(props: { cls: Class; firehose: Firehose }) {
+  const { cls, firehose } = props;
+
+  // TODO: these buttons don't work because currentClasses aren't state!
+  if (!firehose.isCurrentClass(cls)) {
+    return (
+      <div id="class-buttons-div">
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => firehose.addClass(cls)}
+        >
+          Add class
+        </button>
+      </div>
+    );
+  } else {
+    return (
+      <div id="class-buttons-div">
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => firehose.removeClass(cls)}
+        >
+          Remove class
+        </button>
+        <p id="manual-button">+ Manually set sections</p>
+        <div id="manual-div" style={{ display: "none" }}>
+          <div id="man-lec-div">
+            Lecture:
+            <br />
+            <input
+              type="radio"
+              className="man-button"
+              id="lec-auto"
+              name="lec"
+              value="auto"
+            />{" "}
+            Auto (default)
+            <br />
+            <input
+              type="radio"
+              className="man-button"
+              id="lec-none"
+              name="lec"
+              value="none"
+            />{" "}
+            None
+            <br />
+            <div id="spec-man-lec-div"></div>
+          </div>
+          <div id="man-rec-div">
+            Recitation:
+            <br />
+            <input
+              type="radio"
+              className="man-button"
+              id="rec-auto"
+              name="rec"
+              value="auto"
+            />{" "}
+            Auto (default)
+            <br />
+            <input
+              type="radio"
+              className="man-button"
+              id="rec-none"
+              name="rec"
+              value="none"
+            />{" "}
+            None
+            <br />
+            <div id="spec-man-rec-div"></div>
+          </div>
+          <div id="man-lab-div">
+            Lab:
+            <br />
+            <input
+              type="radio"
+              className="man-button"
+              id="lab-auto"
+              name="lab"
+              value="auto"
+            />{" "}
+            Auto (default)
+            <br />
+            <input
+              type="radio"
+              className="man-button"
+              id="lab-none"
+              name="lab"
+              value="none"
+            />{" "}
+            None
+            <br />
+            <div id="spec-man-lab-div"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
 /**
  * Full class description, from title to URLs at the end.
  * TODO: make the class buttons work nicely.
  */
-export function ClassDescription(props: {
-  cls: Class;
-  getClass: (number: string) => Class | undefined;
-  setCurrentClass: (cls: Class) => void;
-}) {
-  const { cls } = props;
+export function ClassDescription(props: { cls: Class; firehose: Firehose }) {
+  const { cls, firehose } = props;
 
   return (
     <>
@@ -178,88 +274,10 @@ export function ClassDescription(props: {
       </p>
       <div id="flags-div">
         <ClassTypes cls={cls} />
-        <ClassRelated
-          cls={cls}
-          getClass={props.getClass}
-          setCurrentClass={props.setCurrentClass}
-        />
+        <ClassRelated cls={cls} firehose={firehose} />
         <ClassEval cls={cls} />
       </div>
-      <div id="class-buttons-div"></div>
-      <p id="manual-button" style={{ display: "none" }}>
-        + Manually set sections
-      </p>
-      <div id="manual-div" style={{ display: "none" }}>
-        <div id="man-lec-div">
-          Lecture:
-          <br />
-          <input
-            type="radio"
-            className="man-button"
-            id="lec-auto"
-            name="lec"
-            value="auto"
-          />{" "}
-          Auto (default)
-          <br />
-          <input
-            type="radio"
-            className="man-button"
-            id="lec-none"
-            name="lec"
-            value="none"
-          />{" "}
-          None
-          <br />
-          <div id="spec-man-lec-div"></div>
-        </div>
-        <div id="man-rec-div">
-          Recitation:
-          <br />
-          <input
-            type="radio"
-            className="man-button"
-            id="rec-auto"
-            name="rec"
-            value="auto"
-          />{" "}
-          Auto (default)
-          <br />
-          <input
-            type="radio"
-            className="man-button"
-            id="rec-none"
-            name="rec"
-            value="none"
-          />{" "}
-          None
-          <br />
-          <div id="spec-man-rec-div"></div>
-        </div>
-        <div id="man-lab-div">
-          Lab:
-          <br />
-          <input
-            type="radio"
-            className="man-button"
-            id="lab-auto"
-            name="lab"
-            value="auto"
-          />{" "}
-          Auto (default)
-          <br />
-          <input
-            type="radio"
-            className="man-button"
-            id="lab-none"
-            name="lab"
-            value="none"
-          />{" "}
-          None
-          <br />
-          <div id="spec-man-lab-div"></div>
-        </div>
-      </div>
+      <ClassButtons cls={cls} firehose={firehose} />
       <ClassBody cls={cls} />
     </>
   );

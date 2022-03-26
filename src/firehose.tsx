@@ -37,7 +37,15 @@ export class Firehose {
     );
   }
 
-  /** @param cls - Class to add. */
+  /** @returns True if cls is one of the currently selected classes. */
+  isCurrentClass(cls: Class): boolean {
+    return this.currentClasses.some((cls_) => cls_.number === cls.number);
+  }
+
+  /**
+   * TODO: check that class doesn't already exist
+   * @param cls - Class to add.
+   */
   addClass(cls: Class): void {
     this.currentClasses.push(cls);
   }
@@ -63,11 +71,7 @@ export class Firehose {
   classDescription(cls: Class): void {
     this.currentClass = cls;
     ReactDOM.render(
-      <ClassDescription
-        cls={this.currentClass}
-        getClass={this.classes.get.bind(this)}
-        setCurrentClass={this.classDescription.bind(this)}
-      />,
+      <ClassDescription cls={this.currentClass} firehose={this} />,
       document.getElementById("desc-div")
     );
   }
