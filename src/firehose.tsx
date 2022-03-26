@@ -65,7 +65,8 @@ export class Firehose {
     ReactDOM.render(
       <ClassDescription
         cls={this.currentClass}
-        setCurrentClass={this.classDescription_.bind(this)}
+        getClass={this.classes.get.bind(this)}
+        setCurrentClass={this.classDescription.bind(this)}
       />,
       document.getElementById("desc-div")
     );

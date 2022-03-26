@@ -19,70 +19,8 @@ function TypeSpan(props: { flag: string; title: string }) {
   );
 }
 
-/**
- * A link to a class number.
- * TODO: change setCurrentClass api?
- */
-function LinkedClass(props: {
-  number: string;
-  setCurrentClass: (number: string) => void;
-}) {
-  const { number } = props;
-  return (
-    <span className="link-span" onClick={() => props.setCurrentClass(number)}>
-      {number}
-    </span>
-  );
-}
-
-/** List of related classes, appears after flags and before description. */
-function ClassRelated(props: {
-  cls: Class;
-  setCurrentClass: (number: string) => void;
-}) {
-  const { cls } = props;
-  const { prereq, same, meets } = cls.related;
-
-  /** Wrapper to link all classes (substrings with ".") in a given string. */
-  const linkClasses = (str: string) =>
-    str
-      .split(/([ ,;[\]()])/)
-      .map((text) =>
-        text.includes(".") ? (
-          <LinkedClass
-            key={text}
-            number={text}
-            setCurrentClass={props.setCurrentClass}
-          />
-        ) : (
-          text
-        )
-      );
-
-  return (
-    <>
-      <span id="class-prereq">Prereq: {linkClasses(prereq)}</span>
-      {same ? (
-        <span id="class-same">
-          <br />
-          Same class as: {linkClasses(same)}
-        </span>
-      ) : null}
-      {meets ? (
-        <span id="class-meets">
-          <br />
-          Meets with: {linkClasses(meets)}
-        </span>
-      ) : null}
-    </>
-  );
-}
-
 /** Header for class description; contains flags and related classes. */
-function ClassTypes(props: {
-  cls: Class;
-  setCurrentClass: (number: string) => void;
-}) {
+function ClassTypes(props: { cls: Class }) {
   const { cls } = props;
   const { flags, totalUnits, units } = cls;
 
@@ -137,8 +75,47 @@ function ClassTypes(props: {
         </span>
       ) : null}
       <br />
-      <ClassRelated cls={cls} setCurrentClass={props.setCurrentClass} />
     </p>
+  );
+}
+
+/** List of related classes, appears after flags and before description. */
+function ClassRelated(props: {
+  cls: Class;
+  getClass: (number: string) => Class | undefined;
+  setCurrentClass: (cls: Class) => void;
+}) {
+  const { cls } = props;
+  const { prereq, same, meets } = cls.related;
+
+  /** Wrapper to link all classes in a given string. */
+  const linkClasses = (str: string) =>
+    str.split(/([ ,;[\]()])/).map((text) => {
+      const cls = props.getClass(text);
+      if (!cls) return text;
+      return (
+        <span key={text} onClick={() => props.setCurrentClass(cls)}>
+          {text}
+        </span>
+      );
+    });
+
+  return (
+    <>
+      <span id="class-prereq">Prereq: {linkClasses(prereq)}</span>
+      {same ? (
+        <span id="class-same">
+          <br />
+          Same class as: {linkClasses(same)}
+        </span>
+      ) : null}
+      {meets ? (
+        <span id="class-meets">
+          <br />
+          Meets with: {linkClasses(meets)}
+        </span>
+      ) : null}
+    </>
   );
 }
 
@@ -173,7 +150,11 @@ function ClassBody(props: { cls: Class }) {
         </>
       ) : null}
       {extraUrls
-        .map<React.ReactNode>(({ label, url }) => <a key={label} href={url}>{label}</a>)
+        .map<React.ReactNode>(({ label, url }) => (
+          <a key={label} href={url}>
+            {label}
+          </a>
+        ))
         .reduce((acc, cur) => [acc, " | ", cur])}
     </p>
   );
@@ -182,11 +163,11 @@ function ClassBody(props: { cls: Class }) {
 /**
  * Full class description, from title to URLs at the end.
  * TODO: make the class buttons work nicely.
- * TODO: denest some things
  */
 export function ClassDescription(props: {
   cls: Class;
-  setCurrentClass: (number: string) => void;
+  getClass: (number: string) => Class | undefined;
+  setCurrentClass: (cls: Class) => void;
 }) {
   const { cls } = props;
 
@@ -196,7 +177,12 @@ export function ClassDescription(props: {
         {cls.number}: {cls.name}
       </p>
       <div id="flags-div">
-        <ClassTypes cls={cls} setCurrentClass={props.setCurrentClass} />
+        <ClassTypes cls={cls} />
+        <ClassRelated
+          cls={cls}
+          getClass={props.getClass}
+          setCurrentClass={props.setCurrentClass}
+        />
         <ClassEval cls={cls} />
       </div>
       <div id="class-buttons-div"></div>
