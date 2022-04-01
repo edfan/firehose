@@ -89,16 +89,17 @@ function ClassRelated(props: { cls: Class; firehose: Firehose }) {
   const linkClasses = (str: string) =>
     str.split(/([ ,;[\]()])/).map((text) => {
       const cls = firehose.classes.get(text);
+      console.log(cls, text);
       if (!cls) return text;
       return (
-        <span key={text} onClick={() => firehose.classDescription(cls)}>
+        <span className="link-span" key={text} onClick={() => firehose.classDescription(cls)}>
           {text}
         </span>
       );
     });
 
   return (
-    <>
+    <p id="class-type">
       <span id="class-prereq">Prereq: {linkClasses(prereq)}</span>
       {same ? (
         <span id="class-same">
@@ -112,7 +113,7 @@ function ClassRelated(props: { cls: Class; firehose: Firehose }) {
           Meets with: {linkClasses(meets)}
         </span>
       ) : null}
-    </>
+    </p>
   );
 }
 
@@ -136,7 +137,9 @@ function ClassBody(props: { cls: Class }) {
 
   return (
     <p id="class-desc">
-      {description}
+      {/* this is necessary as descriptions contain ampersand escapes like
+          &nbsp. there's probably a better solution to this */}
+      <span dangerouslySetInnerHTML={{ __html: description }}/>
       <br />
       <br />
       {inCharge ? (
@@ -160,7 +163,6 @@ function ClassBody(props: { cls: Class }) {
 function ClassButtons(props: { cls: Class; firehose: Firehose }) {
   const { cls, firehose } = props;
 
-  // TODO: these buttons don't work because currentClasses aren't state!
   if (!firehose.isCurrentClass(cls)) {
     return (
       <div id="class-buttons-div">

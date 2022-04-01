@@ -42,12 +42,11 @@ export class Firehose {
     return this.currentClasses.some((cls_) => cls_.number === cls.number);
   }
 
-  /**
-   * TODO: check that class doesn't already exist
-   * @param cls - Class to add.
-   */
+  /** @param cls - Class to add. */
   addClass(cls: Class): void {
-    this.currentClasses.push(cls);
+    if (!this.isCurrentClass(cls)) this.currentClasses.push(cls);
+    // manually update state for classDescription; TODO fix
+    this.classDescription(this.currentClass);
   }
 
   /** @param cls - Class to remove. */
@@ -55,6 +54,8 @@ export class Firehose {
     this.currentClasses = this.currentClasses.filter(
       (cls_) => cls_.number !== cls.number
     );
+    // manually update state for classDescription; TODO fix
+    this.classDescription(this.currentClass);
   }
 
   /** See {@link selectSlots}. */
@@ -68,8 +69,9 @@ export class Firehose {
   }
 
   /** Render the class description for a given class. */
-  classDescription(cls: Class): void {
+  classDescription(cls: Class | undefined): void {
     this.currentClass = cls;
+    if (this.currentClass === undefined) return;
     ReactDOM.render(
       <ClassDescription cls={this.currentClass} firehose={this} />,
       document.getElementById("desc-div")
