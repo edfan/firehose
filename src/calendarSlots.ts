@@ -84,7 +84,9 @@ export function selectSlots(
     for (const secs of cls.sections) {
       const key = `${cls.number},${secs.kind}`;
       const option = lockedSlots.get(key);
-      if (option !== undefined && option !== "none") {
+      if (option === "none") {
+        // do nothing
+      } else if (option !== undefined) {
         const sec = secs.sections[option as number];
         lockedSections.push(secs);
         lockedOptions.push(sec);

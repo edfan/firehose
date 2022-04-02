@@ -1,3 +1,5 @@
+import { EventInput } from "@fullcalendar/core";
+
 import { formatNumber } from "./utils";
 
 /** Raw timeslot format: [start slot, length of timeslot]. */
@@ -66,8 +68,10 @@ export type RawClass = {
 
   /** Level: "U" undergrad, "G" grad */
   le: "U" | "G";
-  /** Comma-separated list of classes with same number, e.g.
-   * "21A.103, WGS.225" */
+  /**
+   * Comma-separated list of classes with same number, e.g.
+   * "21A.103, WGS.225"
+   */
   sa: string;
   /** Comma-separated list of classes it meets with */
   mw: string;
@@ -104,6 +108,32 @@ export type RawClass = {
   si: number;
 };
 
+/** Flags. */
+export type Flags = {
+  nonext: boolean;
+  under: boolean;
+  grad: boolean;
+  fall: boolean;
+  iap: boolean;
+  spring: boolean;
+  summer: boolean;
+  repeat: boolean;
+  rest: boolean;
+  Lab: boolean;
+  PartLab: boolean;
+  hass: boolean;
+  hassH: boolean;
+  hassA: boolean;
+  hassS: boolean;
+  hassE: boolean;
+  cih: boolean;
+  cihw: boolean;
+  notcih: boolean;
+  final: boolean;
+  nofinal: boolean;
+  le9units: boolean;
+};
+
 /**
  * A timeslot is a period of time, spanning several thirty-minute slots. Each
  * day has 30 thirty-minute slots from 8 AM to 11 PM, times five days a week.
@@ -129,34 +159,6 @@ export class Timeslot {
     return this.startSlot <= other.endSlot && other.startSlot <= this.endSlot;
   }
 }
-
-/**
- * Flags.
- */
-export type Flags = {
-  nonext: boolean;
-  under: boolean;
-  grad: boolean;
-  fall: boolean;
-  iap: boolean;
-  spring: boolean;
-  summer: boolean;
-  repeat: boolean;
-  rest: boolean;
-  Lab: boolean;
-  PartLab: boolean;
-  hass: boolean;
-  hassH: boolean;
-  hassA: boolean;
-  hassS: boolean;
-  hassE: boolean;
-  cih: boolean;
-  cihw: boolean;
-  notcih: boolean;
-  final: boolean;
-  nofinal: boolean;
-  le9units: boolean;
-};
 
 /**
  * A section is an array of timeslots that meet in the same room for the same
@@ -222,12 +224,72 @@ export class Sections {
   }
 }
 
-/** An entire class, e.g. 6.036. Wrapper for {@link RawClass}. */
-export class Class {
-  rawClass: RawClass;
+/**
+ * A group of events to be rendered in a calendar, all of the same name, room,
+ * and color.
+ */
+class Event {
+  /** The name of the event. */
+  name: string;
+  /** All slots of the event. */
+  slots: Array<Timeslot>;
+  /** The room of the event. */
+  room: string | undefined;
+  /** The event's background color. */
+  backgroundColor: string;
+  /** The event's border color. */
+  borderColor: string;
 
-  constructor(rawClass: RawClass) {
+  constructor(
+    name: string,
+    slots: Array<Timeslot>,
+    room: string | undefined,
+    backgroundColor: string,
+    borderColor: string
+  ) {
+    this.name = name;
+    this.slots = slots;
+    this.room = room;
+    this.backgroundColor = backgroundColor;
+    this.borderColor = borderColor;
+  }
+
+  /** @returns List of events that can be directly given to FullCalendar. */
+  get eventInputs(): Array<EventInput> {
+    // TODO: compute from slots
+    return [
+      {
+        title: this.name,
+        start: new Date(),
+        end: new Date(),
+        backgroundColor: this.backgroundColor,
+        borderColor: this.borderColor,
+        room: this.room,
+      },
+    ];
+  }
+}
+
+/** An entire class, e.g. 6.036, and its selected sections. */
+export class Class {
+  /** The RawClass being wrapped around. */
+  rawClass: RawClass;
+  /**
+   * Map from SectionKind to whether that SectionKind is locked, i.e. not auto.
+   * None counts as locked.
+   */
+  lockedSections: Map<SectionKind, boolean>;
+  /** Map from SectionKind to currently scheduled section. None is null. */
+  currentSections: Map<SectionKind, Section | null>;
+
+  constructor(
+    rawClass: RawClass,
+    lockedSections?: Map<SectionKind, boolean>,
+    currentSections?: Map<SectionKind, Section | null>
+  ) {
     this.rawClass = rawClass;
+    this.lockedSections = lockedSections ?? new Map();
+    this.currentSections = currentSections ?? new Map();
   }
 
   /** Name, e.g. "Introduction to Machine Learning". */
@@ -287,6 +349,11 @@ export class Class {
     return this.sectionKinds.map((kind) => this.sectionsOfKind(kind));
   }
 
+  get events(): Array<Event> {
+    // TODO: write based on currentSections
+    return [];
+  }
+
   /** Object of boolean properties of class, used for filtering. */
   get flags(): Flags {
     return {
@@ -340,8 +407,10 @@ export class Class {
     }
   }
 
-  /** Related classes, in unspecified format, but likely to contain class
-   * numbers as substrings.*/
+  /**
+   * Related classes, in unspecified format, but likely to contain class
+   * numbers as substrings.
+   */
   get related(): {
     prereq: string;
     same: string;
@@ -354,9 +423,11 @@ export class Class {
     };
   }
 
-  /** Class description and (person) in-charge. Extra URLs are labels and URLs
+  /**
+   * Class description and (person) in-charge. Extra URLs are labels and URLs
    * that should appear after the class description, like "Course Catalog" or
-   * "Class Evaluations". */
+   * "Class Evaluations".
+   */
   get description(): {
     description: string;
     inCharge: string;
@@ -394,5 +465,13 @@ export class Class {
       inCharge: this.rawClass.i,
       extraUrls: extraUrls,
     };
+  }
+}
+
+// TODO: write
+export class NonClass {
+  get events(): Array<Event> {
+    // TODO: write based on currentSections
+    return [];
   }
 }

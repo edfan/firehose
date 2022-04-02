@@ -1,8 +1,7 @@
 import { Firehose } from "./firehose";
 import { classSort } from "./utils";
-
-var classes_map = new Map(Object.entries(classes));
-var firehose = new Firehose(classes_map);
+import { firehose, main } from "./index_";
+main();
 
 var cur_class;
 var cur_classes = [];
@@ -207,7 +206,7 @@ function set_option(index) {
 
 function fill_table() {
 	conflicts_flag = false;
-	firehose.fillTable();
+	firehose.updateState();
 }
 
 function class_desc(number) {

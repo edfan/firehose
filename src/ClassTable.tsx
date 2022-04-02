@@ -28,14 +28,16 @@ function ClassInput(props: {
   rowData: Array<ClassTableRow>;
   setInputFilter: SetClassFilter;
 }) {
+  const { rowData, setInputFilter } = props;
+
   const fuse = useMemo(() => {
-    return new Fuse(props.rowData, {
+    return new Fuse(rowData, {
       ignoreLocation: true,
       keys: ["name"],
       shouldSort: false,
       threshold: 0.2,
     });
-  }, [props.rowData]);
+  }, [rowData]);
 
   const [classInput, setClassInput] = useState("");
 
@@ -44,11 +46,11 @@ function ClassInput(props: {
       const results = fuse.search(input).map(({ item }) => item.number);
       // careful! we have to wrap it with a () => because otherwise react will
       // think it's an updater function instead of the actual function.
-      props.setInputFilter(() => (cls: Class) =>
+      setInputFilter(() => (cls: Class) =>
         results.includes(cls.number) || classNumberMatch(input, cls.number)
       );
     } else {
-      props.setInputFilter(null);
+      setInputFilter(null);
     }
     setClassInput(input);
   };
@@ -88,6 +90,8 @@ const CLASS_FLAGS: Array<[keyof Flags, string]> = [
 ];
 
 function ClassFlags(props: { setFlagsFilter: SetClassFilter }) {
+  const { setFlagsFilter } = props;
+
   const [flags, setFlags] = useState<Map<keyof Flags, boolean>>(() => {
     const result = new Map();
     CLASS_FLAGS.forEach(([flag]) => {
@@ -102,7 +106,7 @@ function ClassFlags(props: { setFlagsFilter: SetClassFilter }) {
     setFlags(newFlags);
     // careful! we have to wrap it with a () => because otherwise react will
     // think it's an updater function instead of the actual function.
-    props.setFlagsFilter(() => (cls: Class) => {
+    setFlagsFilter(() => (cls: Class) => {
       let result = true;
       // either button is off (!value) or class has flag (cls.flags[flag])
       newFlags.forEach((value, flag) => {
@@ -135,12 +139,14 @@ function ClassFlags(props: { setFlagsFilter: SetClassFilter }) {
  * TODO: test performance in build
  * TODO: style as original
  * TODO: add loading?
+ * TODO: document
  */
 
 export function ClassTable(props: {
   classes: Map<string, Class>;
   setCurrentClass: (cls: Class) => void;
 }) {
+  const { classes, setCurrentClass } = props;
   const gridRef = useRef<AgGridReact>(null);
 
   const columnDefs = useMemo(() => {
@@ -163,7 +169,7 @@ export function ClassTable(props: {
 
   const rowData = useMemo(() => {
     const rows: Array<ClassTableRow> = [];
-    props.classes.forEach((cls) => {
+    classes.forEach((cls) => {
       const { number, evals, name } = cls;
       rows.push({
         number: number,
@@ -174,7 +180,7 @@ export function ClassTable(props: {
       });
     });
     return rows;
-  }, [props.classes]);
+  }, [classes]);
 
   const [inputFilter, setInputFilter] = useState<ClassFilter | null>(null);
   const [flagsFilter, setFlagsFilter] = useState<ClassFilter | null>(null);
@@ -192,7 +198,7 @@ export function ClassTable(props: {
   }, [inputFilter, flagsFilter]);
 
   const onRowClicked = (e: AgGrid.RowClickedEvent) => {
-    props.setCurrentClass(e.node.data.class);
+    setCurrentClass(e.node.data.class);
   };
 
   return (

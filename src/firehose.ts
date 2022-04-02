@@ -1,23 +1,35 @@
-import * as ReactDOM from "react-dom";
-import { ClassDescription } from "./ClassDescription";
-import { ClassTable } from "./ClassTable";
-import { RawClass, Class } from "./class";
+import { RawClass, Class, NonClass, Section } from "./class";
 import { selectSlots } from "./calendarSlots";
+
+/**
+ * React / localStorage state.
+ */
+export type FirehoseState = {
+  currentActivities: Array<Class | NonClass>;
+  currentClass: Class | undefined;
+};
 
 /**
  * Global Firehose object. Maintains global program state (selected classes,
  * schedule options selected, activities, etc.).
+ *
+ * TODO: serialize/deserialize into localStorage.
+ * TODO: rename class to activity when needed.
  */
 export class Firehose {
   /** Map from class number to Class object. */
   classes: Map<string, Class>;
-  /**
-   * Classes currently selected.
-   * TODO: persist in localStorage.
-   */
+  /** Possible section choices. */
+  options: Array<Array<Section>> = [];
+
+  /** Classes currently selected. */
   currentClasses: Array<Class> = [];
+  /** Non-class activities. */
+  currentNonClasses: Array<NonClass> = [];
   /** Class description currently being viewed. */
   currentClass: Class | undefined;
+  /** React callback to update state. */
+  callback: ((state: FirehoseState) => void) | undefined;
 
   constructor(rawClasses: Map<string, RawClass>) {
     this.classes = new Map();
@@ -26,18 +38,25 @@ export class Firehose {
     });
   }
 
-  /** Render the table listing all the classes. */
-  fillTable(): void {
-    ReactDOM.render(
-      <ClassTable
-        classes={this.classes}
-        setCurrentClass={this.classDescription.bind(this)}
-      />,
-      document.getElementById("eval-table-div")
-    );
+  /** All activities. */
+  get currentActivities(): Array<Class | NonClass> {
+    return [...this.currentClasses, ...this.currentNonClasses];
   }
 
-  /** @returns True if cls is one of the currently selected classes. */
+  /** Update React state by calling React callback. */
+  updateState(): void {
+    this?.callback?.({
+      currentActivities: this.currentActivities,
+      currentClass: this.currentClass,
+    });
+  }
+
+  /**
+   * @returns True if cls is one of the currently selected classes.
+   *
+   * TODO: is it true that each class only has one instance? if so, this can
+   * just be a === check
+   */
   isCurrentClass(cls: Class): boolean {
     return this.currentClasses.some((cls_) => cls_.number === cls.number);
   }
@@ -45,8 +64,7 @@ export class Firehose {
   /** @param cls - Class to add. */
   addClass(cls: Class): void {
     if (!this.isCurrentClass(cls)) this.currentClasses.push(cls);
-    // manually update state for classDescription; TODO fix
-    this.classDescription(this.currentClass);
+    this.updateState();
   }
 
   /** @param cls - Class to remove. */
@@ -54,11 +72,20 @@ export class Firehose {
     this.currentClasses = this.currentClasses.filter(
       (cls_) => cls_.number !== cls.number
     );
-    // manually update state for classDescription; TODO fix
-    this.classDescription(this.currentClass);
+    this.updateState();
   }
 
-  /** See {@link selectSlots}. */
+  /**
+   * See {@link selectSlots}.
+   *
+   * TODO: sketch for new schedule model:
+   *    - Each class has a map from SectionKind to whether it's locked.
+   *    - Each class maintains its current sections, including locked ones.
+   *    - allSections will no longer exist; instead options is maintained in
+   *      global state, and is list of list of sections. (Section has the
+   *      Class and SectionKind, so that's enough info to recover.)
+   *    - setOption is a global that changes the current section of each class
+   */
   selectSlots(
     lockedSlots: Map<string, string | number>
   ): {
@@ -71,11 +98,7 @@ export class Firehose {
   /** Render the class description for a given class. */
   classDescription(cls: Class | undefined): void {
     this.currentClass = cls;
-    if (this.currentClass === undefined) return;
-    ReactDOM.render(
-      <ClassDescription cls={this.currentClass} firehose={this} />,
-      document.getElementById("desc-div")
-    );
+    this.updateState();
   }
 
   classDescription_(number: string): void {
