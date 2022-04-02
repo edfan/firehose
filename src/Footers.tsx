@@ -1,3 +1,4 @@
+// TODO: docs
 export function LeftFooter() {
   return (
     <>
@@ -15,7 +16,7 @@ export function LeftFooter() {
           title="Make sure popups are enabled!"
           data-trigger="hover"
         >
-          <img src="img/calendar-button.svg" />
+          <img src="img/calendar-button.svg" alt="" />
         </span>
       </div>
       <div id="footer-div">
@@ -28,6 +29,7 @@ export function LeftFooter() {
   );
 }
 
+// TODO: docs
 export function RightFooter() {
   return (
     <>
@@ -38,13 +40,7 @@ export function RightFooter() {
         </p>
         <p>
           Looking for the old Firehose? It's been moved{" "}
-          <a
-            href="https://firehose.guide/old_www/evaluations.html"
-            target="_blank"
-          >
-            here
-          </a>
-          .
+          <a href="https://firehose.guide/old_www/evaluations.html">here</a>.
         </p>
         <p>
           <a href="https://github.com/edfan/firehose">GitHub</a> |{" "}

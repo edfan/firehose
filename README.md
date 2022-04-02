@@ -2,32 +2,6 @@
 
 doing a refactor on src/firehose.ts. the ideal is to be able to compile and drop-in replace most of the functionality while having stronger types and stuff.
 
-## todo
-
-**blocking**:
-
-- drop semester dependencies on `src/index.js` and `public/index.html` (cf. `update.py`)
-- factor out semester dropdown information
-- `update.py` needs to work with new semester format
-  - having the same script rather than running using `script-compiled.js` over and over
-
-**refactoring**:
-
-- split much more cleanly...
-  - factor out logic for table feature, search, and filtering (all globals when it's local)
-    - see #class-input in src/index.js
-  - logic for slot selection, option selection (complicated logic, move out)
-  - view for class description, buttons for adding/removing classes (bubble up)
-    - cur_class is a global that isn't global (so linked class doesn't bubble up too much)
-    - put locked slots on the firehose object
-    - likely blocked on not having so many globals (class_desc, select_slots...)
-- handle activities correctly (not just "special classes")
-- remove jquery timepicker (is it even used?)
-- remove rest of jquery (glhf)
-- put dataTables as an npm dependency (or use something better?)
-- move rest of index.html ui to react
-- remove images from public folder
-
 ## development
 
 you need **node 16** and **python 3**. run:

@@ -1,9 +1,10 @@
+// TODO: docs
 export function Header() {
   return (
     <>
       <div id="spacer3-div"></div>
       <div id="info-div">
-        <img src="img/logo.png" height="40px" />
+        <img src="img/logo.png" height="40px" alt="" />
         <p>
           <a href="semesters/i22/iap.html">IAP 2022</a> | Spring 2022
         </p>

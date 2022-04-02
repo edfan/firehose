@@ -4,6 +4,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import { Class, NonClass } from "./class";
 import { Firehose } from "./firehose";
 
+// TODO: docs
 export function Calendar(props: {
   currentActivities: Array<Class | NonClass>;
   firehose: Firehose;

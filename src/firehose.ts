@@ -129,19 +129,4 @@ export class Firehose {
   } {
     return selectSlots(this.currentClasses, lockedSlots);
   }
-
-  classDescription_(number: string): void {
-    const cls = this.classes.get(number);
-    cls && this.setCurrentClass(cls);
-  }
-
-  addClass_(number: string): void {
-    const cls = this.classes.get(number);
-    cls && this.addClass(cls);
-  }
-
-  removeClass_(number: string): void {
-    const cls = this.classes.get(number);
-    cls && this.removeClass(cls);
-  }
 }
