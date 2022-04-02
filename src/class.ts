@@ -1,6 +1,6 @@
 import { EventInput } from "@fullcalendar/core";
 
-import { formatNumber } from "./utils";
+import { formatNumber, toDate } from "./utils";
 
 /** Raw timeslot format: [start slot, length of timeslot]. */
 type RawTimeslot = [number, number];
@@ -147,8 +147,19 @@ export class Timeslot {
     [this.startSlot, this.numSlots] = timeslot;
   }
 
+  /** Ending slot, inclusive. */
   get endSlot(): number {
     return this.startSlot + this.numSlots - 1;
+  }
+
+  /** The start time, on the week of 2001-01-01. */
+  get startTime(): Date {
+    return toDate(this.startSlot);
+  }
+
+  /** The end time, on the week of 2001-01-01. */
+  get endTime(): Date {
+    return toDate(this.endSlot + 1);
   }
 
   /**
@@ -209,6 +220,16 @@ export class Section {
     }
     return conflicts;
   }
+
+  get event(): Event {
+    return new Event(
+      `${this.cls.number} ${this.kind}`,
+      this.timeslots,
+      this.room,
+      "red",
+      "red"
+    );
+  }
 }
 
 /** Wrapper for an array of {@link Section}s, all the same kind. */
@@ -256,17 +277,14 @@ class Event {
 
   /** @returns List of events that can be directly given to FullCalendar. */
   get eventInputs(): Array<EventInput> {
-    // TODO: compute from slots
-    return [
-      {
-        title: this.name,
-        start: new Date(),
-        end: new Date(),
-        backgroundColor: this.backgroundColor,
-        borderColor: this.borderColor,
-        room: this.room,
-      },
-    ];
+    return this.slots.map((slot) => ({
+      title: this.name,
+      start: slot.startTime,
+      end: slot.endTime,
+      backgroundColor: this.backgroundColor,
+      borderColor: this.borderColor,
+      room: this.room,
+    }));
   }
 }
 
@@ -345,9 +363,11 @@ export class Class {
     return this.sectionKinds.map((kind) => this.sectionsOfKind(kind));
   }
 
+  /** Get all calendar events corresponding to this class. */
   get events(): Array<Event> {
-    // TODO: write based on currentSections
-    return [];
+    return this.sectionKinds
+      .flatMap((kind) => this.currentSections.get(kind)?.event)
+      .filter((event): event is Event => event instanceof Event);
   }
 
   /** Object of boolean properties of class, used for filtering. */

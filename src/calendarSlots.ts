@@ -57,24 +57,17 @@ function selectHelper(
 }
 
 /**
- * Find best options for choosing sections among classes. Returns list of
- * sections, and list of options for which sections to pick.
- *
- * TODO: there should be a *much* better interface for this
+ * Find best options for choosing sections among classes. Returns list of list
+ * of possible options.
  *
  * @param currentClasses - Current classes to schedule
- * @param lockedSlots - Locked class slots
- * @returns Object with
- *    allSections - e.g. [["6.036", LECTURE], ["6.036", LAB], ...]
- *    options - e.g. [[2, 0, ...]] for 2nd 6.036 LECTURE, 0th 6.036 LAB, etc.
+ * @returns List of schedule options; each schedule option is a list of all
+ *    sections in that schedule, including locked sections (but not including
+ *    non-class activities.)
  */
 export function selectSlots(
-  currentClasses: Array<Class>,
-  lockedSlots: Map<string, string | number>
-): {
-  allSections: Array<[string, string]>;
-  options: Array<Array<number>>;
-} {
+  currentClasses: Array<Class>
+): Array<Array<Section>> {
   const lockedSections: Array<Sections> = [];
   const lockedOptions: Array<Section> = [];
   const initialSlots: Array<Timeslot> = [];
@@ -82,29 +75,20 @@ export function selectSlots(
 
   for (const cls of currentClasses) {
     for (const secs of cls.sections) {
-      const key = `${cls.number},${secs.kind}`;
-      const option = lockedSlots.get(key);
-      if (option === "none") {
-        // do nothing
-      } else if (option !== undefined) {
-        const sec = secs.sections[option as number];
-        lockedSections.push(secs);
-        lockedOptions.push(sec);
-        initialSlots.push(...sec.timeslots);
+      if (cls.lockedSections.get(secs.kind)) {
+        const sec = cls.currentSections.get(secs.kind);
+        if (sec) {
+          lockedSections.push(secs);
+          lockedOptions.push(sec);
+          initialSlots.push(...sec.timeslots);
+        } else {
+          // locked to having no section, do nothing
+        }
       } else {
         freeSections.push(secs);
       }
     }
   }
 
-  const { options } = selectHelper(freeSections, initialSlots, [], 0, Infinity);
-
-  return {
-    allSections: [lockedSections, freeSections]
-      .flat()
-      .map((sec) => [sec.cls.number, sec.kind]),
-    options: options.map((opt) =>
-      lockedOptions.concat(opt).map((sec) => sec.index)
-    ),
-  };
+  return selectHelper(freeSections, initialSlots, [], 0, Infinity).options;
 }

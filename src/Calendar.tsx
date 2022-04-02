@@ -5,6 +5,7 @@ import { Class, NonClass } from "./class";
 import { Firehose } from "./firehose";
 
 // TODO: docs
+// TODO: click event
 export function Calendar(props: {
   currentActivities: Array<Class | NonClass>;
   firehose: Firehose;
@@ -33,7 +34,9 @@ export function Calendar(props: {
             allDaySlot={false}
             dayHeaderFormat={{ weekday: "long" }}
             editable={false}
-            events={currentActivities.flatMap((act) => act.events)}
+            events={currentActivities
+              .flatMap((act) => act.events)
+              .flatMap((event) => event.eventInputs)}
             headerToolbar={false}
             height="auto"
             // a date that is, conveniently enough, a monday

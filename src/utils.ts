@@ -1,7 +1,5 @@
-/** Rounds {@param x} to {@param n} decimal places? */ export function formatNumber(
-  x: number,
-  n: number
-) {
+/** Rounds {@param x} to {@param n} decimal places? */
+export function formatNumber(x: number, n: number) {
   const re = "\\d(?=(\\d{" + (x || 3) + "})+" + (n > 0 ? "\\." : "$") + ")";
   return x.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, "g"), "$&,");
 }
@@ -50,4 +48,15 @@ export function classNumberMatch(searchString: string, classNumber: string) {
   } else {
     return simplify(classNumber).startsWith(simplify(searchString));
   }
+}
+
+/**
+ * Converts a timeslot (as in {@link Timeslot}) to a date in the week of
+ * 2001-01-01, which is the week the calendar shows.
+ */
+export function toDate(slot: number): Date {
+  const day = Math.floor(slot / 30) + 1;
+  const hour = Math.floor((slot % 30) / 2) + 8;
+  const minute = (slot % 2) * 30;
+  return new Date(2001, 0, day, hour, minute);
 }

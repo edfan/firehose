@@ -80,7 +80,7 @@ export class Firehose {
     });
   }
 
-  /** Render the class description for a given class. */
+  /** Set the current class description being viewed. */
   setCurrentClass(cls: Class | undefined): void {
     this.currentClass = cls;
     this.updateState();
@@ -96,37 +96,35 @@ export class Firehose {
     return this.currentClasses.some((cls_) => cls_.number === cls.number);
   }
 
-  /** @param cls - Class to add. */
+  /** Adds a {@param cls} and reschedules. */
   addClass(cls: Class): void {
     if (!this.isCurrentClass(cls)) this.currentClasses.push(cls);
-    this.updateState();
+    this.selectSlots();
   }
 
-  /** @param cls - Class to remove. */
+  /** Removes a {@param cls} and reschedules. */
   removeClass(cls: Class): void {
     this.currentClasses = this.currentClasses.filter(
       (cls_) => cls_.number !== cls.number
     );
-    this.updateState();
+    this.selectSlots();
+  }
+
+  /** See {@link selectSlots}. */
+  selectSlots(): void {
+    this.options = selectSlots(this.currentClasses);
+    this.setOption();
   }
 
   /**
-   * See {@link selectSlots}.
-   *
-   * TODO: sketch for new schedule model:
-   *    - Each class has a map from SectionKind to whether it's locked.
-   *    - Each class maintains its current sections, including locked ones.
-   *    - allSections will no longer exist; instead options is maintained in
-   *      global state, and is list of list of sections. (Section has the
-   *      Class and SectionKind, so that's enough info to recover.)
-   *    - setOption is a global that changes the current section of each class
+   * Change the current section of each class to match this.options[index].
+   * If index does not exist, change it to this.options[0].
    */
-  selectSlots(
-    lockedSlots: Map<string, string | number>
-  ): {
-    allSections: Array<[string, string]>;
-    options: Array<Array<number>>;
-  } {
-    return selectSlots(this.currentClasses, lockedSlots);
+  setOption(index?: number): void {
+    const option = this.options[index ?? 0] ?? this.options[0];
+    for (const sec of option) {
+      sec.cls.currentSections.set(sec.kind, sec);
+    }
+    this.updateState();
   }
 }
