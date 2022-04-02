@@ -44,9 +44,9 @@ export function classNumberMatch(searchString: string, classNumber: string) {
   const lower = (s: string) => s.toLowerCase();
   const simplify = (s: string) => lower(s).replaceAll(/[^a-z0-9]/g, "");
   if (searchString.includes(".")) {
-    return lower(classNumber).startsWith(lower(searchString));
+    return lower(classNumber).includes(lower(searchString));
   } else {
-    return simplify(classNumber).startsWith(simplify(searchString));
+    return simplify(classNumber).includes(simplify(searchString));
   }
 }
 

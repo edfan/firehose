@@ -8,20 +8,33 @@ import { Firehose } from "./firehose";
 // TODO: click event
 export function Calendar(props: {
   currentActivities: Array<Class | NonClass>;
+  currentOption: number;
+  totalOptions: number;
   firehose: Firehose;
 }) {
-  const { currentActivities, firehose } = props;
+  const { currentActivities, currentOption, totalOptions, firehose } = props;
 
   return (
     <>
       <div id="buttons-div">
-        <button className="btn btn-sm btn-secondary" id="cal-left">
+        <button
+          className="btn btn-sm btn-secondary"
+          id="cal-left"
+          onClick={() => firehose.setOption(currentOption - 1)}
+        >
           &larr;
         </button>{" "}
         &nbsp;&nbsp;&nbsp;
-        <span id="cal-options-1">0</span>/<span id="cal-options-2">0</span>
+        <span id="cal-options-1">
+          {totalOptions > 0 ? currentOption + 1 : 0}
+        </span>
+        /<span id="cal-options-2">{totalOptions}</span>
         &nbsp;&nbsp;&nbsp;
-        <button className="btn btn-sm btn-secondary" id="cal-right">
+        <button
+          className="btn btn-sm btn-secondary"
+          id="cal-right"
+          onClick={() => firehose.setOption(currentOption + 1)}
+        >
           &rarr;
         </button>
         {/* <div id="warning3-div" style="display: none;">Too many options? Use the "+ Manually set sections" button above the class description to lock recitation times.</div> */}

@@ -15,6 +15,8 @@ export function App(props: { firehose: Firehose }) {
   const [state, setState] = useState<FirehoseState>({
     currentActivities: [],
     currentClass: undefined,
+    currentOption: 0,
+    totalOptions: 0,
     units: 0,
     hours: 0,
     warnings: [],
@@ -30,6 +32,8 @@ export function App(props: { firehose: Firehose }) {
       <div id="left-div">
         <Calendar
           currentActivities={state.currentActivities}
+          currentOption={state.currentOption}
+          totalOptions={state.totalOptions}
           firehose={firehose}
         />
         <LeftFooter />

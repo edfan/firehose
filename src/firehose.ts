@@ -7,6 +7,8 @@ import { selectSlots } from "./calendarSlots";
 export type FirehoseState = {
   currentActivities: Array<Class | NonClass>;
   currentClass: Class | undefined;
+  currentOption: number;
+  totalOptions: number;
   units: number;
   hours: number;
   warnings: Array<string>;
@@ -37,6 +39,8 @@ export class Firehose {
   private currentClasses: Array<Class> = [];
   /** Non-class activities. */
   private currentNonClasses: Array<NonClass> = [];
+  /** Current schedule option; zero-indexed. */
+  private currentOption: number = 0;
 
   /** React callback to update state. */
   callback: ((state: FirehoseState) => void) | undefined;
@@ -53,29 +57,21 @@ export class Firehose {
     return [...this.currentClasses, ...this.currentNonClasses];
   }
 
-  /** Total number of selected class units. */
-  get units(): number {
-    return this.currentClasses.reduce(
-      (total, cls) => total + cls.totalUnits,
-      0
-    );
-  }
-
-  /** Total number of selected activity hours. */
-  get hours(): number {
-    return this.currentActivities.reduce(
-      (total, activity) => total + activity.hours,
-      0
-    );
-  }
-
   /** Update React state by calling React callback. */
   updateState(): void {
     this?.callback?.({
       currentActivities: this.currentActivities,
       currentClass: this.currentClass,
-      units: this.units,
-      hours: this.hours,
+      currentOption: this.currentOption,
+      totalOptions: this.options.length,
+      units: this.currentClasses.reduce(
+        (total, cls) => total + cls.totalUnits,
+        0
+      ),
+      hours: this.currentActivities.reduce(
+        (total, activity) => total + activity.hours,
+        0
+      ),
       warnings: [], // TODO
     });
   }
@@ -121,8 +117,11 @@ export class Firehose {
    * If index does not exist, change it to this.options[0].
    */
   setOption(index?: number): void {
-    const option = this.options[index ?? 0] ?? this.options[0];
-    for (const sec of option) {
+    this.currentOption = index ?? 0;
+    if (this.currentOption >= this.options.length) {
+      this.currentOption = 0;
+    }
+    for (const sec of this.options[this.currentOption]!) {
       sec.cls.currentSections.set(sec.kind, sec);
     }
     this.updateState();
