@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Firehose, FirehoseState } from "./firehose";
 
-import { CurrentActivities } from "./CurrentActivities";
+import { Calendar } from "./Calendar";
 import { ClassDescription } from "./ClassDescription";
 import { ClassTable } from "./ClassTable";
+import { CurrentActivities } from "./CurrentActivities";
+import { Header } from "./Header";
+import { LeftFooter, RightFooter } from "./Footers";
 
 // TODO: docs
 export function App(props: { firehose: Firehose }) {
@@ -24,24 +27,37 @@ export function App(props: { firehose: Firehose }) {
 
   return (
     <>
-      <CurrentActivities
-        currentActivities={state.currentActivities}
-        units={state.units}
-        hours={state.hours}
-        warnings={state.warnings}
-        firehose={firehose}
-      />
-      <hr />
-      <ClassTable
-        classes={firehose.classes} // this is a constant; no need to add to state
-        firehose={firehose}
-      />
-      {state.currentClass ? (
-        <ClassDescription
-          currentClass={state.currentClass}
+      <div id="left-div">
+        <Calendar
+          currentActivities={state.currentActivities}
           firehose={firehose}
         />
-      ) : null}
+        <LeftFooter />
+      </div>
+      <div id="right-div">
+        <Header />
+        <hr />
+        <CurrentActivities
+          currentActivities={state.currentActivities}
+          units={state.units}
+          hours={state.hours}
+          warnings={state.warnings}
+          firehose={firehose}
+        />
+        <hr />
+        <ClassTable
+          classes={firehose.classes} // this is a constant; no need to add to state
+          firehose={firehose}
+        />
+        {state.currentClass ? (
+          <ClassDescription
+            currentClass={state.currentClass}
+            firehose={firehose}
+          />
+        ) : null}
+        <hr />
+        <RightFooter />
+      </div>
     </>
   );
 }
