@@ -10,6 +10,7 @@ import "@ag-grid-community/core/dist/styles/ag-theme-alpine.css";
 
 import { Class, Flags } from "./class";
 import { classSort, classNumberMatch } from "./utils";
+import { Firehose } from "./firehose";
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -144,9 +145,9 @@ function ClassFlags(props: { setFlagsFilter: SetClassFilter }) {
 
 export function ClassTable(props: {
   classes: Map<string, Class>;
-  setCurrentClass: (cls: Class) => void;
+  firehose: Firehose;
 }) {
-  const { classes, setCurrentClass } = props;
+  const { classes, firehose } = props;
   const gridRef = useRef<AgGridReact>(null);
 
   const columnDefs = useMemo(() => {
@@ -198,7 +199,7 @@ export function ClassTable(props: {
   }, [inputFilter, flagsFilter]);
 
   const onRowClicked = (e: AgGrid.RowClickedEvent) => {
-    setCurrentClass(e.node.data.class);
+    firehose.setCurrentClass(e.node.data.class);
   };
 
   return (
@@ -207,7 +208,7 @@ export function ClassTable(props: {
         <ClassInput rowData={rowData} setInputFilter={setInputFilter} />
         <ClassFlags setFlagsFilter={setFlagsFilter} />
       </div>
-      <div className="ag-theme-alpine">
+      <div className="ag-theme-alpine" style={{ height: 200 }}>
         <AgGridReact
           ref={gridRef}
           columnDefs={columnDefs}
@@ -217,7 +218,7 @@ export function ClassTable(props: {
           isExternalFilterPresent={() => true}
           doesExternalFilterPass={doesExternalFilterPass}
           onRowClicked={onRowClicked}
-        ></AgGridReact>
+        />
       </div>
     </>
   );

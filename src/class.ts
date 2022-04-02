@@ -318,12 +318,8 @@ export class Class {
   }
 
   /** Hours per week, taking from evals if exists, or units if not. */
-  get hours(): { hours: number; setToUnits: boolean } {
-    const setToUnits = !this.rawClass.h;
-    return {
-      hours: setToUnits ? this.totalUnits : this.rawClass.h,
-      setToUnits,
-    };
+  get hours(): number {
+    return this.rawClass.h ?? this.totalUnits;
   }
 
   /** Array of section kinds: [LECTURE, RECITATION, LAB]. */
@@ -470,6 +466,12 @@ export class Class {
 
 // TODO: write
 export class NonClass {
+  name: string = "";
+
+  get hours(): number {
+    return 0;
+  }
+
   get events(): Array<Event> {
     // TODO: write based on currentSections
     return [];

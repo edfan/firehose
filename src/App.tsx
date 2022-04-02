@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { Firehose, FirehoseState } from "./firehose";
 
+import { CurrentActivities } from "./CurrentActivities";
 import { ClassDescription } from "./ClassDescription";
 import { ClassTable } from "./ClassTable";
 
@@ -11,6 +12,9 @@ export function App(props: { firehose: Firehose }) {
   const [state, setState] = useState<FirehoseState>({
     currentActivities: [],
     currentClass: undefined,
+    units: 0,
+    hours: 0,
+    warnings: [],
   });
 
   useEffect(() => {
@@ -20,12 +24,23 @@ export function App(props: { firehose: Firehose }) {
 
   return (
     <>
-      <ClassTable
-        classes={firehose.classes}
-        setCurrentClass={firehose.classDescription.bind(firehose)}
+      <CurrentActivities
+        currentActivities={state.currentActivities}
+        units={state.units}
+        hours={state.hours}
+        warnings={state.warnings}
+        firehose={firehose}
       />
-      {firehose.currentClass ? (
-        <ClassDescription cls={firehose.currentClass} firehose={firehose} />
+      <hr />
+      <ClassTable
+        classes={firehose.classes} // this is a constant; no need to add to state
+        firehose={firehose}
+      />
+      {state.currentClass ? (
+        <ClassDescription
+          currentClass={state.currentClass}
+          firehose={firehose}
+        />
       ) : null}
     </>
   );

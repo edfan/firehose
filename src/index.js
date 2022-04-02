@@ -216,35 +216,14 @@ function class_desc(number) {
 
 function add_class(number) {
 	firehose.addClass_(number);
-
-	var n_number = id_sanitize(number);
-
-	$('#selected-div').append('<button type="button" class="btn btn-primary" id=' + n_number + '-button>' + number + '</button>');
-	sortable('.sortable');
-	sortable_listener();
-
-	$('#' + n_number + '-button').click(function () {
-		class_desc(number);
-	});
-
-	$('#' + n_number + '-button').dblclick(function () {
-		remove_class(number);
-	});
-
 	cur_classes.push(number);
 	try { class_desc(number); }
 	catch (err) { }
 	select_slots();
-	$("#units-div").show();
 }
 
 function remove_class(number) {
 	firehose.removeClass_(number);
-
-	var n_number = id_sanitize(number);
-
-	$('#' + n_number + '-button').remove();
-
 	cur_classes.splice(cur_classes.indexOf(number), 1);
 	class_desc(number);
 	if (cur_classes.length == 0) {
@@ -512,20 +491,6 @@ function clipboard_export() {
 	$("#modal-textarea").prop("rows", option.length);
 	$('#modal-textarea').val(class_str.join('\r\n'));
 	$('#modal').modal('show');
-}
-
-function sortable_listener() {
-	sortable('.sortable')[0].addEventListener('sortupdate', function (e) {
-		var old_option = cur_option;
-		var new_classes = [];
-		e.detail.newEndList.forEach(function (c) {
-			new_classes.push(c.innerHTML.replace('*', '').replace('+', ''));
-		});
-		cur_classes = new_classes;
-		localStorage.setObj('fall21_cur_classes', cur_classes);
-		select_slots();
-		set_option(old_option);
-	});
 }
 
 function set_css(css_state) {
@@ -951,12 +916,6 @@ $(document).ready(function () {
 			set_option(tmp_cur_option);
 		}
 	}
-
-	sortable('.sortable', {
-		forcePlaceholderSize: true,
-		placeholder: '<button type="button" class="btn btn-primary">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>'
-	});
-	sortable_listener();
 
 	if (localStorage.getObj('new_css')) {
 		new_css = localStorage.getObj('new_css', new_css);

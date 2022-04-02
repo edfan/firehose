@@ -89,10 +89,13 @@ function ClassRelated(props: { cls: Class; firehose: Firehose }) {
   const linkClasses = (str: string) =>
     str.split(/([ ,;[\]()])/).map((text) => {
       const cls = firehose.classes.get(text);
-      console.log(cls, text);
       if (!cls) return text;
       return (
-        <span className="link-span" key={text} onClick={() => firehose.classDescription(cls)}>
+        <span
+          className="link-span"
+          key={text}
+          onClick={() => firehose.setCurrentClass(cls)}
+        >
           {text}
         </span>
       );
@@ -139,7 +142,7 @@ function ClassBody(props: { cls: Class }) {
     <p id="class-desc">
       {/* this is necessary as descriptions contain ampersand escapes like
           &nbsp. there's probably a better solution to this */}
-      <span dangerouslySetInnerHTML={{ __html: description }}/>
+      <span dangerouslySetInnerHTML={{ __html: description }} />
       <br />
       <br />
       {inCharge ? (
@@ -265,9 +268,13 @@ function ClassButtons(props: { cls: Class; firehose: Firehose }) {
 /**
  * Full class description, from title to URLs at the end.
  * TODO: make the class buttons work nicely.
+ * TODO: rename cls to currentClass or something?
  */
-export function ClassDescription(props: { cls: Class; firehose: Firehose }) {
-  const { cls, firehose } = props;
+export function ClassDescription(props: {
+  currentClass: Class;
+  firehose: Firehose;
+}) {
+  const { currentClass: cls, firehose } = props;
 
   return (
     <>

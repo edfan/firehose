@@ -7,6 +7,9 @@ import { selectSlots } from "./calendarSlots";
 export type FirehoseState = {
   currentActivities: Array<Class | NonClass>;
   currentClass: Class | undefined;
+  units: number;
+  hours: number;
+  warnings: Array<string>;
 };
 
 /**
@@ -22,12 +25,19 @@ export class Firehose {
   /** Possible section choices. */
   options: Array<Array<Section>> = [];
 
-  /** Classes currently selected. */
-  currentClasses: Array<Class> = [];
-  /** Non-class activities. */
-  currentNonClasses: Array<NonClass> = [];
+  // The following are React state, so should be private. Even if we pass the
+  // Firehose object to React components, they shouldn't be looking at these
+  // directly; they should have it passed down to them as props from App.
+  // TODO: rename "current" as in currentClass and "current" as in
+  //       currentClasses and currentNonClasses
+
   /** Class description currently being viewed. */
-  currentClass: Class | undefined;
+  private currentClass: Class | undefined;
+  /** Classes currently selected. */
+  private currentClasses: Array<Class> = [];
+  /** Non-class activities. */
+  private currentNonClasses: Array<NonClass> = [];
+
   /** React callback to update state. */
   callback: ((state: FirehoseState) => void) | undefined;
 
@@ -43,12 +53,37 @@ export class Firehose {
     return [...this.currentClasses, ...this.currentNonClasses];
   }
 
+  /** Total number of selected class units. */
+  get units(): number {
+    return this.currentClasses.reduce(
+      (total, cls) => total + cls.totalUnits,
+      0
+    );
+  }
+
+  /** Total number of selected activity hours. */
+  get hours(): number {
+    return this.currentActivities.reduce(
+      (total, activity) => total + activity.hours,
+      0
+    );
+  }
+
   /** Update React state by calling React callback. */
   updateState(): void {
     this?.callback?.({
       currentActivities: this.currentActivities,
       currentClass: this.currentClass,
+      units: this.units,
+      hours: this.hours,
+      warnings: [], // TODO
     });
+  }
+
+  /** Render the class description for a given class. */
+  setCurrentClass(cls: Class | undefined): void {
+    this.currentClass = cls;
+    this.updateState();
   }
 
   /**
@@ -95,15 +130,9 @@ export class Firehose {
     return selectSlots(this.currentClasses, lockedSlots);
   }
 
-  /** Render the class description for a given class. */
-  classDescription(cls: Class | undefined): void {
-    this.currentClass = cls;
-    this.updateState();
-  }
-
   classDescription_(number: string): void {
     const cls = this.classes.get(number);
-    cls && this.classDescription(cls);
+    cls && this.setCurrentClass(cls);
   }
 
   addClass_(number: string): void {
