@@ -27,6 +27,8 @@ export class Firehose {
   classes: Map<string, Class>;
   /** Possible section choices. */
   options: Array<Array<Section>> = [];
+  /** Current number of schedule conflicts. */
+  conflicts: number = 0;
 
   // The following are React state, so should be private. Even if we pass the
   // Firehose object to React components, they shouldn't be looking at these
@@ -43,6 +45,8 @@ export class Firehose {
 
   /** React callback to update state. */
   callback: ((state: FirehoseState) => void) | undefined;
+  /** React callback to update fits schedule filter. */
+  fitsScheduleCallback: (() => void) | undefined;
 
   constructor(rawClasses: Map<string, RawClass>) {
     this.classes = new Map();
@@ -58,7 +62,7 @@ export class Firehose {
 
   /** Update React state by calling React callback. */
   updateState(): void {
-    this?.callback?.({
+    this.callback?.({
       selectedActivities: this.selectedActivities,
       viewedActivity: this.viewedActivity,
       selectedOption: this.selectedOption,
@@ -90,6 +94,7 @@ export class Firehose {
   addClass(cls: Class): void {
     if (!this.isSelectedClass(cls)) this.selectedClasses.push(cls);
     this.updateActivities();
+    this.fitsScheduleCallback?.();
   }
 
   /** Removes a {@param cls} and updates. */
@@ -98,6 +103,7 @@ export class Firehose {
       (cls_) => cls_.number !== cls.number
     );
     this.updateActivities();
+    this.fitsScheduleCallback?.();
   }
 
   /**
@@ -126,7 +132,9 @@ export class Firehose {
    */
   updateActivities(): void {
     chooseColors(this.selectedActivities);
-    this.options = scheduleSlots(this.selectedClasses);
+    const result = scheduleSlots(this.selectedClasses);
+    this.options = result.options;
+    this.conflicts = result.conflicts;
     this.selectOption();
   }
 
@@ -143,5 +151,19 @@ export class Firehose {
       sec.cls.selectedSections.set(sec.kind, sec);
     }
     this.updateState();
+  }
+
+  /**
+   * TODO: docs
+   * TODO: measure performance
+   */
+  fitsSchedule(cls: Class): boolean {
+    return (
+      !this.isSelectedClass(cls) &&
+      (cls.sections.length === 0 ||
+        this.selectedClasses.length === 0 ||
+        scheduleSlots(this.selectedClasses.concat([cls])).conflicts ===
+          this.conflicts)
+    );
   }
 }

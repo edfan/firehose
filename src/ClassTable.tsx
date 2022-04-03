@@ -74,9 +74,10 @@ function ClassInput(props: {
   );
 }
 
-const CLASS_FLAGS: Array<[keyof Flags, string]> = [
+const CLASS_FLAGS: Array<[keyof Flags | "fits", string]> = [
   ["hass", "HASS"],
   ["cih", "CI-H"],
+  ["fits", "Fits schedule"],
   ["nofinal", "No final"],
   ["hassA", "HASS-A"],
   ["hassH", "HASS-H"],
@@ -90,10 +91,14 @@ const CLASS_FLAGS: Array<[keyof Flags, string]> = [
   ["le9units", "≤ 9 units"],
 ];
 
-function ClassFlags(props: { setFlagsFilter: SetClassFilter }) {
-  const { setFlagsFilter } = props;
+function ClassFlags(props: {
+  setFlagsFilter: SetClassFilter;
+  firehose: Firehose;
+  updateFilter: () => void;
+}) {
+  const { setFlagsFilter, firehose, updateFilter } = props;
 
-  const [flags, setFlags] = useState<Map<keyof Flags, boolean>>(() => {
+  const [flags, setFlags] = useState<Map<keyof Flags | "fits", boolean>>(() => {
     const result = new Map();
     CLASS_FLAGS.forEach(([flag]) => {
       result.set(flag, false);
@@ -101,7 +106,11 @@ function ClassFlags(props: { setFlagsFilter: SetClassFilter }) {
     return result;
   });
 
-  const onChange = (flag: keyof Flags, value: boolean) => {
+  useEffect(() => {
+    firehose.fitsScheduleCallback = () => flags.get("fits") && updateFilter();
+  }, [firehose, flags, updateFilter]);
+
+  const onChange = (flag: keyof Flags | "fits", value: boolean) => {
     const newFlags = new Map(flags);
     newFlags.set(flag, value);
     setFlags(newFlags);
@@ -111,7 +120,11 @@ function ClassFlags(props: { setFlagsFilter: SetClassFilter }) {
       let result = true;
       // either button is off (!value) or class has flag (cls.flags[flag])
       newFlags.forEach((value, flag) => {
-        result &&= !value || cls.flags[flag];
+        if (flag === "fits") {
+          result &&= !value || firehose.fitsSchedule(cls);
+        } else {
+          result &&= !value || cls.flags[flag];
+        }
       });
       return result;
     });
@@ -134,15 +147,13 @@ function ClassFlags(props: { setFlagsFilter: SetClassFilter }) {
 }
 
 /**
- * TODO: no conflicts filter
  * TODO: add class on enter
- * TODO: implement click events
+ * TODO: implement double click
  * TODO: test performance in build
  * TODO: style as original
  * TODO: add loading?
  * TODO: document
  */
-
 export function ClassTable(props: {
   classes: Map<string, Class>;
   firehose: Firehose;
@@ -206,7 +217,11 @@ export function ClassTable(props: {
     <>
       <div id="selector-div">
         <ClassInput rowData={rowData} setInputFilter={setInputFilter} />
-        <ClassFlags setFlagsFilter={setFlagsFilter} />
+        <ClassFlags
+          setFlagsFilter={setFlagsFilter}
+          firehose={firehose}
+          updateFilter={() => gridRef?.current?.api?.onFilterChanged()}
+        />
       </div>
       <div className="ag-theme-alpine" style={{ height: 200 }}>
         <AgGridReact

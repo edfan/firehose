@@ -1,5 +1,6 @@
 import { Class, NonClass } from "./class";
 import { Firehose } from "./firehose";
+import { formatNumber } from "./utils";
 
 // TODO: docs
 // TODO: warnings, double click
@@ -35,16 +36,16 @@ export function SelectedActivities(props: {
     <div id="selector-div">
       <p id="activity-button">+ Add non-class activity</p>
       <div id="selected-div">
-        {selectedActivities.map((activity) => (
+        {selectedActivities.map((activity, i) => (
           <Activity
-            key={activity.name}
+            key={i}
             activity={activity}
             firehose={firehose}
           />
         ))}
       </div>
       <p id="units-div">
-        Units: {units}&nbsp;&nbsp;&nbsp;Hours:{" " + hours}
+        Units: {units}&nbsp;&nbsp;&nbsp;Hours: {formatNumber(hours, 1)}
       </p>
       {warnings.map((warning) => (
         <p key={warning} id="warning-div">

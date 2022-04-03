@@ -191,7 +191,7 @@ class Event {
     activity: Class | NonClass,
     name: string,
     slots: Array<Timeslot>,
-    room: string | undefined,
+    room: string | undefined
   ) {
     this.activity = activity;
     this.name = name;
@@ -287,23 +287,25 @@ export class Sections {
 
   /** Short name for the kind of sections these are. */
   get shortName(): string {
-    if (this.kind === SectionKind.LECTURE) {
-      return "lec";
-    } else if (this.kind === SectionKind.RECITATION) {
-      return "rec";
-    } else {
-      return "lab";
+    switch (this.kind) {
+      case SectionKind.LECTURE:
+        return "lec";
+      case SectionKind.RECITATION:
+        return "rec";
+      default:
+        return "lab";
     }
   }
 
   /** Name for the kind of sections these are. */
   get name(): string {
-    if (this.kind === SectionKind.LECTURE) {
-      return "Lecture";
-    } else if (this.kind === SectionKind.RECITATION) {
-      return "Recitation";
-    } else {
-      return "Lab";
+    switch (this.kind) {
+      case SectionKind.LECTURE:
+        return "Lecture";
+      case SectionKind.RECITATION:
+        return "Recitation";
+      default:
+        return "Lab";
     }
   }
 
@@ -324,7 +326,7 @@ export class Sections {
           this.cls,
           `${this.cls.number} ${this.shortName}`,
           this.selected.timeslots,
-          this.selected.room,
+          this.selected.room
         )
       : null;
   }

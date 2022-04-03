@@ -61,13 +61,18 @@ function selectHelper(
  * of possible options.
  *
  * @param selectedClasses - Current classes to schedule
- * @returns List of schedule options; each schedule option is a list of all
- *    sections in that schedule, including locked sections (but not including
- *    non-class activities.)
+ * @returns Object with:
+ *    options - list of schedule options; each schedule option is a list of all
+ *      sections in that schedule, including locked sections (but not including
+ *      non-class activities.)
+ *    conflicts - number of conflicts in any option
  */
 export function scheduleSlots(
   selectedClasses: Array<Class>
-): Array<Array<Section>> {
+): {
+  options: Array<Array<Section>>;
+  conflicts: number;
+} {
   const lockedSections: Array<Sections> = [];
   const lockedOptions: Array<Section> = [];
   const initialSlots: Array<Timeslot> = [];
@@ -90,5 +95,10 @@ export function scheduleSlots(
     }
   }
 
-  return selectHelper(freeSections, initialSlots, [], 0, Infinity).options;
+  const result = selectHelper(freeSections, initialSlots, [], 0, Infinity);
+
+  return {
+    options: result.options,
+    conflicts: result.minConflicts,
+  };
 }
