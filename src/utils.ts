@@ -1,4 +1,7 @@
-/** Rounds {@param x} to {@param n} decimal places? */
+/**
+ * Rounds {@param x} to {@param n} decimal places?
+ * TODO: figure out what this does and then remove it
+ */
 export function formatNumber(x: number, n: number) {
   const re = "\\d(?=(\\d{" + (x || 3) + "})+" + (n > 0 ? "\\." : "$") + ")";
   return x.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, "g"), "$&,");

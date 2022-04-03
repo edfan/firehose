@@ -41,6 +41,7 @@ export function App(props: { firehose: Firehose }) {
       <div id="right-div">
         <Header />
         <hr />
+        {/* TODO: figure out where "add non-class activity" should be */}
         <SelectedActivities
           selectedActivities={state.selectedActivities}
           units={state.units}

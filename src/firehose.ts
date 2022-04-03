@@ -80,12 +80,7 @@ export class Firehose {
     this.updateState();
   }
 
-  /**
-   * @returns True if cls is one of the currently selected classes.
-   *
-   * TODO: is it true that each class only has one instance? if so, this can
-   * just be a === check
-   */
+  /** @returns True if cls is one of the currently selected classes. */
   isSelectedClass(cls: Class): boolean {
     return this.selectedClasses.some((cls_) => cls_.number === cls.number);
   }

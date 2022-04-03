@@ -266,7 +266,9 @@ export class Section {
   }
 }
 
-/** Wrapper for an array of {@link Section}s, all the same kind. */
+/**
+ * A group of {@link Section}s, all the same kind.
+ */
 export class Sections {
   cls: Class;
   kind: SectionKind;
@@ -285,6 +287,7 @@ export class Sections {
     );
   }
 
+  /** Short name for the kind of sections these are. */
   get shortName(): string {
     if (this.kind === SectionKind.LECTURE) {
       return "lec";
@@ -295,6 +298,7 @@ export class Sections {
     }
   }
 
+  /** Name for the kind of sections these are. */
   get name(): string {
     if (this.kind === SectionKind.LECTURE) {
       return "Lecture";
@@ -305,14 +309,20 @@ export class Sections {
     }
   }
 
+  /** Are these sections locked? */
   get locked(): boolean {
     return this.cls.lockedSections.get(this.kind) ?? false;
   }
 
+  /** Currently selected section out of these. */
   get selected(): Section | null {
     return this.cls.selectedSections.get(this.kind)!;
   }
 
+  /**
+   * The event (possibly none) for this group of sections.
+   * TODO: colors
+   */
   get event(): Event | null {
     return this.selected
       ? new Event(
@@ -406,7 +416,13 @@ export class Class {
     );
   }
 
-  /** All class sections */
+  /**
+   * All class sections.
+   * TODO: should this exist, or should this be in the constructor instead,
+   *    so that this is an actual property?
+   * TODO: if this is an actual property, we should move lockedSections and
+   *    selectedSections to Sections instead of this
+   */
   get sections(): Array<Sections> {
     return this.sectionKinds.map((kind) => this.sectionsOfKind(kind));
   }
@@ -541,7 +557,6 @@ export class NonClass {
   }
 
   get events(): Array<Event> {
-    // TODO: write based on currentSections
     return [];
   }
 }

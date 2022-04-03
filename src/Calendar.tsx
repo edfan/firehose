@@ -6,6 +6,7 @@ import { Firehose } from "./firehose";
 
 // TODO: docs
 // TODO: click event
+// TODO: style
 export function Calendar(props: {
   selectedActivities: Array<Class | NonClass>;
   selectedOption: number;

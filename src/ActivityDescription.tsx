@@ -165,6 +165,7 @@ function ClassBody(props: { cls: Class }) {
   );
 }
 
+// TODO: docs
 function ClassManualOption(props: {
   secs: Sections;
   sec: Section | "auto" | "none";
@@ -194,6 +195,7 @@ function ClassManualOption(props: {
   );
 }
 
+// TODO: docs
 function ClassManualSections(props: { cls: Class; firehose: Firehose }) {
   const { cls, firehose } = props;
 
@@ -228,6 +230,8 @@ function ClassManualSections(props: { cls: Class; firehose: Firehose }) {
   );
 }
 
+// TODO: docs
+// TODO: factor out to own file?
 function ClassButtons(props: { cls: Class; firehose: Firehose }) {
   const { cls, firehose } = props;
 
@@ -266,6 +270,7 @@ function ClassButtons(props: { cls: Class; firehose: Firehose }) {
   }
 }
 
+// TODO: docs
 function ClassDescription(props: { cls: Class; firehose: Firehose }) {
   const { cls, firehose } = props;
 
@@ -287,8 +292,8 @@ function ClassDescription(props: { cls: Class; firehose: Firehose }) {
 
 /**
  * Full class description, from title to URLs at the end.
- * TODO: make the class buttons work nicely.
- * TODO: rename cls to currentClass or something?
+ * TODO: make activity buttons work nicely.
+ * TODO: styling
  */
 export function ActivityDescription(props: {
   activity: Class | NonClass;
