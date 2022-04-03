@@ -55,7 +55,7 @@ export function App(props: { firehose: Firehose }) {
         />
         {state.viewedActivity ? (
           <ActivityDescription
-            viewedActivity={state.viewedActivity}
+            activity={state.viewedActivity}
             firehose={firehose}
           />
         ) : null}

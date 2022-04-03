@@ -1,4 +1,4 @@
-import { Class, Flags } from "./class";
+import { Class, NonClass, Flags } from "./class";
 import { Firehose } from "./firehose";
 
 /** A small image indicating a flag, like Spring or CI-H. */
@@ -265,16 +265,8 @@ function ClassButtons(props: { cls: Class; firehose: Firehose }) {
   }
 }
 
-/**
- * Full class description, from title to URLs at the end.
- * TODO: make the class buttons work nicely.
- * TODO: rename cls to currentClass or something?
- */
-export function ActivityDescription(props: {
-  viewedActivity: Class;
-  firehose: Firehose;
-}) {
-  const { viewedActivity: cls, firehose } = props;
+function ClassDescription(props: { cls: Class; firehose: Firehose }) {
+  const { cls, firehose } = props;
 
   return (
     <>
@@ -288,6 +280,28 @@ export function ActivityDescription(props: {
       </div>
       <ClassButtons cls={cls} firehose={firehose} />
       <ClassBody cls={cls} />
+    </>
+  );
+}
+
+/**
+ * Full class description, from title to URLs at the end.
+ * TODO: make the class buttons work nicely.
+ * TODO: rename cls to currentClass or something?
+ */
+export function ActivityDescription(props: {
+  activity: Class | NonClass;
+  firehose: Firehose;
+}) {
+  const { activity, firehose } = props;
+
+  return activity instanceof Class ? (
+    <ClassDescription cls={activity} firehose={firehose} />
+  ) : (
+    <>
+      <p id="class-name">{activity.name}</p>
+      {/*<ActivityButtons activity={activity} firehose={firehose} />*/}
+      <p id="class-desc">Your activity!</p>
     </>
   );
 }

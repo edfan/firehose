@@ -6,7 +6,7 @@ import { scheduleSlots } from "./calendarSlots";
  */
 export type FirehoseState = {
   selectedActivities: Array<Class | NonClass>;
-  viewedActivity: Class | undefined;
+  viewedActivity: Class | NonClass | undefined;
   selectedOption: number;
   totalOptions: number;
   units: number;
@@ -32,7 +32,7 @@ export class Firehose {
   // directly; they should have it passed down to them as props from App.
 
   /** Activity whose description is being viewed. */
-  private viewedActivity: Class | undefined;
+  private viewedActivity: Class | NonClass | undefined;
   /** Selected class activities. */
   private selectedClasses: Array<Class> = [];
   /** Selected non-class activities. */
