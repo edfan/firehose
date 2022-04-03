@@ -28,8 +28,9 @@ type SetClassFilter = React.Dispatch<React.SetStateAction<ClassFilter | null>>;
 function ClassInput(props: {
   rowData: Array<ClassTableRow>;
   setInputFilter: SetClassFilter;
+  onEnter: () => void;
 }) {
-  const { rowData, setInputFilter } = props;
+  const { rowData, setInputFilter, onEnter } = props;
 
   const fuse = useMemo(() => {
     return new Fuse(rowData, {
@@ -57,7 +58,12 @@ function ClassInput(props: {
   };
 
   return (
-    <>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        onEnter();
+      }}
+    >
       <label id="class-input-label" htmlFor="class-input">
         Class number or name:&nbsp;
       </label>
@@ -70,7 +76,7 @@ function ClassInput(props: {
         onChange={(e) => onClassInputChange(e.target.value)}
         debounceTimeout={300}
       />
-    </>
+    </form>
   );
 }
 
@@ -147,8 +153,6 @@ function ClassFlags(props: {
 }
 
 /**
- * TODO: add class on enter
- * TODO: implement double click
  * TODO: test performance in build
  * TODO: style as original
  * TODO: add loading?
@@ -209,14 +213,18 @@ export function ClassTable(props: {
     };
   }, [inputFilter, flagsFilter]);
 
-  const onRowClicked = (e: AgGrid.RowClickedEvent) => {
-    firehose.setViewedActivity(e.node.data.class);
-  };
-
   return (
     <>
       <div id="selector-div">
-        <ClassInput rowData={rowData} setInputFilter={setInputFilter} />
+        <ClassInput
+          rowData={rowData}
+          setInputFilter={setInputFilter}
+          onEnter={() =>
+            firehose.toggleClass(
+              gridRef?.current?.api?.getDisplayedRowAtIndex(0)?.data.class
+            )
+          }
+        />
         <ClassFlags
           setFlagsFilter={setFlagsFilter}
           firehose={firehose}
@@ -232,7 +240,8 @@ export function ClassTable(props: {
           enableCellTextSelection={true}
           isExternalFilterPresent={() => true}
           doesExternalFilterPass={doesExternalFilterPass}
-          onRowClicked={onRowClicked}
+          onRowClicked={(e) => firehose.setViewedActivity(e.data.class)}
+          onRowDoubleClicked={(e) => firehose.toggleClass(e.data.class)}
         />
       </div>
     </>

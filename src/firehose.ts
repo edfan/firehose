@@ -106,6 +106,12 @@ export class Firehose {
     this.fitsScheduleCallback?.();
   }
 
+  /** Add class if it exists, remove if it doesn't. */
+  toggleClass(cls?: Class): void {
+    if (!cls) return;
+    this.isSelectedClass(cls) ? this.removeClass(cls) : this.addClass(cls);
+  }
+
   /**
    * Lock a specific section of a class. This is here because we need to update
    * the React state after doing this.
