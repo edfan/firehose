@@ -7,12 +7,12 @@ import { Firehose } from "./firehose";
 // TODO: docs
 // TODO: click event
 export function Calendar(props: {
-  currentActivities: Array<Class | NonClass>;
-  currentOption: number;
+  selectedActivities: Array<Class | NonClass>;
+  selectedOption: number;
   totalOptions: number;
   firehose: Firehose;
 }) {
-  const { currentActivities, currentOption, totalOptions, firehose } = props;
+  const { selectedActivities, selectedOption, totalOptions, firehose } = props;
 
   return (
     <>
@@ -20,20 +20,20 @@ export function Calendar(props: {
         <button
           className="btn btn-sm btn-secondary"
           id="cal-left"
-          onClick={() => firehose.setOption(currentOption - 1)}
+          onClick={() => firehose.selectOption(selectedOption - 1)}
         >
           &larr;
         </button>{" "}
         &nbsp;&nbsp;&nbsp;
         <span id="cal-options-1">
-          {totalOptions > 0 ? currentOption + 1 : 0}
+          {totalOptions > 0 ? selectedOption + 1 : 0}
         </span>
         /<span id="cal-options-2">{totalOptions}</span>
         &nbsp;&nbsp;&nbsp;
         <button
           className="btn btn-sm btn-secondary"
           id="cal-right"
-          onClick={() => firehose.setOption(currentOption + 1)}
+          onClick={() => firehose.selectOption(selectedOption + 1)}
         >
           &rarr;
         </button>
@@ -47,7 +47,7 @@ export function Calendar(props: {
             allDaySlot={false}
             dayHeaderFormat={{ weekday: "long" }}
             editable={false}
-            events={currentActivities
+            events={selectedActivities
               .flatMap((act) => act.events)
               .flatMap((event) => event.eventInputs)}
             headerToolbar={false}

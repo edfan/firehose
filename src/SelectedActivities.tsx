@@ -8,20 +8,20 @@ function Activity(props: { activity: Class | NonClass; firehose: Firehose }) {
 }
 
 // TODO: docs
-export function CurrentActivities(props: {
-  currentActivities: Array<Class | NonClass>;
+export function SelectedActivities(props: {
+  selectedActivities: Array<Class | NonClass>;
   units: number;
   hours: number;
   warnings: Array<string>;
   firehose: Firehose;
 }) {
-  const { currentActivities, units, hours, warnings, firehose } = props;
+  const { selectedActivities, units, hours, warnings, firehose } = props;
 
   return (
     <div id="selector-div">
       <p id="activity-button">+ Add non-class activity</p>
       <div id="selected-div">
-        {currentActivities.map((activity) => (
+        {selectedActivities.map((activity) => (
           <Activity
             key={activity.name}
             activity={activity}

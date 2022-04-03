@@ -199,7 +199,7 @@ export function ClassTable(props: {
   }, [inputFilter, flagsFilter]);
 
   const onRowClicked = (e: AgGrid.RowClickedEvent) => {
-    firehose.setCurrentClass(e.node.data.class);
+    firehose.setViewedActivity(e.node.data.class);
   };
 
   return (

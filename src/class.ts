@@ -298,16 +298,16 @@ export class Class {
    */
   lockedSections: Map<SectionKind, boolean>;
   /** Map from SectionKind to currently scheduled section. None is null. */
-  currentSections: Map<SectionKind, Section | null>;
+  selectedSections: Map<SectionKind, Section | null>;
 
   constructor(
     rawClass: RawClass,
     lockedSections?: Map<SectionKind, boolean>,
-    currentSections?: Map<SectionKind, Section | null>
+    selectedSections?: Map<SectionKind, Section | null>
   ) {
     this.rawClass = rawClass;
     this.lockedSections = lockedSections ?? new Map();
-    this.currentSections = currentSections ?? new Map();
+    this.selectedSections = selectedSections ?? new Map();
   }
 
   /** Name, e.g. "Introduction to Machine Learning". */
@@ -366,7 +366,7 @@ export class Class {
   /** Get all calendar events corresponding to this class. */
   get events(): Array<Event> {
     return this.sectionKinds
-      .flatMap((kind) => this.currentSections.get(kind)?.event)
+      .flatMap((kind) => this.selectedSections.get(kind)?.event)
       .filter((event): event is Event => event instanceof Event);
   }
 

@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { Firehose, FirehoseState } from "./firehose";
 
 import { Calendar } from "./Calendar";
-import { ClassDescription } from "./ClassDescription";
+import { ActivityDescription } from "./ActivityDescription";
 import { ClassTable } from "./ClassTable";
-import { CurrentActivities } from "./CurrentActivities";
+import { SelectedActivities } from "./SelectedActivities";
 import { Header } from "./Header";
 import { LeftFooter, RightFooter } from "./Footers";
 
@@ -13,9 +13,9 @@ import { LeftFooter, RightFooter } from "./Footers";
 export function App(props: { firehose: Firehose }) {
   const { firehose } = props;
   const [state, setState] = useState<FirehoseState>({
-    currentActivities: [],
-    currentClass: undefined,
-    currentOption: 0,
+    selectedActivities: [],
+    viewedActivity: undefined,
+    selectedOption: 0,
     totalOptions: 0,
     units: 0,
     hours: 0,
@@ -31,8 +31,8 @@ export function App(props: { firehose: Firehose }) {
     <>
       <div id="left-div">
         <Calendar
-          currentActivities={state.currentActivities}
-          currentOption={state.currentOption}
+          selectedActivities={state.selectedActivities}
+          selectedOption={state.selectedOption}
           totalOptions={state.totalOptions}
           firehose={firehose}
         />
@@ -41,8 +41,8 @@ export function App(props: { firehose: Firehose }) {
       <div id="right-div">
         <Header />
         <hr />
-        <CurrentActivities
-          currentActivities={state.currentActivities}
+        <SelectedActivities
+          selectedActivities={state.selectedActivities}
           units={state.units}
           hours={state.hours}
           warnings={state.warnings}
@@ -53,9 +53,9 @@ export function App(props: { firehose: Firehose }) {
           classes={firehose.classes} // this is a constant; no need to add to state
           firehose={firehose}
         />
-        {state.currentClass ? (
-          <ClassDescription
-            currentClass={state.currentClass}
+        {state.viewedActivity ? (
+          <ActivityDescription
+            viewedActivity={state.viewedActivity}
             firehose={firehose}
           />
         ) : null}

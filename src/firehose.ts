@@ -1,13 +1,13 @@
 import { RawClass, Class, NonClass, Section } from "./class";
-import { selectSlots } from "./calendarSlots";
+import { scheduleSlots } from "./calendarSlots";
 
 /**
  * React / localStorage state.
  */
 export type FirehoseState = {
-  currentActivities: Array<Class | NonClass>;
-  currentClass: Class | undefined;
-  currentOption: number;
+  selectedActivities: Array<Class | NonClass>;
+  viewedActivity: Class | undefined;
+  selectedOption: number;
   totalOptions: number;
   units: number;
   hours: number;
@@ -30,17 +30,15 @@ export class Firehose {
   // The following are React state, so should be private. Even if we pass the
   // Firehose object to React components, they shouldn't be looking at these
   // directly; they should have it passed down to them as props from App.
-  // TODO: rename "current" as in currentClass and "current" as in
-  //       currentClasses and currentNonClasses
 
-  /** Class description currently being viewed. */
-  private currentClass: Class | undefined;
-  /** Classes currently selected. */
-  private currentClasses: Array<Class> = [];
-  /** Non-class activities. */
-  private currentNonClasses: Array<NonClass> = [];
-  /** Current schedule option; zero-indexed. */
-  private currentOption: number = 0;
+  /** Activity whose description is being viewed. */
+  private viewedActivity: Class | undefined;
+  /** Selected class activities. */
+  private selectedClasses: Array<Class> = [];
+  /** Selected non-class activities. */
+  private selectedNonClasses: Array<NonClass> = [];
+  /** Selected schedule option; zero-indexed. */
+  private selectedOption: number = 0;
 
   /** React callback to update state. */
   callback: ((state: FirehoseState) => void) | undefined;
@@ -53,22 +51,22 @@ export class Firehose {
   }
 
   /** All activities. */
-  get currentActivities(): Array<Class | NonClass> {
-    return [...this.currentClasses, ...this.currentNonClasses];
+  get selectedActivities(): Array<Class | NonClass> {
+    return [...this.selectedClasses, ...this.selectedNonClasses];
   }
 
   /** Update React state by calling React callback. */
   updateState(): void {
     this?.callback?.({
-      currentActivities: this.currentActivities,
-      currentClass: this.currentClass,
-      currentOption: this.currentOption,
+      selectedActivities: this.selectedActivities,
+      viewedActivity: this.viewedActivity,
+      selectedOption: this.selectedOption,
       totalOptions: this.options.length,
-      units: this.currentClasses.reduce(
+      units: this.selectedClasses.reduce(
         (total, cls) => total + cls.totalUnits,
         0
       ),
-      hours: this.currentActivities.reduce(
+      hours: this.selectedActivities.reduce(
         (total, activity) => total + activity.hours,
         0
       ),
@@ -77,8 +75,8 @@ export class Firehose {
   }
 
   /** Set the current class description being viewed. */
-  setCurrentClass(cls: Class | undefined): void {
-    this.currentClass = cls;
+  setViewedActivity(cls: Class | undefined): void {
+    this.viewedActivity = cls;
     this.updateState();
   }
 
@@ -88,41 +86,41 @@ export class Firehose {
    * TODO: is it true that each class only has one instance? if so, this can
    * just be a === check
    */
-  isCurrentClass(cls: Class): boolean {
-    return this.currentClasses.some((cls_) => cls_.number === cls.number);
+  isSelectedClass(cls: Class): boolean {
+    return this.selectedClasses.some((cls_) => cls_.number === cls.number);
   }
 
   /** Adds a {@param cls} and reschedules. */
   addClass(cls: Class): void {
-    if (!this.isCurrentClass(cls)) this.currentClasses.push(cls);
-    this.selectSlots();
+    if (!this.isSelectedClass(cls)) this.selectedClasses.push(cls);
+    this.scheduleSlots();
   }
 
   /** Removes a {@param cls} and reschedules. */
   removeClass(cls: Class): void {
-    this.currentClasses = this.currentClasses.filter(
+    this.selectedClasses = this.selectedClasses.filter(
       (cls_) => cls_.number !== cls.number
     );
-    this.selectSlots();
+    this.scheduleSlots();
   }
 
   /** See {@link selectSlots}. */
-  selectSlots(): void {
-    this.options = selectSlots(this.currentClasses);
-    this.setOption();
+  scheduleSlots(): void {
+    this.options = scheduleSlots(this.selectedClasses);
+    this.selectOption();
   }
 
   /**
    * Change the current section of each class to match this.options[index].
    * If index does not exist, change it to this.options[0].
    */
-  setOption(index?: number): void {
-    this.currentOption = index ?? 0;
-    if (this.currentOption >= this.options.length) {
-      this.currentOption = 0;
+  selectOption(index?: number): void {
+    this.selectedOption = index ?? 0;
+    if (this.selectedOption >= this.options.length) {
+      this.selectedOption = 0;
     }
-    for (const sec of this.options[this.currentOption]!) {
-      sec.cls.currentSections.set(sec.kind, sec);
+    for (const sec of this.options[this.selectedOption]!) {
+      sec.cls.selectedSections.set(sec.kind, sec);
     }
     this.updateState();
   }

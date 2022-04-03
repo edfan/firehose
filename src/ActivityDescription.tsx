@@ -94,7 +94,7 @@ function ClassRelated(props: { cls: Class; firehose: Firehose }) {
         <span
           className="link-span"
           key={text}
-          onClick={() => firehose.setCurrentClass(cls)}
+          onClick={() => firehose.setViewedActivity(cls)}
         >
           {text}
         </span>
@@ -166,7 +166,7 @@ function ClassBody(props: { cls: Class }) {
 function ClassButtons(props: { cls: Class; firehose: Firehose }) {
   const { cls, firehose } = props;
 
-  if (!firehose.isCurrentClass(cls)) {
+  if (!firehose.isSelectedClass(cls)) {
     return (
       <div id="class-buttons-div">
         <button
@@ -270,11 +270,11 @@ function ClassButtons(props: { cls: Class; firehose: Firehose }) {
  * TODO: make the class buttons work nicely.
  * TODO: rename cls to currentClass or something?
  */
-export function ClassDescription(props: {
-  currentClass: Class;
+export function ActivityDescription(props: {
+  viewedActivity: Class;
   firehose: Firehose;
 }) {
-  const { currentClass: cls, firehose } = props;
+  const { viewedActivity: cls, firehose } = props;
 
   return (
     <>

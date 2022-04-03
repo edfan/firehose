@@ -60,23 +60,23 @@ function selectHelper(
  * Find best options for choosing sections among classes. Returns list of list
  * of possible options.
  *
- * @param currentClasses - Current classes to schedule
+ * @param selectedClasses - Current classes to schedule
  * @returns List of schedule options; each schedule option is a list of all
  *    sections in that schedule, including locked sections (but not including
  *    non-class activities.)
  */
-export function selectSlots(
-  currentClasses: Array<Class>
+export function scheduleSlots(
+  selectedClasses: Array<Class>
 ): Array<Array<Section>> {
   const lockedSections: Array<Sections> = [];
   const lockedOptions: Array<Section> = [];
   const initialSlots: Array<Timeslot> = [];
   const freeSections: Array<Sections> = [];
 
-  for (const cls of currentClasses) {
+  for (const cls of selectedClasses) {
     for (const secs of cls.sections) {
       if (cls.lockedSections.get(secs.kind)) {
-        const sec = cls.currentSections.get(secs.kind);
+        const sec = cls.selectedSections.get(secs.kind);
         if (sec) {
           lockedSections.push(secs);
           lockedOptions.push(sec);
