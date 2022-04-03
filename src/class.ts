@@ -1,6 +1,6 @@
 import { EventInput } from "@fullcalendar/core";
 
-import { formatNumber, toDate } from "./utils";
+import { formatNumber, toDate, FALLBACK_COLOR } from "./utils";
 
 /** Raw timeslot format: [start slot, length of timeslot]. */
 type RawTimeslot = [number, number];
@@ -11,9 +11,9 @@ type RawSection = [Array<RawTimeslot>, string];
 // This isn't exported intentionally. Instead of using this, can you use
 // Sections directly?
 enum SectionKind {
-  LECTURE = "l",
-  RECITATION = "r",
-  LAB = "b",
+  LECTURE,
+  RECITATION,
+  LAB,
 }
 
 /** The raw class format produced by combiner_ws.py. */
@@ -28,7 +28,7 @@ export type RawClass = {
   tb: boolean;
 
   /** Kinds of sections (among LECTURE, RECITATION, LAB) that exist */
-  s: Array<SectionKind>;
+  s: Array<"l" | "r" | "b">;
   /** Possible lecture sections */
   l: Array<RawSection>;
   /** Possible recitation sections */
@@ -178,40 +178,38 @@ export class Timeslot {
  * and color.
  */
 class Event {
+  /** The parent activity owning the event. */
+  activity: Class | NonClass;
   /** The name of the event. */
   name: string;
   /** All slots of the event. */
   slots: Array<Timeslot>;
   /** The room of the event. */
   room: string | undefined;
-  /** The event's background color. */
-  backgroundColor: string;
-  /** The event's border color. */
-  borderColor: string;
 
   constructor(
+    activity: Class | NonClass,
     name: string,
     slots: Array<Timeslot>,
     room: string | undefined,
-    backgroundColor: string,
-    borderColor: string
   ) {
+    this.activity = activity;
     this.name = name;
     this.slots = slots;
     this.room = room;
-    this.backgroundColor = backgroundColor;
-    this.borderColor = borderColor;
   }
 
   /** @returns List of events that can be directly given to FullCalendar. */
   get eventInputs(): Array<EventInput> {
+    const color = this.activity.backgroundColor ?? FALLBACK_COLOR;
     return this.slots.map((slot) => ({
       title: this.name,
       start: slot.startTime,
       end: slot.endTime,
-      backgroundColor: this.backgroundColor,
-      borderColor: this.borderColor,
+      backgroundColor: color,
+      borderColor: color,
       room: this.room,
+      activity: this.activity,
     }));
   }
 }
@@ -319,18 +317,14 @@ export class Sections {
     return this.cls.selectedSections.get(this.kind)!;
   }
 
-  /**
-   * The event (possibly none) for this group of sections.
-   * TODO: colors
-   */
+  /** The event (possibly none) for this group of sections. */
   get event(): Event | null {
     return this.selected
       ? new Event(
+          this.cls,
           `${this.cls.number} ${this.shortName}`,
           this.selected.timeslots,
           this.selected.room,
-          "red",
-          "red"
         )
       : null;
   }
@@ -347,6 +341,8 @@ export class Class {
   lockedSections: Map<SectionKind, boolean>;
   /** Map from SectionKind to currently scheduled section. None is null. */
   selectedSections: Map<SectionKind, Section | null>;
+  /** The background color for the class, used for buttons and calendar. */
+  backgroundColor: string | undefined;
 
   constructor(
     rawClass: RawClass,
@@ -388,14 +384,15 @@ export class Class {
     return this.rawClass.h ?? this.totalUnits;
   }
 
-  /** Array of section kinds: [LECTURE, RECITATION, LAB]. */
+  /** Array of section kinds: [LECTURE, RECITATION, LAB], in order. */
   get sectionKinds(): Array<SectionKind> {
-    const map = {
-      l: SectionKind.LECTURE,
-      r: SectionKind.RECITATION,
-      b: SectionKind.LAB,
-    };
-    return this.rawClass.s.map((kind) => map[kind]);
+    // TODO these are so bad
+    const map = new Map<"l" | "r" | "b", SectionKind>([
+      ["l", SectionKind.LECTURE],
+      ["r", SectionKind.RECITATION],
+      ["b", SectionKind.LAB],
+    ]);
+    return this.rawClass.s.map((kind) => map.get(kind)!).sort();
   }
 
   /**
@@ -408,11 +405,16 @@ export class Class {
       [SectionKind.RECITATION, "rr"],
       [SectionKind.LAB, "br"],
     ]);
+    const map2 = new Map<SectionKind, "l" | "r" | "b">([
+      [SectionKind.LECTURE, "l"],
+      [SectionKind.RECITATION, "r"],
+      [SectionKind.LAB, "b"],
+    ]);
     return new Sections(
       this,
       kind,
       this.rawClass[map.get(kind)!],
-      this.rawClass[kind]
+      this.rawClass[map2.get(kind)!]
     );
   }
 
@@ -551,6 +553,8 @@ export class Class {
 // TODO: write
 export class NonClass {
   name: string = "";
+  /** The background color for the activity, used for buttons and calendar. */
+  backgroundColor: string | undefined;
 
   get hours(): number {
     return 0;

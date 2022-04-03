@@ -2,9 +2,23 @@ import { Class, NonClass } from "./class";
 import { Firehose } from "./firehose";
 
 // TODO: docs
-// TODO: style, onclick, on double click
+// TODO: warnings, double click
 function Activity(props: { activity: Class | NonClass; firehose: Firehose }) {
-  return <div>{props.activity.name}</div>;
+  const { activity, firehose } = props;
+  return (
+    <button
+      type="button"
+      className="btn btn-primary"
+      onClick={() => firehose.setViewedActivity(activity)}
+      style={{
+        backgroundColor: activity.backgroundColor,
+        borderColor: activity.backgroundColor,
+        color: "white",
+      }}
+    >
+      {activity instanceof Class ? activity.number : activity.name}
+    </button>
+  );
 }
 
 // TODO: docs

@@ -5,8 +5,8 @@ import { Class, NonClass } from "./class";
 import { Firehose } from "./firehose";
 
 // TODO: docs
-// TODO: click event
 // TODO: style
+// TODO: warning
 export function Calendar(props: {
   selectedActivities: Array<Class | NonClass>;
   selectedOption: number;
@@ -51,6 +51,10 @@ export function Calendar(props: {
             events={selectedActivities
               .flatMap((act) => act.events)
               .flatMap((event) => event.eventInputs)}
+            eventClick={(e) => {
+              // extendedProps: non-standard props of {@link Event.eventInputs}
+              firehose.setViewedActivity(e.event.extendedProps.activity);
+            }}
             headerToolbar={false}
             height="auto"
             // a date that is, conveniently enough, a monday

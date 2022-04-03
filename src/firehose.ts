@@ -1,5 +1,6 @@
 import { RawClass, Class, NonClass, Section, Sections } from "./class";
 import { scheduleSlots } from "./calendarSlots";
+import { chooseColors } from "./utils";
 
 /**
  * React / localStorage state.
@@ -75,7 +76,7 @@ export class Firehose {
   }
 
   /** Set the current class description being viewed. */
-  setViewedActivity(cls: Class | undefined): void {
+  setViewedActivity(cls: Class | NonClass | undefined): void {
     this.viewedActivity = cls;
     this.updateState();
   }
@@ -85,18 +86,18 @@ export class Firehose {
     return this.selectedClasses.some((cls_) => cls_.number === cls.number);
   }
 
-  /** Adds a {@param cls} and reschedules. */
+  /** Adds a {@param cls} and updates. */
   addClass(cls: Class): void {
     if (!this.isSelectedClass(cls)) this.selectedClasses.push(cls);
-    this.scheduleSlots();
+    this.updateActivities();
   }
 
-  /** Removes a {@param cls} and reschedules. */
+  /** Removes a {@param cls} and updates. */
   removeClass(cls: Class): void {
     this.selectedClasses = this.selectedClasses.filter(
       (cls_) => cls_.number !== cls.number
     );
-    this.scheduleSlots();
+    this.updateActivities();
   }
 
   /**
@@ -113,11 +114,18 @@ export class Firehose {
       secs.cls.lockedSections.set(secs.kind, true);
       secs.cls.selectedSections.set(secs.kind, sec);
     }
-    this.scheduleSlots();
+    this.updateActivities();
   }
 
-  /** See {@link selectSlots}. */
-  scheduleSlots(): void {
+  /**
+   * Update selected activities: reschedule them and assign colors. Call after
+   * every update of this.selectedClasses or this.selectedActivities.
+   *
+   * TODO: measure performance; if it takes a hit, then add option to only
+   *    reschedule slash recolor.
+   */
+  updateActivities(): void {
+    chooseColors(this.selectedActivities);
     this.options = scheduleSlots(this.selectedClasses);
     this.selectOption();
   }
