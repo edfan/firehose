@@ -160,7 +160,10 @@ export class Firehose {
   }
 
   /**
-   * TODO: docs
+   * Does {@param cls} fit into current schedule without increasing conflicts?
+   * Used for the "fits schedule" filter in ClassTable. Might be slow; careful
+   * with using this too frequently.
+   *
    * TODO: measure performance
    */
   fitsSchedule(cls: Class): boolean {

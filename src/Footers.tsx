@@ -1,4 +1,9 @@
-// TODO: docs
+/**
+ * The footer on the bottom of the calendar.
+ *
+ * TODO: implement functionality
+ * TODO: make years independent
+ */
 export function LeftFooter() {
   return (
     <>
@@ -29,24 +34,22 @@ export function LeftFooter() {
   );
 }
 
-// TODO: docs
+/** The footer on the bottom of the activity description. */
 export function RightFooter() {
   return (
-    <>
-      <div id="info2-div">
-        <p>
-          Questions? Issues? Feedback?{" "}
-          <a href="mailto:cjq@mit.edu">Send me an email!</a>
-        </p>
-        <p>
-          Looking for the old Firehose? It's been moved{" "}
-          <a href="https://firehose.guide/old_www/evaluations.html">here</a>.
-        </p>
-        <p>
-          <a href="https://github.com/edfan/firehose">GitHub</a> |{" "}
-          <a href="privacy.html">Privacy Policy</a>
-        </p>
-      </div>
-    </>
+    <div id="info2-div">
+      <p>
+        Questions? Issues? Feedback?{" "}
+        <a href="mailto:cjq@mit.edu">Send me an email!</a>
+      </p>
+      <p>
+        Looking for the old Firehose? It's been moved{" "}
+        <a href="https://firehose.guide/old_www/evaluations.html">here</a>.
+      </p>
+      <p>
+        <a href="https://github.com/edfan/firehose">GitHub</a> |{" "}
+        <a href="privacy.html">Privacy Policy</a>
+      </p>
+    </div>
   );
 }

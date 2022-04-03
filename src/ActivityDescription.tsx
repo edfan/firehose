@@ -1,9 +1,15 @@
 import { useState } from "react";
 
-import { Class, NonClass, Flags, Section, Sections } from "./class";
+import { Class, NonClass, Flags } from "./class";
 import { Firehose } from "./firehose";
 
-/** A small image indicating a flag, like Spring or CI-H. */
+import { ClassButtons } from "./ActivityButtons";
+
+/**
+ * A small image indicating a flag, like Spring or CI-H.
+ *
+ * TODO: tooltips
+ */
 function TypeSpan(props: { flag: string; title: string }) {
   const { flag, title } = props;
   return (
@@ -165,112 +171,7 @@ function ClassBody(props: { cls: Class }) {
   );
 }
 
-// TODO: docs
-function ClassManualOption(props: {
-  secs: Sections;
-  sec: Section | "auto" | "none";
-  firehose: Firehose;
-}) {
-  const { secs, sec, firehose } = props;
-  const checked =
-    sec instanceof Section
-      ? secs.locked && secs.selected?.index === sec.index
-      : sec === "auto"
-      ? !secs.locked
-      : secs.selected === null;
-
-  return (
-    <>
-      <input
-        type="radio"
-        className="man-button"
-        checked={checked}
-        onChange={() => {
-          firehose.lockSection(secs, sec);
-        }}
-      />
-      {sec instanceof Section ? sec.rawTime : sec}
-      <br />
-    </>
-  );
-}
-
-// TODO: docs
-function ClassManualSections(props: { cls: Class; firehose: Firehose }) {
-  const { cls, firehose } = props;
-
-  const renderOptions = (secs: Sections) => {
-    const options: Array<Section | "auto" | "none"> = [
-      "auto",
-      "none",
-      ...secs.sections,
-    ];
-    return (
-      <div>
-        {secs.name}:
-        <br />
-        {options.map((sec, i) => (
-          <ClassManualOption
-            key={i}
-            secs={secs}
-            sec={sec}
-            firehose={firehose}
-          />
-        ))}
-      </div>
-    );
-  };
-
-  return (
-    <div id="manual-div">
-      {cls.sections.map((secs) => (
-        <div key={secs.kind}>{renderOptions(secs)}</div>
-      ))}
-    </div>
-  );
-}
-
-// TODO: docs
-// TODO: factor out to own file?
-function ClassButtons(props: { cls: Class; firehose: Firehose }) {
-  const { cls, firehose } = props;
-
-  const [showManual, setShowManual] = useState(false);
-
-  if (!firehose.isSelectedClass(cls)) {
-    return (
-      <div id="class-buttons-div">
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => firehose.addClass(cls)}
-        >
-          Add class
-        </button>
-      </div>
-    );
-  } else {
-    return (
-      <div id="class-buttons-div">
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => firehose.removeClass(cls)}
-        >
-          Remove class
-        </button>
-        <p id="manual-button" onClick={() => setShowManual(!showManual)}>
-          {showManual
-            ? "- Hide manual selection pane"
-            : "+ Manually set sections"}
-        </p>
-        {showManual && <ClassManualSections cls={cls} firehose={firehose} />}
-      </div>
-    );
-  }
-}
-
-// TODO: docs
+/** Full class description, from title to URLs at the end. */
 function ClassDescription(props: { cls: Class; firehose: Firehose }) {
   const { cls, firehose } = props;
 
@@ -291,8 +192,8 @@ function ClassDescription(props: { cls: Class; firehose: Firehose }) {
 }
 
 /**
- * Full class description, from title to URLs at the end.
- * TODO: make activity buttons work nicely.
+ * Activity description, whether class or non-class.
+ * TODO: write non-class buttons
  * TODO: styling
  */
 export function ActivityDescription(props: {
@@ -306,7 +207,7 @@ export function ActivityDescription(props: {
   ) : (
     <>
       <p id="class-name">{activity.name}</p>
-      {/*<ActivityButtons activity={activity} firehose={firehose} />*/}
+      {/*<NonClassButtons activity={activity} firehose={firehose} />*/}
       <p id="class-desc">Your activity!</p>
     </>
   );

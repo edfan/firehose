@@ -9,7 +9,7 @@ import { SelectedActivities } from "./SelectedActivities";
 import { Header } from "./Header";
 import { LeftFooter, RightFooter } from "./Footers";
 
-// TODO: docs
+/** The main application. */
 export function App(props: { firehose: Firehose }) {
   const { firehose } = props;
   const [state, setState] = useState<FirehoseState>({

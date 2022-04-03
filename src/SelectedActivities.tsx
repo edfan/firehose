@@ -2,8 +2,12 @@ import { Class, NonClass } from "./class";
 import { Firehose } from "./firehose";
 import { formatNumber } from "./utils";
 
-// TODO: docs
-// TODO: warnings, double click
+/**
+ * A button representing a single, selected activity.
+ *
+ * TODO: double click functionality
+ * TODO: warning symbols like * and +
+ */
 function Activity(props: { activity: Class | NonClass; firehose: Firehose }) {
   const { activity, firehose } = props;
   return (
@@ -22,7 +26,11 @@ function Activity(props: { activity: Class | NonClass; firehose: Firehose }) {
   );
 }
 
-// TODO: docs
+/**
+ * List of selected activities; one button for each activity.
+ *
+ * TODO: make buttons draggable
+ */
 export function SelectedActivities(props: {
   selectedActivities: Array<Class | NonClass>;
   units: number;
@@ -36,9 +44,9 @@ export function SelectedActivities(props: {
     <div id="selector-div">
       <p id="activity-button">+ Add non-class activity</p>
       <div id="selected-div">
-        {selectedActivities.map((activity, i) => (
+        {selectedActivities.map((activity) => (
           <Activity
-            key={i}
+            key={activity instanceof Class ? activity.number : activity.id}
             activity={activity}
             firehose={firehose}
           />

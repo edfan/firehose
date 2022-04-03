@@ -14,6 +14,7 @@ import { Firehose } from "./firehose";
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
+/** A single row in the class table. */
 type ClassTableRow = {
   number: string;
   rating: string;
@@ -23,15 +24,27 @@ type ClassTableRow = {
 };
 
 type ClassFilter = (cls: Class) => boolean;
+/** Type of filter on class list; null if no filter. */
 type SetClassFilter = React.Dispatch<React.SetStateAction<ClassFilter | null>>;
 
+/**
+ * Textbox for typing in the name or number of the class to search. Maintains
+ * the {@link ClassFilter} that searches for a class name/number.
+ */
 function ClassInput(props: {
+  /** All rows in the class table. */
   rowData: Array<ClassTableRow>;
+  /** Callback for updating the class filter. */
   setInputFilter: SetClassFilter;
+  /** Callback after pressing Enter in the textbox. */
   onEnter: () => void;
 }) {
   const { rowData, setInputFilter, onEnter } = props;
 
+  // State for textbox input.
+  const [classInput, setClassInput] = useState("");
+
+  // Fuse is a fuzzy search library; this is set-up that gets called once.
   const fuse = useMemo(() => {
     return new Fuse(rowData, {
       ignoreLocation: true,
@@ -41,11 +54,10 @@ function ClassInput(props: {
     });
   }, [rowData]);
 
-  const [classInput, setClassInput] = useState("");
-
   const onClassInputChange = (input: string) => {
     if (input) {
       const results = fuse.search(input).map(({ item }) => item.number);
+
       // careful! we have to wrap it with a () => because otherwise react will
       // think it's an updater function instead of the actual function.
       setInputFilter(() => (cls: Class) =>
@@ -80,6 +92,7 @@ function ClassInput(props: {
   );
 }
 
+/** List of all filter IDs and their displayed names. */
 const CLASS_FLAGS: Array<[keyof Flags | "fits", string]> = [
   ["hass", "HASS"],
   ["cih", "CI-H"],
@@ -97,13 +110,17 @@ const CLASS_FLAGS: Array<[keyof Flags | "fits", string]> = [
   ["le9units", "≤ 9 units"],
 ];
 
+/** Div containing all the flags like "HASS". Maintains the flag filter. */
 function ClassFlags(props: {
+  /** Callback for updating the class filter. */
   setFlagsFilter: SetClassFilter;
   firehose: Firehose;
+  /** Callback for updating the grid filter manually. */
   updateFilter: () => void;
 }) {
   const { setFlagsFilter, firehose, updateFilter } = props;
 
+  // Map from flag to whether it's on.
   const [flags, setFlags] = useState<Map<keyof Flags | "fits", boolean>>(() => {
     const result = new Map();
     CLASS_FLAGS.forEach(([flag]) => {
@@ -112,6 +129,8 @@ function ClassFlags(props: {
     return result;
   });
 
+  // this callback needs to get called when the set of classes change, because
+  // the filter has to change as well
   useEffect(() => {
     firehose.fitsScheduleCallback = () => flags.get("fits") && updateFilter();
   }, [firehose, flags, updateFilter]);
@@ -120,16 +139,16 @@ function ClassFlags(props: {
     const newFlags = new Map(flags);
     newFlags.set(flag, value);
     setFlags(newFlags);
+
     // careful! we have to wrap it with a () => because otherwise react will
     // think it's an updater function instead of the actual function.
     setFlagsFilter(() => (cls: Class) => {
       let result = true;
-      // either button is off (!value) or class has flag (cls.flags[flag])
       newFlags.forEach((value, flag) => {
-        if (flag === "fits") {
-          result &&= !value || firehose.fitsSchedule(cls);
-        } else {
-          result &&= !value || cls.flags[flag];
+        if (value && flag === "fits" && !firehose.fitsSchedule(cls)) {
+          result = false;
+        } else if (value && flag !== "fits" && cls.flags[flag]) {
+          result = false;
         }
       });
       return result;
@@ -153,10 +172,10 @@ function ClassFlags(props: {
 }
 
 /**
+ * The table of all classes, along with searching and filtering with flags.
+ *
  * TODO: test performance in build
  * TODO: style as original
- * TODO: add loading?
- * TODO: document
  */
 export function ClassTable(props: {
   classes: Map<string, Class>;
@@ -165,6 +184,7 @@ export function ClassTable(props: {
   const { classes, firehose } = props;
   const gridRef = useRef<AgGridReact>(null);
 
+  // Setup table columns
   const columnDefs = useMemo(() => {
     const initialSort: "asc" = "asc";
     const sortingOrder: Array<"asc" | "desc"> = ["asc", "desc"];
@@ -183,6 +203,7 @@ export function ClassTable(props: {
     ];
   }, []);
 
+  // Setup rows
   const rowData = useMemo(() => {
     const rows: Array<ClassTableRow> = [];
     classes.forEach((cls) => {
@@ -201,6 +222,7 @@ export function ClassTable(props: {
   const [inputFilter, setInputFilter] = useState<ClassFilter | null>(null);
   const [flagsFilter, setFlagsFilter] = useState<ClassFilter | null>(null);
 
+  // Need to notify grid every time we update the filter
   useEffect(() => {
     gridRef.current?.api?.onFilterChanged();
   }, [inputFilter, flagsFilter]);

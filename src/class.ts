@@ -552,11 +552,14 @@ export class Class {
   }
 }
 
-// TODO: write
+/** A non-class activity. */
 export class NonClass {
+  /** randomly generated id. Must be different from any class number */
+  readonly id: string = "";
   name: string = "";
   /** The background color for the activity, used for buttons and calendar. */
   backgroundColor: string | undefined;
+  timeslots: Array<Timeslot> = [];
 
   get hours(): number {
     return 0;

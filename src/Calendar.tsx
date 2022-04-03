@@ -4,9 +4,12 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import { Class, NonClass } from "./class";
 import { Firehose } from "./firehose";
 
-// TODO: docs
-// TODO: style
-// TODO: warning
+/**
+ * Calendar showing all the activities, including the buttons on top that
+ * change the schedule option selected.
+ *
+ * TODO: warning for too many choices
+ */
 export function Calendar(props: {
   selectedActivities: Array<Class | NonClass>;
   selectedOption: number;

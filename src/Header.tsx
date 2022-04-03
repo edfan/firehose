@@ -1,4 +1,8 @@
-// TODO: docs
+/**
+ * Header above the right column, with logo and semester selection.
+ *
+ * TODO: make years independent
+ */
 export function Header() {
   return (
     <>
