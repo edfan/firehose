@@ -8,6 +8,8 @@ type RawTimeslot = [number, number];
 /** Raw section format: [[[10, 2], [70, 2]], "34-101". */
 type RawSection = [Array<RawTimeslot>, string];
 
+// This isn't exported intentionally. Instead of using this, can you use
+// Sections directly?
 enum SectionKind {
   LECTURE = "l",
   RECITATION = "r",
@@ -34,11 +36,11 @@ export type RawClass = {
   /** Possible lab sections */
   b: Array<RawSection>;
   /** Raw lecture times, e.g. T9.301-11 or TR1,F2 */
-  lr: string;
+  lr: Array<string>;
   /** Raw recitation times, e.g. T9.301-11 or TR1,F2 */
-  rr: string;
+  rr: Array<string>;
   /** Raw lab times, e.g. T9.301-11 or TR1,F2 */
-  br: string;
+  br: Array<string>;
 
   /** True if HASS-H */
   hh: boolean;
@@ -172,80 +174,6 @@ export class Timeslot {
 }
 
 /**
- * A section is an array of timeslots that meet in the same room for the same
- * purpose. Sections can be lectures, recitations, or labs, for a given class.
- */
-export class Section {
-  /** Class this section belongs to */
-  cls: Class;
-  /** Index among sections of the same kind, e.g. 0th LAB, 1st LAB, etc. */
-  index: number;
-  /** Is it LECTURE, RECITATION, or LAB? */
-  kind: SectionKind;
-  /** Timeslots this section meets */
-  timeslots: Array<Timeslot>;
-  /** Room this section meets in */
-  room: string;
-
-  /**
-   * @param cls - Class this section belongs to
-   * @param index - Index among sections of the same kind
-   * @param kind - LECTURE, RECITATION, or LAB
-   * @param section - raw section info (timeslot and room)
-   */
-  constructor(
-    cls: Class,
-    index: number,
-    kind: SectionKind,
-    section: RawSection
-  ) {
-    this.cls = cls;
-    this.index = index;
-    this.kind = kind;
-    const [rawSlots, room] = section;
-    this.timeslots = rawSlots.map((slot) => new Timeslot(slot));
-    this.room = room;
-  }
-
-  /**
-   * @param currentSlots - array of timeslots currently occupied
-   * @returns number of conflicts this section has with currentSlots
-   */
-  countConflicts(currentSlots: Array<Timeslot>): number {
-    let conflicts = 0;
-    for (const slot of this.timeslots) {
-      for (const otherSlot of currentSlots) {
-        conflicts += slot.conflicts(otherSlot) ? 1 : 0;
-      }
-    }
-    return conflicts;
-  }
-
-  get event(): Event {
-    return new Event(
-      `${this.cls.number} ${this.kind}`,
-      this.timeslots,
-      this.room,
-      "red",
-      "red"
-    );
-  }
-}
-
-/** Wrapper for an array of {@link Section}s, all the same kind. */
-export class Sections {
-  cls: Class;
-  kind: SectionKind;
-  sections: Array<Section>;
-
-  constructor(cls: Class, kind: SectionKind, secs: Array<RawSection>) {
-    this.cls = cls;
-    this.kind = kind;
-    this.sections = secs.map((sec, i) => new Section(cls, i, kind, sec));
-  }
-}
-
-/**
  * A group of events to be rendered in a calendar, all of the same name, room,
  * and color.
  */
@@ -285,6 +213,116 @@ class Event {
       borderColor: this.borderColor,
       room: this.room,
     }));
+  }
+}
+
+/**
+ * A section is an array of timeslots that meet in the same room for the same
+ * purpose. Sections can be lectures, recitations, or labs, for a given class.
+ */
+export class Section {
+  /** Class this section belongs to */
+  cls: Class;
+  /** Index among sections of the same kind, e.g. 0th LAB, 1st LAB, etc. */
+  index: number;
+  /** Is it LECTURE, RECITATION, or LAB? */
+  kind: SectionKind;
+  /** Timeslots this section meets */
+  timeslots: Array<Timeslot>;
+  /** String representing raw timeslots, e.g. MW9-11 or T2,F1. */
+  rawTime: string;
+  /** Room this section meets in */
+  room: string;
+
+  /** @param section - raw section info (timeslot and room) */
+  constructor(
+    cls: Class,
+    index: number,
+    kind: SectionKind,
+    rawTime: string,
+    section: RawSection
+  ) {
+    this.cls = cls;
+    this.index = index;
+    this.kind = kind;
+    this.rawTime = rawTime;
+    const [rawSlots, room] = section;
+    this.timeslots = rawSlots.map((slot) => new Timeslot(slot));
+    this.room = room;
+  }
+
+  /**
+   * @param currentSlots - array of timeslots currently occupied
+   * @returns number of conflicts this section has with currentSlots
+   */
+  countConflicts(currentSlots: Array<Timeslot>): number {
+    let conflicts = 0;
+    for (const slot of this.timeslots) {
+      for (const otherSlot of currentSlots) {
+        conflicts += slot.conflicts(otherSlot) ? 1 : 0;
+      }
+    }
+    return conflicts;
+  }
+}
+
+/** Wrapper for an array of {@link Section}s, all the same kind. */
+export class Sections {
+  cls: Class;
+  kind: SectionKind;
+  sections: Array<Section>;
+
+  constructor(
+    cls: Class,
+    kind: SectionKind,
+    rawTimes: Array<string>,
+    secs: Array<RawSection>
+  ) {
+    this.cls = cls;
+    this.kind = kind;
+    this.sections = secs.map(
+      (sec, i) => new Section(cls, i, kind, rawTimes[i]!, sec)
+    );
+  }
+
+  get shortName(): string {
+    if (this.kind === SectionKind.LECTURE) {
+      return "lec";
+    } else if (this.kind === SectionKind.RECITATION) {
+      return "rec";
+    } else {
+      return "lab";
+    }
+  }
+
+  get name(): string {
+    if (this.kind === SectionKind.LECTURE) {
+      return "Lecture";
+    } else if (this.kind === SectionKind.RECITATION) {
+      return "Recitation";
+    } else {
+      return "Lab";
+    }
+  }
+
+  get locked(): boolean {
+    return this.cls.lockedSections.get(this.kind) ?? false;
+  }
+
+  get selected(): Section | null {
+    return this.cls.selectedSections.get(this.kind)!;
+  }
+
+  get event(): Event | null {
+    return this.selected
+      ? new Event(
+          `${this.cls.number} ${this.shortName}`,
+          this.selected.timeslots,
+          this.selected.room,
+          "red",
+          "red"
+        )
+      : null;
   }
 }
 
@@ -355,7 +393,17 @@ export class Class {
    * @returns all sections with that kind
    */
   sectionsOfKind(kind: SectionKind): Sections {
-    return new Sections(this, kind, this.rawClass[kind]);
+    const map = new Map<SectionKind, "lr" | "rr" | "br">([
+      [SectionKind.LECTURE, "lr"],
+      [SectionKind.RECITATION, "rr"],
+      [SectionKind.LAB, "br"],
+    ]);
+    return new Sections(
+      this,
+      kind,
+      this.rawClass[map.get(kind)!],
+      this.rawClass[kind]
+    );
   }
 
   /** All class sections */
@@ -365,8 +413,8 @@ export class Class {
 
   /** Get all calendar events corresponding to this class. */
   get events(): Array<Event> {
-    return this.sectionKinds
-      .flatMap((kind) => this.selectedSections.get(kind)?.event)
+    return this.sections
+      .map((secs) => secs.event)
       .filter((event): event is Event => event instanceof Event);
   }
 

@@ -1,4 +1,6 @@
-import { Class, NonClass, Flags } from "./class";
+import { useState } from "react";
+
+import { Class, NonClass, Flags, Section, Sections } from "./class";
 import { Firehose } from "./firehose";
 
 /** A small image indicating a flag, like Spring or CI-H. */
@@ -163,8 +165,73 @@ function ClassBody(props: { cls: Class }) {
   );
 }
 
+function ClassManualOption(props: {
+  secs: Sections;
+  sec: Section | "auto" | "none";
+  firehose: Firehose;
+}) {
+  const { secs, sec, firehose } = props;
+  const checked =
+    sec instanceof Section
+      ? secs.locked && secs.selected?.index === sec.index
+      : sec === "auto"
+      ? !secs.locked
+      : secs.selected === null;
+
+  return (
+    <>
+      <input
+        type="radio"
+        className="man-button"
+        checked={checked}
+        onChange={() => {
+          firehose.lockSection(secs, sec);
+        }}
+      />
+      {sec instanceof Section ? sec.rawTime : sec}
+      <br />
+    </>
+  );
+}
+
+function ClassManualSections(props: { cls: Class; firehose: Firehose }) {
+  const { cls, firehose } = props;
+
+  const renderOptions = (secs: Sections) => {
+    const options: Array<Section | "auto" | "none"> = [
+      "auto",
+      "none",
+      ...secs.sections,
+    ];
+    return (
+      <div>
+        {secs.name}:
+        <br />
+        {options.map((sec, i) => (
+          <ClassManualOption
+            key={i}
+            secs={secs}
+            sec={sec}
+            firehose={firehose}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <div id="manual-div">
+      {cls.sections.map((secs) => (
+        <div key={secs.kind}>{renderOptions(secs)}</div>
+      ))}
+    </div>
+  );
+}
+
 function ClassButtons(props: { cls: Class; firehose: Firehose }) {
   const { cls, firehose } = props;
+
+  const [showManual, setShowManual] = useState(false);
 
   if (!firehose.isSelectedClass(cls)) {
     return (
@@ -188,78 +255,12 @@ function ClassButtons(props: { cls: Class; firehose: Firehose }) {
         >
           Remove class
         </button>
-        <p id="manual-button">+ Manually set sections</p>
-        <div id="manual-div" style={{ display: "none" }}>
-          <div id="man-lec-div">
-            Lecture:
-            <br />
-            <input
-              type="radio"
-              className="man-button"
-              id="lec-auto"
-              name="lec"
-              value="auto"
-            />{" "}
-            Auto (default)
-            <br />
-            <input
-              type="radio"
-              className="man-button"
-              id="lec-none"
-              name="lec"
-              value="none"
-            />{" "}
-            None
-            <br />
-            <div id="spec-man-lec-div"></div>
-          </div>
-          <div id="man-rec-div">
-            Recitation:
-            <br />
-            <input
-              type="radio"
-              className="man-button"
-              id="rec-auto"
-              name="rec"
-              value="auto"
-            />{" "}
-            Auto (default)
-            <br />
-            <input
-              type="radio"
-              className="man-button"
-              id="rec-none"
-              name="rec"
-              value="none"
-            />{" "}
-            None
-            <br />
-            <div id="spec-man-rec-div"></div>
-          </div>
-          <div id="man-lab-div">
-            Lab:
-            <br />
-            <input
-              type="radio"
-              className="man-button"
-              id="lab-auto"
-              name="lab"
-              value="auto"
-            />{" "}
-            Auto (default)
-            <br />
-            <input
-              type="radio"
-              className="man-button"
-              id="lab-none"
-              name="lab"
-              value="none"
-            />{" "}
-            None
-            <br />
-            <div id="spec-man-lab-div"></div>
-          </div>
-        </div>
+        <p id="manual-button" onClick={() => setShowManual(!showManual)}>
+          {showManual
+            ? "- Hide manual selection pane"
+            : "+ Manually set sections"}
+        </p>
+        {showManual && <ClassManualSections cls={cls} firehose={firehose} />}
       </div>
     );
   }

@@ -1,4 +1,4 @@
-import { RawClass, Class, NonClass, Section } from "./class";
+import { RawClass, Class, NonClass, Section, Sections } from "./class";
 import { scheduleSlots } from "./calendarSlots";
 
 /**
@@ -101,6 +101,23 @@ export class Firehose {
     this.selectedClasses = this.selectedClasses.filter(
       (cls_) => cls_.number !== cls.number
     );
+    this.scheduleSlots();
+  }
+
+  /**
+   * Lock a specific section of a class. This is here because we need to update
+   * the React state after doing this.
+   */
+  lockSection(secs: Sections, sec: Section | "auto" | "none"): void {
+    if (sec === "auto") {
+      secs.cls.lockedSections.set(secs.kind, false);
+    } else if (sec === "none") {
+      secs.cls.lockedSections.set(secs.kind, true);
+      secs.cls.selectedSections.set(secs.kind, null);
+    } else {
+      secs.cls.lockedSections.set(secs.kind, true);
+      secs.cls.selectedSections.set(secs.kind, sec);
+    }
     this.scheduleSlots();
   }
 
