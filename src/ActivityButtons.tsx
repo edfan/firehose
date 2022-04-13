@@ -96,11 +96,13 @@ export function ClassButtons(props: { cls: Class; firehose: Firehose }) {
         >
           Remove class
         </button>
-        <p id="manual-button" onClick={() => setShowManual(!showManual)}>
-          {showManual
-            ? "- Hide manual selection pane"
-            : "+ Manually set sections"}
-        </p>
+        <button
+          type="button"
+          className={"btn btn-primary" + (showManual ? " active" : "")}
+          onClick={() => setShowManual(!showManual)}
+        >
+          Edit sections
+        </button>
         {showManual && <ClassManualSections cls={cls} firehose={firehose} />}
       </div>
     );

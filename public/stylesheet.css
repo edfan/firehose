@@ -122,6 +122,7 @@
 #selected-div {
     margin: 12 auto 0 auto;
     text-align: left;
+    min-height: 38px;
 }
 
 #expand-button{
@@ -220,7 +221,7 @@ form {
     margin-bottom: -1px;
 }
 
-.btn-primary, .btn-primary.focus {
+.btn-primary, .btn-primary.focus, .btn-primary:focus {
     color: #ec5339;
     background-color: transparent;
     border-color: #ec5339;
@@ -228,7 +229,7 @@ form {
     outline: 0 !important;
 }
 
-.btn-primary.active, .btn-primary.active.focus {
+.btn-primary.active, .btn-primary.active.focus, .btn-primary.active:focus {
     color: #fff;
     background-color: #ec5339;
     border-color: #ec5339;
@@ -280,8 +281,13 @@ form {
 }
 
 #class-name {
+    margin: 1em 0 6px;
     font-weight: bold;
     line-height: 1;
+}
+
+#flags-div p {
+    margin-bottom: 3px;
 }
 
 #class-type {
