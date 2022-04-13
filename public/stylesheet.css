@@ -171,14 +171,18 @@
     margin: 0 auto 10 auto;
 }
 
-#activity-button {
-    margin: 5 auto 5 auto;
+form {
+    margin-bottom: 8px;
+}
+
+#activity-button, #more-filters-button {
+    margin: 10 auto;
     font-size: 70%;
     color: #0275d8;
     cursor: pointer;
 }
 
-#activity-button:hover {
+#activity-button:hover, #more-filters-button:hover {
     text-decoration: underline;
 }
 

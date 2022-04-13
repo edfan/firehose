@@ -1,3 +1,15 @@
+// class selection styles
+
+#selector-div {
+  label {
+    input[type="checkbox"] {
+      display: none;
+    }
+  }
+}
+
+// table styles
+
 .ag-icon-asc::before {
   content: url(https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/images/sort_asc.png);
 }
@@ -13,10 +25,9 @@
 .class-table-wrapper {
   font-family: "PT Serif", serif;
   font-size: 17px;
-  font-weight: 1rem;
-  width: 100%;
-  scrollbar-width: 10px;
   height: 320px;
+  margin-top: 8px;
+  width: 100%;
 }
 
 .ag-cell-wrapper {

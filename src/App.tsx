@@ -53,18 +53,19 @@ export function App(props: { firehose: Firehose }) {
           firehose={firehose}
         />
         <hr />
-        <p id="activity-button" onClick={() => setShowNonClass(!showNonClass)}>
-          { showNonClass ? "+ Add class" : "+ Add non-class activity" }
+        <p
+          id="more-filters-button"
+          onClick={() => setShowNonClass(!showNonClass)}
+          style={{ textAlign: "center" }}
+        >
+          {showNonClass ? "+ Add class" : "+ Add non-class activity"}
         </p>
         <ClassTable
           classes={firehose.classes} // this is a constant; no need to add to state
           firehose={firehose}
           hidden={showNonClass}
         />
-        <AddNonClassActivity
-          firehose={firehose}
-          hidden={!showNonClass}
-        />
+        <AddNonClassActivity firehose={firehose} hidden={!showNonClass} />
         {state.viewedActivity ? (
           <ActivityDescription
             activity={state.viewedActivity}

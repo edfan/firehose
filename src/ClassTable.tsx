@@ -92,12 +92,16 @@ function ClassInput(props: {
   );
 }
 
-/** List of all filter IDs and their displayed names. */
-const CLASS_FLAGS: Array<[keyof Flags | "fits", string]> = [
+/** List of top filter IDs and their displayed names. */
+const CLASS_FLAGS_1: Array<[keyof Flags | "fits", string]> = [
   ["hass", "HASS"],
   ["cih", "CI-H"],
   ["fits", "Fits schedule"],
   ["nofinal", "No final"],
+];
+
+/** List of hidden filter IDs and their displayed names. */
+const CLASS_FLAGS_2: Array<[keyof Flags | "fits", string]> = [
   ["hassA", "HASS-A"],
   ["hassH", "HASS-H"],
   ["hassS", "HASS-S"],
@@ -123,11 +127,17 @@ function ClassFlags(props: {
   // Map from flag to whether it's on.
   const [flags, setFlags] = useState<Map<keyof Flags | "fits", boolean>>(() => {
     const result = new Map();
-    CLASS_FLAGS.forEach(([flag]) => {
+    CLASS_FLAGS_1.forEach(([flag]) => {
+      result.set(flag, false);
+    });
+    CLASS_FLAGS_2.forEach(([flag]) => {
       result.set(flag, false);
     });
     return result;
   });
+
+  // Show hidden flags?
+  const [allFlags, setAllFlags] = useState(false);
 
   // this callback needs to get called when the set of classes change, because
   // the filter has to change as well
@@ -147,7 +157,7 @@ function ClassFlags(props: {
       newFlags.forEach((value, flag) => {
         if (value && flag === "fits" && !firehose.fitsSchedule(cls)) {
           result = false;
-        } else if (value && flag !== "fits" && cls.flags[flag]) {
+        } else if (value && flag !== "fits" && !cls.flags[flag]) {
           result = false;
         }
       });
@@ -156,18 +166,42 @@ function ClassFlags(props: {
   };
 
   return (
-    <div className="btn-group">
-      {CLASS_FLAGS.map(([flag, label]) => (
-        <label className="btn btn-primary" key={flag}>
-          <input
-            type="checkbox"
-            checked={flags.get(flag)}
-            onChange={(e) => onChange(flag, e.target.checked)}
-          />
-          {label}
-        </label>
-      ))}
-    </div>
+    <>
+      <div className="btn-group">
+        {CLASS_FLAGS_1.map(([flag, label]) => (
+          <label
+            className={"btn btn-primary" + (flags.get(flag) ? " active" : "")}
+            key={flag}
+          >
+            <input
+              type="checkbox"
+              checked={flags.get(flag)}
+              onChange={(e) => onChange(flag, e.target.checked)}
+            />
+            {label}
+          </label>
+        ))}
+      </div>
+      <p id="activity-button" onClick={() => setAllFlags(!allFlags)}>
+        {allFlags ? "- Fewer filters" : "+ More filters"}
+      </p>
+      <div className="btn-group">
+        {allFlags &&
+          CLASS_FLAGS_2.map(([flag, label]) => (
+            <label
+              className={"btn btn-primary" + (flags.get(flag) ? " active" : "")}
+              key={flag}
+            >
+              <input
+                type="checkbox"
+                checked={flags.get(flag)}
+                onChange={(e) => onChange(flag, e.target.checked)}
+              />
+              {label}
+            </label>
+          ))}
+      </div>
+    </>
   );
 }
 
@@ -239,18 +273,20 @@ export function ClassTable(props: {
   const [inputFilter, setInputFilter] = useState<ClassFilter | null>(null);
   const [flagsFilter, setFlagsFilter] = useState<ClassFilter | null>(null);
 
-  // Need to notify grid every time we update the filter
-  useEffect(() => {
-    gridRef.current?.api?.onFilterChanged();
-  }, [inputFilter, flagsFilter]);
-
   const doesExternalFilterPass = useMemo(() => {
+    console.log("updating filter");
     return (node: AgGrid.RowNode) => {
       if (inputFilter && !inputFilter(node.data.class)) return false;
       if (flagsFilter && !flagsFilter(node.data.class)) return false;
       return true;
     };
   }, [inputFilter, flagsFilter]);
+
+  // Need to notify grid every time we update the filter
+  useEffect(() => {
+    console.log("updating filter");
+    gridRef.current?.api?.onFilterChanged();
+  }, [doesExternalFilterPass]);
 
   return (
     <div
