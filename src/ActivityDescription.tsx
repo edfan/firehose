@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import { Class, NonClass, Flags } from "./class";
 import { Firehose } from "./firehose";
 

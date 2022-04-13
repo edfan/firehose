@@ -20,6 +20,7 @@ export type FirehoseState = {
  * schedule options selected, activities, etc.).
  *
  * TODO: serialize/deserialize into localStorage.
+ * TODO: serialize into urls too?
  * TODO: rename class to activity when needed.
  */
 export class Firehose {

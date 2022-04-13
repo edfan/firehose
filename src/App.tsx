@@ -5,6 +5,7 @@ import { Firehose, FirehoseState } from "./firehose";
 import { Calendar } from "./Calendar";
 import { ActivityDescription } from "./ActivityDescription";
 import { ClassTable } from "./ClassTable";
+import { AddNonClassActivity } from "./AddNonClassActivity";
 import { SelectedActivities } from "./SelectedActivities";
 import { Header } from "./Header";
 import { LeftFooter, RightFooter } from "./Footers";
@@ -21,6 +22,9 @@ export function App(props: { firehose: Firehose }) {
     hours: 0,
     warnings: [],
   });
+
+  // Are we showing the non-class activity pane?
+  const [showNonClass, setShowNonClass] = useState(false);
 
   useEffect(() => {
     firehose.callback = setState;
@@ -41,7 +45,6 @@ export function App(props: { firehose: Firehose }) {
       <div id="right-div">
         <Header />
         <hr />
-        {/* TODO: figure out where "add non-class activity" should be */}
         <SelectedActivities
           selectedActivities={state.selectedActivities}
           units={state.units}
@@ -50,9 +53,17 @@ export function App(props: { firehose: Firehose }) {
           firehose={firehose}
         />
         <hr />
+        <p id="activity-button" onClick={() => setShowNonClass(!showNonClass)}>
+          { showNonClass ? "+ Add class" : "+ Add non-class activity" }
+        </p>
         <ClassTable
           classes={firehose.classes} // this is a constant; no need to add to state
           firehose={firehose}
+          hidden={showNonClass}
+        />
+        <AddNonClassActivity
+          firehose={firehose}
+          hidden={!showNonClass}
         />
         {state.viewedActivity ? (
           <ActivityDescription

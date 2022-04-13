@@ -42,7 +42,6 @@ export function SelectedActivities(props: {
 
   return (
     <div id="selector-div">
-      <p id="activity-button">+ Add non-class activity</p>
       <div id="selected-div">
         {selectedActivities.map((activity) => (
           <Activity
