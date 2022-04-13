@@ -6,7 +6,7 @@ import { DebounceInput } from "react-debounce-input";
 import Fuse from "fuse.js";
 
 import "@ag-grid-community/core/dist/styles/ag-grid.css";
-import "@ag-grid-community/core/dist/styles/ag-theme-alpine.css";
+import "./ClassTable.scss";
 
 import { Class, Flags } from "./class";
 import { classSort, classNumberMatch } from "./utils";
@@ -175,7 +175,6 @@ function ClassFlags(props: {
  * The table of all classes, along with searching and filtering with flags.
  *
  * TODO: test performance in build
- * TODO: style as original
  */
 export function ClassTable(props: {
   classes: Map<string, Class>;
@@ -190,6 +189,23 @@ export function ClassTable(props: {
     const initialSort: "asc" = "asc";
     const sortingOrder: Array<"asc" | "desc"> = ["asc", "desc"];
     const sortProps = { sortable: true, unSortIcon: true, sortingOrder };
+    const numberSortProps = {
+      maxWidth: 90,
+      // sort by number, N/A is infinity, tiebreak with class number
+      comparator: (
+        valueA: string,
+        valueB: string,
+        nodeA: AgGrid.RowNode,
+        nodeB: AgGrid.RowNode
+      ) => {
+        const numberA = valueA === "N/A" ? Infinity : Number(valueA);
+        const numberB = valueB === "N/A" ? Infinity : Number(valueB);
+        return numberA !== numberB
+          ? numberA - numberB
+          : classSort(nodeA.data.number, nodeB.data.number);
+      },
+      ...sortProps,
+    };
     return [
       {
         field: "number",
@@ -198,8 +214,8 @@ export function ClassTable(props: {
         initialSort,
         ...sortProps,
       },
-      { field: "rating", ...sortProps },
-      { field: "hours", ...sortProps },
+      { field: "rating", ...numberSortProps },
+      { field: "hours", ...numberSortProps },
       { field: "name" },
     ];
   }, []);
@@ -250,17 +266,17 @@ export function ClassTable(props: {
           setInputFilter={setInputFilter}
           onEnter={() =>
             firehose.toggleClass(
-              gridRef?.current?.api?.getDisplayedRowAtIndex(0)?.data.class
+              gridRef.current?.api?.getDisplayedRowAtIndex(0)?.data.class
             )
           }
         />
         <ClassFlags
           setFlagsFilter={setFlagsFilter}
           firehose={firehose}
-          updateFilter={() => gridRef?.current?.api?.onFilterChanged()}
+          updateFilter={() => gridRef.current?.api?.onFilterChanged()}
         />
       </div>
-      <div className="ag-theme-alpine" style={{ height: 200 }}>
+      <div className="class-table-wrapper">
         <AgGridReact
           ref={gridRef}
           columnDefs={columnDefs}
@@ -271,6 +287,10 @@ export function ClassTable(props: {
           doesExternalFilterPass={doesExternalFilterPass}
           onRowClicked={(e) => firehose.setViewedActivity(e.data.class)}
           onRowDoubleClicked={(e) => firehose.toggleClass(e.data.class)}
+          onGridReady={() => gridRef.current?.columnApi?.autoSizeAllColumns()}
+          // these have to be set here, not in css:
+          headerHeight={40}
+          rowHeight={40}
         />
       </div>
     </div>
