@@ -6,33 +6,68 @@ import subprocess
 OLD_TERM = "2022JA"
 NEW_TERM = "2022SP"
 
+# this are inclusive
 START_DATE = "2022-01-31"
+HALF_1_END_DATE = "2022-03-18"
+HALF_2_START_DATE = "2022-03-28"
 END_DATE = "2022-05-10"
 MONDAY_SCHEDULE = "2022-02-22"
-HOLIDAYS = ["2022-02-21", "2022-03-21", "2022-03-22", "2022-03-23", "2022-03-24", "2022-03-25", "2022-04-18"]
+HOLIDAYS = [
+    "2022-02-21",
+    "2022-03-21",
+    "2022-03-22",
+    "2022-03-23",
+    "2022-03-24",
+    "2022-03-25",
+    "2022-04-18",
+]
 
-def compute_dates(start, end, monday, holidays):
+
+def compute_dates(start, half_1_end, half_2_start, end, monday, holidays):
     DELTA_DAY = timedelta(days=1)
-    start_dates = [""]*5
-    end_dates = [""]*5
-    r_dates = [""]*5
+    start_dates = [""] * 5
+    half_1_end_dates = [""] * 5
+    half_2_start_dates = [""] * 5
+    end_dates = [""] * 5
+    r_dates = [""] * 5
     # ex_dates cannot be empty, so add a random date
     ex_dates = [["20000101"] for _ in range(5)]
+
+    # fill start_dates, r_dates
     start = datetime.fromisoformat(start)
-    while any(d is None for d in start_dates):
+    while not all(d for d in start_dates):
         weekday = start.weekday()
         if 0 <= weekday <= 4:
             # yes, this is correct
             start_dates[weekday] = start.strftime("%Y-%m-%d")
             r_dates[weekday] = start.strftime("%Y%m%d")
         start += DELTA_DAY
+
+    # fill half 1 end dates; move up one for inclusivity issues
+    half_1_end = datetime.fromisoformat(half_1_end) + DELTA_DAY
+    while not all(d for d in half_1_end_dates):
+        weekday = half_1_end.weekday()
+        if 1 <= weekday <= 5:
+            half_1_end_dates[weekday - 1] = half_1_end.strftime("%Y%m%d")
+        half_1_end -= DELTA_DAY
+
+    # fill half 2 start dates
+    half_2_start = datetime.fromisoformat(half_2_start)
+    while not all(d for d in half_2_start_dates):
+        weekday = half_2_start.weekday()
+        if 0 <= weekday <= 4:
+            half_2_start_dates[weekday] = half_2_start.strftime("%Y-%m-%d")
+        half_2_start += DELTA_DAY
+
     # due to inclusivity issues, we actually move the end_dates up one
     end = datetime.fromisoformat(end) + DELTA_DAY
-    while any(d is None for d in end_dates):
+    while not all(d for d in end_dates):
         weekday = end.weekday()
         if 1 <= weekday <= 5:
             end_dates[weekday - 1] = end.strftime("%Y%m%d")
         end -= DELTA_DAY
+
+    # handle holidays
     if monday:
         # the only possibility is that a tuesday becomes a monday
         date = datetime.fromisoformat(monday)
@@ -40,7 +75,16 @@ def compute_dates(start, end, monday, holidays):
     for d in holidays:
         date = datetime.fromisoformat(d)
         ex_dates[date.weekday()].append(date.strftime("%Y%m%d"))
-    return start_dates, end_dates, r_dates, ex_dates
+
+    return (
+        start_dates,
+        half_1_end_dates,
+        half_2_start_dates,
+        end_dates,
+        r_dates,
+        ex_dates,
+    )
+
 
 class Term:
     def __init__(self, name):
@@ -252,18 +296,31 @@ for line in lines:
 lines = new_lines[:]
 
 # update the mit schedule for gcal export in script.js
-start_dates, end_dates, r_dates, ex_dates = compute_dates(START_DATE, END_DATE, MONDAY_SCHEDULE, HOLIDAYS)
+(
+    start_dates,
+    half_1_end_dates,
+    half_2_start_dates,
+    end_dates,
+    r_dates,
+    ex_dates,
+) = compute_dates(
+    START_DATE, HALF_1_END_DATE, HALF_2_START_DATE, END_DATE, MONDAY_SCHEDULE, HOLIDAYS
+)
 new_lines = []
-indent = "\t"*3
+indent = "\t" * 3
 for line in lines:
     if "var start_dates =" in line:
-        line = f'{indent}var start_dates = {repr(start_dates)};\n'
+        line = f"{indent}var start_dates = {repr(start_dates)};\n"
+    elif "var half_1_end_dates =" in line:
+        line = f"{indent}var half_1_end_dates = {repr(half_1_end_dates)};\n"
+    elif "var half_2_start_dates =" in line:
+        line = f"{indent}var half_2_start_dates = {repr(half_2_start_dates)};\n"
     elif "var end_dates =" in line:
-        line = f'{indent}var end_dates = {repr(end_dates)};\n'
+        line = f"{indent}var end_dates = {repr(end_dates)};\n"
     elif "var r_dates =" in line:
-        line = f'{indent}var r_dates = {repr(r_dates)};\n'
+        line = f"{indent}var r_dates = {repr(r_dates)};\n"
     elif "var ex_dates =" in line:
-        line = f'{indent}var ex_dates = {repr(ex_dates)};\n'
+        line = f"{indent}var ex_dates = {repr(ex_dates)};\n"
     new_lines.append(line)
 
 with open(script_js, "w") as file:

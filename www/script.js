@@ -193,7 +193,7 @@ function expand_type(type) {
 	}
 }
 
-function add_cal(number, type, room, slot, length) {
+function add_cal(number, type, room, slot, length, half) {
 	var day = Math.floor(slot / 30) + 1;
 	var hour = (Math.floor((slot % 30) / 2) + 8).toString().paddingLeft("00");
 	var minute = ((slot % 2) * 30).toString().paddingLeft("00");
@@ -204,7 +204,7 @@ function add_cal(number, type, room, slot, length) {
 	var type_full = expand_type(type);
 
 	gcal_slots.push([day - 1, hour + ':' + minute, end_hour + ':' + end_minute,
-	number + ' ' + type_full, room]);
+	number + ' ' + type_full, room, half]);
 
 	var index = cur_classes.indexOf(number);
 	var color = colors[index % colors.length];
@@ -400,9 +400,10 @@ function set_option(index) {
 		var type = all_sections[o][1];
 		slots = classes[number][type][option[o]];
 		var room = slots[1];
+		var half = classes[number]["half"];
 		for (var s = 0; s < slots[0].length; s++) {
 			add_cal(number, type, room,
-				slots[0][s][0], slots[0][s][1]);
+				slots[0][s][0], slots[0][s][1], half);
 		}
 	}
 
@@ -1114,6 +1115,8 @@ function calendar_send(isSignedIn) {
 			});
 
 			var start_dates = ['2022-01-31', '2022-02-01', '2022-02-02', '2022-02-03', '2022-02-04'];
+			var half_1_end_dates = [];
+			var half_2_start_dates = [];
 			var end_dates = ['20220510', '20220511', '20220505', '20220506', '20220507'];
 			var r_dates = ['20220131', '20220222', '20220202', '20220203', '20220204'];
 			var ex_dates = [['20220221', '20220321', '20220418'], ['20220322'], ['20220323'], ['20220324'], ['20220325']];
@@ -1129,21 +1132,30 @@ function calendar_send(isSignedIn) {
 					ex_date += ex_dates[g[0]][x] + time;
 				}
 
+				var start_date = start_dates[g[0]];
+				var end_date = end_dates[g[0]];
+
+				if (g[5] == 1) {
+					end_date = half_1_end_dates[g[0]];
+				} else if (g[5] == 2) {
+					start_date = half_2_start_dates[g[0]];
+				}
+
 				batch.add(gapi.client.calendar.events.insert({
 					'calendarId': id,
 					'resource': {
 						'summary': g[3],
 						'location': g[4],
 						'start': {
-							'dateTime': start_dates[g[0]] + 'T' + g[1] + ':00',
+							'dateTime': start_date + 'T' + g[1] + ':00',
 							'timeZone': "America/New_York"
 						},
 						'end': {
-							'dateTime': start_dates[g[0]] + 'T' + g[2] + ':00',
+							'dateTime': start_date + 'T' + g[2] + ':00',
 							'timeZone': "America/New_York"
 						},
 						'recurrence': [
-							'RRULE:FREQ=WEEKLY;UNTIL=' + end_dates[g[0]],
+							'RRULE:FREQ=WEEKLY;UNTIL=' + end_date,
 							'EXDATE;TZID=America/New_York:' + ex_date,
 							'RDATE;TZID=America/New_York:' + r_dates[g[0]] + 'T' + g[1].replace(':', '') + '00,'
 						]
