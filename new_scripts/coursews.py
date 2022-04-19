@@ -193,6 +193,7 @@ for c in raw_classes:
             'same_as': parse_joint(c['joint_subjects']),
             'meets_with': parse_joint(c['meets_with_subjects']),
             'sat': False,
+            'limited': 'limited' in c['description'].lower(),
             # 'instructors': ', '.join(c[instructors]),
             'in-charge': c['in-charge']}
 

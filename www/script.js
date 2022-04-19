@@ -20,6 +20,7 @@ var final_active = false;
 var under_active = false;
 var grad_active = false;
 var units_active = false;
+var half_active = false;
 var cur_class;
 var cur_classes = [];
 var options;
@@ -545,6 +546,18 @@ function is_selected(number) {
 		}
 
 		if (!selected) {
+			return false;
+		}
+	}
+
+	if (half_active) {
+ 	 	if (!classes[number]['half']) {
+			return false;
+		}
+	}
+
+	if (limited_active) {
+ 	 	if (!classes[number]['limited']) {
 			return false;
 		}
 	}
