@@ -32,6 +32,7 @@ var calc_slots = [];
 var conflicts_flag;
 var activity_times = [];
 var activity_times_raw = [];
+var old_activity_number = false;
 var activities = [];
 var locked_slots = {};
 var gcal_slots = [];
@@ -862,6 +863,7 @@ function class_desc(number) {
 		if (classes[number]['s'].length == 1 && classes[number]['s'][0] == 'a') {
 			$('#class-buttons-div').append('<button type="button" class="btn btn-primary" id=' + n_number + '-edit-button>Edit activity</button>')
 			$('#' + n_number + '-edit-button').click(function () {
+				old_activity_number = number
 				activity_times = classes[number]['at']
 				activity_times_raw = classes[number]['atr']
 				activity_timeslot_close();
@@ -1000,6 +1002,12 @@ function add_activity() {
 	} else {
 		select_slots();
 	}
+
+	// see #22
+	if (old_activity_number != name) {
+		remove_class(old_activity_number);
+	}
+	old_activity_number = false;
 
 	$("#activity-modal").modal('hide');
 }
