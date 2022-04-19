@@ -656,8 +656,18 @@ function link_classes(text, type) {
 	}
 }
 
+function set_class_number(number, name) {
+	if (name.startsWith("[")) {
+		var old_number;
+		old_number, name = name.split(" ", 2);
+		$('#class-name').html(number + '<sub>' + old_number + '</sub>: ' + name);
+	} else {
+		$('#class-name').text(number + ': ' + name);
+	}
+}
+
 function class_desc(number) {
-	$('#class-name').text(classes[number]['no'] + ': ' + classes[number]['n']);
+	set_class_number(classes[number]['no'], classes[number]['n']);
 	$('.type-span').hide();
 
 	if (classes[number]['nx']) {
