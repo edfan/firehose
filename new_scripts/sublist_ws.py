@@ -25,6 +25,7 @@ for c in class_list:
 
         classes[num] = {'no_next': False,
                         'repeat': False,
+                        'half': False,
                         'url': ''}
 
         level = start.findNext('img').findNext('img')
@@ -56,6 +57,10 @@ for c in class_list:
         for other in others:
             if 'repeat.gif' in str(other):
                 classes[num]['repeat'] = True
+            if 'first half' in str(other):
+                classes[num]['half'] = 1
+            elif 'second half' in str(other):
+                classes[num]['half'] = 2
             
         url = soup.getText().split('URL: ')
         if len(url) > 1:

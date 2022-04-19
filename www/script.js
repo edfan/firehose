@@ -757,6 +757,13 @@ function class_desc(number) {
 		$('#final-span').show();
 	}
 
+	// half-term class?
+	if (classes[number]['half'] == 1) {
+		$('#first-half-span').show();
+	} else if (classes[number]['half'] == 2) {
+		$('#second-half-span').show();
+	}
+
 	$('#class-prereq').html('Prereq: ');
 	link_classes(classes[number]['pr'], 'prereq');
 
