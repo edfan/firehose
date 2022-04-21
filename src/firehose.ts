@@ -13,6 +13,7 @@ export type FirehoseState = {
   units: number;
   hours: number;
   warnings: Array<string>;
+  selectable: boolean;
 };
 
 /**
@@ -77,6 +78,7 @@ export class Firehose {
         0
       ),
       warnings: [], // TODO
+      selectable: this.viewedActivity instanceof NonClass,
     });
   }
 
@@ -89,6 +91,22 @@ export class Firehose {
   /** @returns True if cls is one of the currently selected classes. */
   isSelectedClass(cls: Class): boolean {
     return this.selectedClasses.some((cls_) => cls_.number === cls.number);
+  }
+
+  /** Adds a non-class with name {@param name}, selects it, and updates. */
+  addNonClass(name: string): void {
+    const nonClass = new NonClass(name);
+    this.selectedNonClasses.push(nonClass);
+    this.setViewedActivity(nonClass);
+    this.updateActivities();
+    this.fitsScheduleCallback?.();
+  }
+
+  /** Add the timeslot to currently viewed activity. */
+  addTimeslot(startDate: Date, endDate: Date): void {
+    this.viewedActivity?.addTimeslot(startDate, endDate);
+    this.updateActivities();
+    this.fitsScheduleCallback?.();
   }
 
   /** Adds a {@param cls} and updates. */

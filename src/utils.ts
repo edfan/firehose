@@ -66,6 +66,17 @@ export function toDate(slot: number): Date {
   return new Date(2001, 0, day, hour, minute);
 }
 
+/**
+ * Converts a date (within 8 AM to 9PM) to a timeslot (as in {@link Timeslot}).
+ */
+export function toSlot(date: Date): number {
+  return (
+    30 * (date.getDay() - 1) +
+    2 * (date.getHours() - 8) +
+    Math.floor(date.getMinutes() / 30)
+  );
+}
+
 // Color utilities:
 
 export const FALLBACK_COLOR = "#4A4A4A";

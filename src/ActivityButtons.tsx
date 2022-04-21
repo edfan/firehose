@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Class, Section, Sections } from "./class";
+import { Class, NonClass, Section, Sections } from "./class";
 import { Firehose } from "./firehose";
 
 /** A single, manual section option, under {@link ClassManualSections}. */
@@ -107,4 +107,17 @@ export function ClassButtons(props: { cls: Class; firehose: Firehose }) {
       </div>
     );
   }
+}
+
+/** Buttons in non-class description to rename it, or add/edit/remove timeslots. */
+export function NonClassButtons(props: { activity: NonClass; firehose: Firehose }) {
+  const { activity, firehose } = props;
+
+    // TODO add list of activity times, delete button
+    // TODO add manually adding times
+    return (
+      <div id="class-buttons-div">
+        Drag on the calendar to add the times for your activity.
+      </div>
+    );
 }

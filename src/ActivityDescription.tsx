@@ -1,7 +1,7 @@
 import { Class, NonClass, Flags } from "./class";
 import { Firehose } from "./firehose";
 
-import { ClassButtons } from "./ActivityButtons";
+import { ClassButtons, NonClassButtons } from "./ActivityButtons";
 
 /**
  * A small image indicating a flag, like Spring or CI-H.
@@ -189,6 +189,21 @@ function ClassDescription(props: { cls: Class; firehose: Firehose }) {
   );
 }
 
+function NonClassDescription(props: {
+  activity: NonClass;
+  firehose: Firehose;
+}) {
+  const { activity, firehose } = props;
+
+  return (
+    <>
+      <p id="class-name">{activity.name}</p>
+      <NonClassButtons activity={activity} firehose={firehose} />
+      <p id="class-desc">Your activity!</p>
+    </>
+  );
+}
+
 /**
  * Activity description, whether class or non-class.
  * TODO: write non-class buttons
@@ -203,10 +218,6 @@ export function ActivityDescription(props: {
   return activity instanceof Class ? (
     <ClassDescription cls={activity} firehose={firehose} />
   ) : (
-    <>
-      <p id="class-name">{activity.name}</p>
-      {/*<NonClassButtons activity={activity} firehose={firehose} />*/}
-      <p id="class-desc">Your activity!</p>
-    </>
+    <NonClassDescription activity={activity} firehose={firehose} />
   );
 }

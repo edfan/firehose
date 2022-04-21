@@ -274,7 +274,6 @@ export function ClassTable(props: {
   const [flagsFilter, setFlagsFilter] = useState<ClassFilter | null>(null);
 
   const doesExternalFilterPass = useMemo(() => {
-    console.log("updating filter");
     return (node: AgGrid.RowNode) => {
       if (inputFilter && !inputFilter(node.data.class)) return false;
       if (flagsFilter && !flagsFilter(node.data.class)) return false;
@@ -284,7 +283,6 @@ export function ClassTable(props: {
 
   // Need to notify grid every time we update the filter
   useEffect(() => {
-    console.log("updating filter");
     gridRef.current?.api?.onFilterChanged();
   }, [doesExternalFilterPass]);
 

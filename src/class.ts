@@ -1,6 +1,6 @@
 import { EventInput } from "@fullcalendar/core";
 
-import { formatNumber, toDate, FALLBACK_COLOR } from "./utils";
+import { formatNumber, toDate, toSlot, FALLBACK_COLOR } from "./utils";
 
 /** Raw timeslot format: [start slot, length of timeslot]. */
 type RawTimeslot = [number, number];
@@ -335,7 +335,7 @@ export class Sections {
 /** An entire class, e.g. 6.036, and its selected sections. */
 export class Class {
   /** The RawClass being wrapped around. */
-  rawClass: RawClass;
+  readonly rawClass: RawClass;
   /**
    * Map from SectionKind to whether that SectionKind is locked, i.e. not auto.
    * None counts as locked.
@@ -550,22 +550,37 @@ export class Class {
       extraUrls: extraUrls,
     };
   }
+
+  /** TODO */
+  addTimeslot(startDate: Date, endDate: Date): void {}
 }
 
 /** A non-class activity. */
 export class NonClass {
   /** randomly generated id. Must be different from any class number */
-  readonly id: string = "";
+  readonly id: string;
   name: string = "";
   /** The background color for the activity, used for buttons and calendar. */
-  backgroundColor: string | undefined;
+  backgroundColor: string | undefined = undefined;
   timeslots: Array<Timeslot> = [];
 
+  constructor(name: string) {
+    this.id = Date.now().toString(); // TODO: better ids
+    this.name = name;
+  }
+
   get hours(): number {
-    return 0;
+    return 0; // TODO
   }
 
   get events(): Array<Event> {
-    return [];
+    return [new Event(this, this.name, this.timeslots, undefined)];
+  }
+
+  /** TODO */
+  addTimeslot(startDate: Date, endDate: Date): void {
+    const startSlot = toSlot(startDate);
+    const slotLength = toSlot(endDate) - startSlot;
+    this.timeslots.push(new Timeslot([startSlot, slotLength]));
   }
 }

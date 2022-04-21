@@ -1,5 +1,6 @@
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
 
 import { Class, NonClass } from "./class";
 import { Firehose } from "./firehose";
@@ -14,9 +15,16 @@ export function Calendar(props: {
   selectedActivities: Array<Class | NonClass>;
   selectedOption: number;
   totalOptions: number;
+  selectable: boolean;
   firehose: Firehose;
 }) {
-  const { selectedActivities, selectedOption, totalOptions, firehose } = props;
+  const {
+    selectedActivities,
+    selectedOption,
+    totalOptions,
+    selectable,
+    firehose,
+  } = props;
 
   return (
     <>
@@ -46,7 +54,7 @@ export function Calendar(props: {
       <div id="left-int-div">
         <div id="calendar">
           <FullCalendar
-            plugins={[timeGridPlugin]}
+            plugins={[timeGridPlugin, interactionPlugin]}
             initialView="timeGridWeek"
             allDaySlot={false}
             dayHeaderFormat={{ weekday: "long" }}
@@ -62,9 +70,12 @@ export function Calendar(props: {
             height="auto"
             // a date that is, conveniently enough, a monday
             initialDate="2001-01-01"
+            slotDuration="00:30:00"
             slotMinTime="08:00:00"
             slotMaxTime="22:00:00"
             weekends={false}
+            selectable={selectable}
+            select={(e) => firehose.addTimeslot(e.start, e.end)}
           />
         </div>
       </div>

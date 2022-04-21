@@ -11,4 +11,5 @@ const firehose = new Firehose(classes_map);
 // Expose Firehose as global.
 window.firehose = firehose;
 
+// TODO switch to react 18 eventually (ag-grid doesn't like it yet)
 ReactDOM.render(<App firehose={firehose} />, document.querySelector("#App"));
