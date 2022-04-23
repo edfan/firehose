@@ -126,9 +126,9 @@
     min-height: 38px;
 
     .btn-secondary {
-        border-style: dashed;
-        border-width: 2px;
         color: gray;
+        padding: 0.25rem 0.5rem;
+        margin: 0.25rem 0 0.25rem 0.5rem;
     }
 }
 
@@ -179,7 +179,7 @@
 
 #units-div {
     // leave space for loading/saving... somehow...
-    margin: 4em auto 10 auto;
+    margin: 2.25em auto 10 auto;
 }
 
 #activity-button, #more-filters-button {

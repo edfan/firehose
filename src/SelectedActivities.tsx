@@ -68,6 +68,20 @@ export function SelectedActivities(props: {
             firehose={firehose}
           />
         ))}
+        <button
+          type="button"
+          className={"btn btn-secondary" + (showClassTable ? " active" : "")}
+          onClick={() => setShowClassTable()}
+        >
+          + Class
+        </button>
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={() => firehose.addNonClass()}
+        >
+          + Non-class
+        </button>
       </div>
     </div>
   );
