@@ -189,7 +189,11 @@ function ClassDescription(props: { cls: Class; firehose: Firehose }) {
   );
 }
 
-/** Full non-class activity description, from title to timeslots. */
+/**
+ * Full non-class activity description, from title to timeslots.
+ * TODO: should the labels here be moved slash should nonclassbuttons be named
+ * something else?
+ */
 function NonClassDescription(props: {
   activity: NonClass;
   firehose: Firehose;

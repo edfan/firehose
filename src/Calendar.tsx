@@ -37,10 +37,8 @@ export function Calendar(props: {
           &larr;
         </button>{" "}
         &nbsp;&nbsp;&nbsp;
-        <span id="cal-options-1">
-          {totalOptions > 0 ? selectedOption + 1 : 0}
-        </span>
-        /<span id="cal-options-2">{totalOptions}</span>
+        <span id="cal-options-1">{selectedOption + 1}</span>/
+        <span id="cal-options-2">{totalOptions}</span>
         &nbsp;&nbsp;&nbsp;
         <button
           className="btn btn-sm btn-secondary"

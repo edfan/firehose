@@ -35,7 +35,7 @@ export class Firehose {
   /** Map from class number to Class object. */
   classes: Map<string, Class>;
   /** Possible section choices. */
-  options: Array<Array<Section>> = [];
+  options: Array<Array<Section>> = [[]];
   /** Current number of schedule conflicts. */
   conflicts: number = 0;
 
@@ -110,7 +110,9 @@ export class Firehose {
 
   /** TODO */
   renameNonClass(id: string, name: string): void {
-    const nonClass = this.selectedNonClasses.find((activity) => activity.id === id)!;
+    const nonClass = this.selectedNonClasses.find(
+      (activity) => activity.id === id
+    )!;
     nonClass.name = name;
     this.updateState();
   }
@@ -197,10 +199,10 @@ export class Firehose {
    */
   selectOption(index?: number): void {
     this.selectedOption = index ?? 0;
-    if (this.selectedOption >= this.options.length) {
+    if (this.selectedOption >= this.options.length || this.selectedOption < 0) {
       this.selectedOption = 0;
     }
-    for (const sec of this.options[this.selectedOption]!) {
+    for (const sec of this.options[this.selectedOption]) {
       sec.cls.selectedSections.set(sec.kind, sec);
     }
     this.updateState();
