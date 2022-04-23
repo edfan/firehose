@@ -110,14 +110,35 @@ export function ClassButtons(props: { cls: Class; firehose: Firehose }) {
 }
 
 /** Buttons in non-class description to rename it, or add/edit/remove timeslots. */
-export function NonClassButtons(props: { activity: NonClass; firehose: Firehose }) {
+export function NonClassButtons(props: {
+  activity: NonClass;
+  firehose: Firehose;
+}) {
   const { activity, firehose } = props;
 
-    // TODO add list of activity times, delete button
-    // TODO add manually adding times
-    return (
+  const [name, setName] = useState("");
+
+  // TODO add manually adding times
+  return (
+    <>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          firehose.renameNonClass(activity.id, name);
+          setName("");
+        }}
+      >
+        <label>New name: </label>{" "}
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <button type="submit">Rename</button>
+      </form>
       <div id="class-buttons-div">
         Drag on the calendar to add the times for your activity.
       </div>
-    );
+    </>
+  );
 }

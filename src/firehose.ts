@@ -1,4 +1,11 @@
-import { RawClass, Class, NonClass, Section, Sections } from "./class";
+import {
+  RawClass,
+  Timeslot,
+  Class,
+  NonClass,
+  Section,
+  Sections,
+} from "./class";
 import { scheduleSlots } from "./calendarSlots";
 import { chooseColors } from "./utils";
 
@@ -93,18 +100,39 @@ export class Firehose {
     return this.selectedClasses.some((cls_) => cls_.number === cls.number);
   }
 
-  /** Adds a non-class with name {@param name}, selects it, and updates. */
-  addNonClass(name: string): void {
-    const nonClass = new NonClass(name);
+  /** Adds a non-class, selects it, and updates. */
+  addNonClass(): void {
+    const nonClass = new NonClass();
     this.selectedNonClasses.push(nonClass);
     this.setViewedActivity(nonClass);
+    this.updateActivities();
+  }
+
+  /** TODO */
+  renameNonClass(id: string, name: string): void {
+    const nonClass = this.selectedNonClasses.find((activity) => activity.id === id)!;
+    nonClass.name = name;
+    this.updateState();
+  }
+
+  /**
+   * Add the timeslot to currently viewed activity. Both {@param startDate} and
+   * {@param endDate} should be dates in the week of 2001-01-01, with times
+   * between 8 AM and 9 PM. Will not add if equal to an existing timeslot.
+   * Will not add if startDate and endDate are on different dates.
+   */
+  addTimeslot(startDate: Date, endDate: Date): void {
+    if (startDate.getDate() !== endDate.getDate()) return;
+    this.viewedActivity?.addTimeslot(startDate, endDate);
     this.updateActivities();
     this.fitsScheduleCallback?.();
   }
 
-  /** Add the timeslot to currently viewed activity. */
-  addTimeslot(startDate: Date, endDate: Date): void {
-    this.viewedActivity?.addTimeslot(startDate, endDate);
+  /**
+   * Remove all timeslots equal to {@param slot} from currently viewed activity.
+   */
+  removeTimeslot(slot: Timeslot): void {
+    this.viewedActivity?.removeTimeslot(slot);
     this.updateActivities();
     this.fitsScheduleCallback?.();
   }
@@ -157,7 +185,7 @@ export class Firehose {
    */
   updateActivities(): void {
     chooseColors(this.selectedActivities);
-    const result = scheduleSlots(this.selectedClasses);
+    const result = scheduleSlots(this.selectedClasses, this.selectedNonClasses);
     this.options = result.options;
     this.conflicts = result.conflicts;
     this.selectOption();
@@ -190,8 +218,10 @@ export class Firehose {
       !this.isSelectedClass(cls) &&
       (cls.sections.length === 0 ||
         this.selectedClasses.length === 0 ||
-        scheduleSlots(this.selectedClasses.concat([cls])).conflicts ===
-          this.conflicts)
+        scheduleSlots(
+          this.selectedClasses.concat([cls]),
+          this.selectedNonClasses
+        ).conflicts === this.conflicts)
     );
   }
 }

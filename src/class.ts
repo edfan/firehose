@@ -1,6 +1,13 @@
 import { EventInput } from "@fullcalendar/core";
 
-import { formatNumber, toDate, toSlot, FALLBACK_COLOR } from "./utils";
+import {
+  formatNumber,
+  toDate,
+  toSlot,
+  slotToDayString,
+  slotToTimeString,
+  FALLBACK_COLOR,
+} from "./utils";
 
 /** Raw timeslot format: [start slot, length of timeslot]. */
 type RawTimeslot = [number, number];
@@ -170,6 +177,18 @@ export class Timeslot {
    */
   conflicts(other: Timeslot): boolean {
     return this.startSlot <= other.endSlot && other.startSlot <= this.endSlot;
+  }
+
+  /** Convert to string of the form "Mon, 9:30 AM – 11:00 AM". */
+  toString(): string {
+    return `${slotToDayString(this.startSlot)}, ${slotToTimeString(
+      this.startSlot
+    )} – ${slotToTimeString(this.endSlot)}`;
+  }
+
+  /** @returns True if this timeslot is equal to other timeslot */
+  equals(other: Timeslot): boolean {
+    return this.startSlot === other.startSlot && this.endSlot === other.endSlot;
   }
 }
 
@@ -553,20 +572,22 @@ export class Class {
 
   /** TODO */
   addTimeslot(startDate: Date, endDate: Date): void {}
+
+  /** TODO */
+  removeTimeslot(slot: Timeslot): void {}
 }
 
 /** A non-class activity. */
 export class NonClass {
   /** randomly generated id. Must be different from any class number */
   readonly id: string;
-  name: string = "";
+  name: string = "New Activity";
   /** The background color for the activity, used for buttons and calendar. */
   backgroundColor: string | undefined = undefined;
   timeslots: Array<Timeslot> = [];
 
-  constructor(name: string) {
+  constructor() {
     this.id = Date.now().toString(); // TODO: better ids
-    this.name = name;
   }
 
   get hours(): number {
@@ -581,6 +602,14 @@ export class NonClass {
   addTimeslot(startDate: Date, endDate: Date): void {
     const startSlot = toSlot(startDate);
     const slotLength = toSlot(endDate) - startSlot;
-    this.timeslots.push(new Timeslot([startSlot, slotLength]));
+    const slot = new Timeslot([startSlot, slotLength]);
+    if (!this.timeslots.find((slot_) => slot_.equals(slot))) {
+      this.timeslots.push(slot);
+    }
+  }
+
+  /** TODO */
+  removeTimeslot(slot: Timeslot): void {
+    this.timeslots = this.timeslots.filter((slot_) => !slot_.equals(slot));
   }
 }

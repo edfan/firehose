@@ -1,4 +1,4 @@
-import { Section, Timeslot, Sections, Class } from "./class";
+import { Section, Timeslot, Sections, Class, NonClass } from "./class";
 
 /**
  * Helper function for selectSlots. Implements backtracking: we try to place
@@ -68,7 +68,8 @@ function selectHelper(
  *    conflicts - number of conflicts in any option
  */
 export function scheduleSlots(
-  selectedClasses: Array<Class>
+  selectedClasses: Array<Class>,
+  selectedNonClasses: Array<NonClass>,
 ): {
   options: Array<Array<Section>>;
   conflicts: number;
@@ -93,6 +94,10 @@ export function scheduleSlots(
         freeSections.push(secs);
       }
     }
+  }
+
+  for (const activity of selectedNonClasses) {
+    initialSlots.push(...activity.timeslots);
   }
 
   const result = selectHelper(freeSections, initialSlots, [], 0, Infinity);

@@ -189,6 +189,7 @@ function ClassDescription(props: { cls: Class; firehose: Firehose }) {
   );
 }
 
+/** Full non-class activity description, from title to timeslots. */
 function NonClassDescription(props: {
   activity: NonClass;
   firehose: Firehose;
@@ -199,14 +200,18 @@ function NonClassDescription(props: {
     <>
       <p id="class-name">{activity.name}</p>
       <NonClassButtons activity={activity} firehose={firehose} />
-      <p id="class-desc">Your activity!</p>
+      {activity.timeslots.map((t) => (
+        <p key={t.toString()}>
+          <button onClick={() => firehose.removeTimeslot(t)}>remove</button>{" "}
+          {t.toString()}
+        </p>
+      ))}
     </>
   );
 }
 
 /**
  * Activity description, whether class or non-class.
- * TODO: write non-class buttons
  * TODO: styling
  */
 export function ActivityDescription(props: {

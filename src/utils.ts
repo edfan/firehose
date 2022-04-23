@@ -55,6 +55,8 @@ export function classNumberMatch(searchString: string, classNumber: string) {
   }
 }
 
+// Date utilities:
+
 /**
  * Converts a timeslot (as in {@link Timeslot}) to a date in the week of
  * 2001-01-01, which is the week the calendar shows.
@@ -67,7 +69,7 @@ export function toDate(slot: number): Date {
 }
 
 /**
- * Converts a date (within 8 AM to 9PM) to a timeslot (as in {@link Timeslot}).
+ * Converts date (within 8 AM to 9 PM) to a timeslot (as in {@link Timeslot}).
  */
 export function toSlot(date: Date): number {
   return (
@@ -75,6 +77,38 @@ export function toSlot(date: Date): number {
     2 * (date.getHours() - 8) +
     Math.floor(date.getMinutes() / 30)
   );
+}
+
+/** Strings for each weekday. */
+const WEEKDAY_STRINGS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+
+/** See {@link TIMESLOT_STRINGS}. */
+function generateTimeslotStrings(): Array<string> {
+  const res = [];
+  for (let i = 8; i <= 11; i++) {
+    res.push(`${i}:00 AM`);
+    res.push(`${i}:30 AM`);
+  }
+  res.push("12:00 PM");
+  res.push("12:30 PM");
+  for (let i = 1; i <= 9; i++) {
+    res.push(`${i}:00 PM`);
+    res.push(`${i}:30 PM`);
+  }
+  return res;
+}
+
+/** Strings for each timeslot, in order. */
+const TIMESLOT_STRINGS = generateTimeslotStrings();
+
+/** Convert a timeslot to a day string. */
+export function slotToDayString(slot: number): string {
+  return WEEKDAY_STRINGS[Math.floor(slot / 30)]!;
+}
+
+/** Convert a timeslot to a time string. */
+export function slotToTimeString(slot: number): string {
+  return TIMESLOT_STRINGS[slot % 30]!;
 }
 
 // Color utilities:
@@ -115,7 +149,9 @@ export function chooseColors(activities: Array<Class | NonClass>): void {
   const colorLen = BACKGROUND_COLORS.length;
   const indices: Array<number> = [];
   for (const activity of activities) {
-    const hash = murmur3(activity.name);
+    const hash = murmur3(
+      activity instanceof Class ? activity.number : activity.id
+    );
     let index = hash() % colorLen;
     // try to pick distinct colors if possible; hash to try to make each
     // activity have a consistent color.
