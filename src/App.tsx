@@ -9,6 +9,8 @@ import { SelectedActivities } from "./SelectedActivities";
 import { Header } from "./Header";
 import { LeftFooter, RightFooter } from "./Footers";
 
+import "./stylesheet.scss";
+
 /** The main application. */
 export function App(props: { firehose: Firehose }) {
   const { firehose } = props;
@@ -23,6 +25,8 @@ export function App(props: { firehose: Firehose }) {
     selectable: false,
   });
 
+  const [showClassTable, setShowClassTable] = useState(true);
+
   useEffect(() => {
     firehose.callback = setState;
     firehose.updateState();
@@ -31,6 +35,7 @@ export function App(props: { firehose: Firehose }) {
   return (
     <>
       <div id="left-div">
+        <Header />
         <Calendar
           selectedActivities={state.selectedActivities}
           selectedOption={state.selectedOption}
@@ -41,26 +46,20 @@ export function App(props: { firehose: Firehose }) {
         <LeftFooter />
       </div>
       <div id="right-div">
-        <Header />
-        <hr />
         <SelectedActivities
           selectedActivities={state.selectedActivities}
           units={state.units}
           hours={state.hours}
           warnings={state.warnings}
           firehose={firehose}
+          showClassTable={showClassTable}
+          setShowClassTable={() => setShowClassTable(!showClassTable)}
         />
         <hr />
-        <p
-          id="more-filters-button"
-          onClick={() => firehose.addNonClass()}
-          style={{ textAlign: "center" }}
-        >
-          + Add non-class activity
-        </p>
         <ClassTable
           classes={firehose.classes} // this is a constant; no need to add to state
           firehose={firehose}
+          hidden={!showClassTable}
         />
         {state.viewedActivity ? (
           <ActivityDescription

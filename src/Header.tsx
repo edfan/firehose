@@ -9,9 +9,6 @@ export function Header() {
       <div id="spacer3-div"></div>
       <div id="info-div">
         <img src="img/logo.png" height="40px" alt="" />
-        <p>
-          <a href="semesters/i22/iap.html">IAP 2022</a> | Spring 2022
-        </p>
         <form>
           <select
             defaultValue="index.html"
@@ -40,9 +37,6 @@ export function Header() {
             <option value="semesters/f17/fall.html">Fall 2017</option>
           </select>
         </form>
-        <span id="info-line">
-          Note that ratings reflect class evals prior to Spring 2020.
-        </span>
       </div>
     </>
   );

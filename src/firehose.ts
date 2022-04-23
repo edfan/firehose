@@ -109,12 +109,21 @@ export class Firehose {
   }
 
   /** TODO */
-  renameNonClass(id: string, name: string): void {
+  renameNonClass(activity: NonClass, name: string): void {
     const nonClass = this.selectedNonClasses.find(
-      (activity) => activity.id === id
+      (activity_) => activity_.id === activity.id
     )!;
     nonClass.name = name;
     this.updateState();
+  }
+
+  /** TODO */
+  removeNonClass(activity: NonClass): void {
+    this.selectedNonClasses = this.selectedNonClasses.filter(
+      (activity_) => activity_.id !== activity.id
+    )!;
+    this.updateActivities();
+    this.fitsScheduleCallback?.();
   }
 
   /**

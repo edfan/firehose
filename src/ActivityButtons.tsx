@@ -121,10 +121,20 @@ export function NonClassButtons(props: {
   // TODO add manually adding times
   return (
     <>
+      <button
+        type="button"
+        className="btn btn-primary"
+        onClick={() => {
+          // TODO: this should change back to add activity if removed
+          firehose.removeNonClass(activity);
+        }}
+      >
+        Remove activity
+      </button>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          firehose.renameNonClass(activity.id, name);
+          firehose.renameNonClass(activity, name);
           setName("");
         }}
       >

@@ -2,6 +2,7 @@
     float: left;
     text-align: center;
     width: 53%;
+    position: relative;
 }
 
 #left-int-div {
@@ -26,18 +27,24 @@
 }
 
 #info-div {
+    display: flex;
     font-family: 'Open Sans', sans-serif;
     font-size: 90%;
-    width: 450px;
-    margin: 0 auto;
-    text-align: center;
+    text-align: left;
     line-height: 7px;
-}
+    align-items: end;
+    margin: 0.5em 0 1em;
 
-#info-line {
-    margin-top: 5px;
-    font-size: 80%;
-    line-height: 1.2;
+    form {
+        margin-bottom: 3px;
+        vertical-align: bottom;
+    }
+
+    #info-line {
+        font-size: 80%;
+        line-height: 1.2;
+        margin-left: 1em;
+    }
 }
 
 #info2-div {
@@ -105,12 +112,6 @@
     display: none;
 }
 
-#info-div img {
-    display: block;
-    margin: 9px auto;
-
-}
-
 #selector-div {
     font-family: 'Open Sans', sans-serif;
     margin: 0 auto 0 auto;
@@ -123,6 +124,12 @@
     margin: 12 auto 0 auto;
     text-align: left;
     min-height: 38px;
+
+    .btn-secondary {
+        border-style: dashed;
+        border-width: 2px;
+        color: gray;
+    }
 }
 
 #expand-button{
@@ -149,7 +156,9 @@
 
 #buttons-div {
     margin: 20 auto;
-    text-align: center;
+    position: absolute;
+    right: 32px;
+    top: 0;
 }
 
 #spacer-div {
@@ -169,11 +178,8 @@
 }
 
 #units-div {
-    margin: 0 auto 10 auto;
-}
-
-form {
-    margin-bottom: 8px;
+    // leave space for loading/saving... somehow...
+    margin: 4em auto 10 auto;
 }
 
 #activity-button, #more-filters-button {

@@ -37,11 +37,29 @@ export function SelectedActivities(props: {
   hours: number;
   warnings: Array<string>;
   firehose: Firehose;
+  showClassTable: boolean;
+  setShowClassTable: () => void;
 }) {
-  const { selectedActivities, units, hours, warnings, firehose } = props;
+  const {
+    selectedActivities,
+    units,
+    hours,
+    warnings,
+    firehose,
+    showClassTable,
+    setShowClassTable,
+  } = props;
 
   return (
     <div id="selector-div">
+      <p id="units-div">
+        Units: {units}&nbsp;&nbsp;&nbsp;Hours: {formatNumber(hours, 1)}
+      </p>
+      {warnings.map((warning) => (
+        <p key={warning} id="warning-div">
+          {warning}
+        </p>
+      ))}
       <div id="selected-div">
         {selectedActivities.map((activity) => (
           <Activity
@@ -51,14 +69,6 @@ export function SelectedActivities(props: {
           />
         ))}
       </div>
-      <p id="units-div">
-        Units: {units}&nbsp;&nbsp;&nbsp;Hours: {formatNumber(hours, 1)}
-      </p>
-      {warnings.map((warning) => (
-        <p key={warning} id="warning-div">
-          {warning}
-        </p>
-      ))}
     </div>
   );
 }
