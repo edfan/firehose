@@ -21,6 +21,7 @@ var under_active = false;
 var grad_active = false;
 var units_active = false;
 var half_active = false;
+var limited_active = false;
 var cur_class;
 var cur_classes = [];
 var options;
@@ -170,13 +171,13 @@ jQuery.extend(jQuery.fn.dataTableExt.oSort, {
 function search_setup() {
 	$('#class-input').on('keyup', function () {
 		if (table.search() !== this.value) {
-			if (this.value.indexOf('.') !== -1) {
-				table.search("^" + escapeRegExp(this.value), true, false, true)
-					.draw();
-			} else {
+			// if (this.value.indexOf('.') !== -1) {
+			// 	table.search("^" + escapeRegExp(this.value), true, false, true)
+			// 		.draw();
+			// } else {
 				table.search(this.value, false, true, true)
 					.draw();
-			}
+			// }
 		}
 	});
 }
@@ -378,7 +379,7 @@ function select_slots() {
 		$("#warning2-div").hide();
 	}
 
-	localStorage.setObj('spring22_cur_classes', cur_classes);
+	localStorage.setObj('fall22_cur_classes', cur_classes);
 
 	/*
     if (conflicts_active) {
@@ -410,7 +411,7 @@ function set_option(index) {
 	cur_option = index;
 	$("#cal-options-1").text(cur_option + 1);
 
-	localStorage.setObj('spring22_cur_option', cur_option);
+	localStorage.setObj('fall22_cur_option', cur_option);
 	set_css(new_css);
 	set_dark_mode(dark_mode);
 }
@@ -674,7 +675,8 @@ function link_classes(text, type) {
 function set_class_number(number, name) {
 	if (name.startsWith("[")) {
 		var old_number;
-		old_number, name = name.split(" ", 2);
+		[old_number, ...rest] = name.split(" ");
+		name = rest.join(" ");
 		$('#class-name').html(number + '<sub>' + old_number + '</sub>: ' + name);
 	} else {
 		$('#class-name').text(number + ': ' + name);
@@ -925,8 +927,8 @@ function remove_class(number) {
 		$("#units-div").hide();
 		$("#warning-div").hide();
 		$("#warning2-div").hide();
-		localStorage.setObj('spring22_cur_classes', cur_classes);
-		localStorage.setObj('spring22_cur_option', cur_option);
+		localStorage.setObj('fall22_cur_classes', cur_classes);
+		localStorage.setObj('fall22_cur_option', cur_option);
 	} else {
 		select_slots();
 	}
@@ -1055,7 +1057,7 @@ function set_activity(name, slots, slots_raw, hours) {
 	activities.push(activity);
 	classes[name] = activity;
 
-	localStorage.setObj('spring22_activities', activities);
+	localStorage.setObj('fall22_activities', activities);
 }
 
 function calendar_export() {
@@ -1080,7 +1082,7 @@ function calendar_send(isSignedIn) {
 		$("#calendar-link").text("Working...");
 
 		gapi.client.calendar.calendarList.list({}).then(function (resp) {
-			var name = "Firehose: Spring 2022";
+			var name = "Firehose: Fall 2022";
 			var ids = [];
 
 			for (var i in resp.result.items) {
@@ -1114,12 +1116,12 @@ function calendar_send(isSignedIn) {
 				}).then();
 			});
 
-			var start_dates = ['2022-01-31', '2022-02-01', '2022-02-02', '2022-02-03', '2022-02-04'];
-			var half_1_end_dates = [];
-			var half_2_start_dates = [];
-			var end_dates = ['20220510', '20220511', '20220505', '20220506', '20220507'];
-			var r_dates = ['20220131', '20220222', '20220202', '20220203', '20220204'];
-			var ex_dates = [['20220221', '20220321', '20220418'], ['20220322'], ['20220323'], ['20220324'], ['20220325']];
+			var start_dates = ['2022-09-12', '2022-09-13', '2022-09-07', '2022-09-08', '2022-09-09'];
+			var half_1_end_dates = ['20220315', '20220316', '20220317', '20220318', '20220319'];
+			var half_2_start_dates = ['2022-03-28', '2022-03-29', '2022-03-30', '2022-03-31', '2022-04-01'];
+			var end_dates = ['20221213', '20221214', '20221215', '20221209', '20221210'];
+			var r_dates = ['20220912', '20220912', '20220907', '20220908', '20220909'];
+			var ex_dates = [['20000101', '20221010'], ['20000101', '20221011'], ['20000101'], ['20000101', '20221124'], ['20000101', '20220923', '20221111', '20221125']];
 			var batch = gapi.client.newBatch();
 
 			for (var s in gcal_slots) {
@@ -1208,7 +1210,7 @@ function sortable_listener() {
 			new_classes.push(c.innerHTML.replace('*', '').replace('+', ''));
 		});
 		cur_classes = new_classes;
-		localStorage.setObj('spring22_cur_classes', cur_classes);
+		localStorage.setObj('fall22_cur_classes', cur_classes);
 		select_slots();
 		set_option(old_option);
 	});
@@ -1538,7 +1540,7 @@ $(document).ready(function () {
 						var stmp = slot;
 						$("#lec-" + tmp).click(function () {
 							locked_slots[stmp] = tmp;
-							localStorage.setObj('spring22_locked_slots', locked_slots);
+							localStorage.setObj('fall22_locked_slots', locked_slots);
 							select_slots();
 						});
 					})();
@@ -1568,7 +1570,7 @@ $(document).ready(function () {
 						var stmp = slot;
 						$("#rec-" + tmp).click(function () {
 							locked_slots[stmp] = tmp;
-							localStorage.setObj('spring22_locked_slots', locked_slots);
+							localStorage.setObj('fall22_locked_slots', locked_slots);
 							select_slots();
 						});
 					})();
@@ -1598,7 +1600,7 @@ $(document).ready(function () {
 						var stmp = slot;
 						$("#lab-" + tmp).click(function () {
 							locked_slots[stmp] = tmp;
-							localStorage.setObj('spring22_locked_slots', locked_slots);
+							localStorage.setObj('fall22_locked_slots', locked_slots);
 							select_slots();
 						});
 					})();
@@ -1624,14 +1626,14 @@ $(document).ready(function () {
 		if (slot in locked_slots) {
 			delete locked_slots[slot];
 		}
-		localStorage.setObj('spring22_locked_slots', locked_slots);
+		localStorage.setObj('fall22_locked_slots', locked_slots);
 		select_slots();
 	});
 
 	$("#lec-none").click(function () {
 		var slot = [cur_class, 'l'];
 		locked_slots[slot] = "none";
-		localStorage.setObj('spring22_locked_slots', locked_slots);
+		localStorage.setObj('fall22_locked_slots', locked_slots);
 		select_slots();
 	});
 
@@ -1640,14 +1642,14 @@ $(document).ready(function () {
 		if (slot in locked_slots) {
 			delete locked_slots[slot];
 		}
-		localStorage.setObj('spring22_locked_slots', locked_slots);
+		localStorage.setObj('fall22_locked_slots', locked_slots);
 		select_slots();
 	});
 
 	$("#rec-none").click(function () {
 		var slot = [cur_class, 'r'];
 		locked_slots[slot] = "none";
-		localStorage.setObj('spring22_locked_slots', locked_slots);
+		localStorage.setObj('fall22_locked_slots', locked_slots);
 		select_slots();
 	});
 
@@ -1656,39 +1658,39 @@ $(document).ready(function () {
 		if (slot in locked_slots) {
 			delete locked_slots[slot];
 		}
-		localStorage.setObj('spring22_locked_slots', locked_slots);
+		localStorage.setObj('fall22_locked_slots', locked_slots);
 		select_slots();
 	});
 
 	$("#lab-none").click(function () {
 		var slot = [cur_class, 'b'];
 		locked_slots[slot] = "none";
-		localStorage.setObj('spring22_locked_slots', locked_slots);
+		localStorage.setObj('fall22_locked_slots', locked_slots);
 		select_slots();
 	});
 
-	var tmp_cur_classes = localStorage.getObj('spring22_cur_classes');
-	var tmp_activities = localStorage.getObj('spring22_activities');
+	var tmp_cur_classes = localStorage.getObj('fall22_cur_classes');
+	var tmp_activities = localStorage.getObj('fall22_activities');
 	if (tmp_activities != null) {
 		for (var a in tmp_activities) {
 			if (tmp_cur_classes != null && tmp_cur_classes.indexOf(tmp_activities[a]['no']) != -1) {
 				set_activity(tmp_activities[a]['no'], tmp_activities[a]['at'], tmp_activities[a]['atr'], tmp_activities[a]['h'])
 			}
 		}
-		localStorage.setObj('spring22_activities', activities);
+		localStorage.setObj('fall22_activities', activities);
 	}
 
-	var tmp_locked_slots = localStorage.getObj('spring22_locked_slots');
+	var tmp_locked_slots = localStorage.getObj('fall22_locked_slots');
 	if (tmp_locked_slots != null) {
 		for (var l in tmp_locked_slots) {
 			if (tmp_locked_slots.hasOwnProperty(l) && tmp_cur_classes.indexOf(l.split(',')[0]) != -1) {
 				locked_slots[l] = tmp_locked_slots[l];
 			}
 		}
-		localStorage.setObj('spring22_locked_slots', locked_slots);
+		localStorage.setObj('fall22_locked_slots', locked_slots);
 	}
 
-	var tmp_cur_option = parseInt(localStorage.getObj('spring22_cur_option'));
+	var tmp_cur_option = parseInt(localStorage.getObj('fall22_cur_option'));
 
 	if (tmp_cur_classes != null) {
 		for (var t in tmp_cur_classes) {

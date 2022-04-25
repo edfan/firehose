@@ -11,6 +11,10 @@ with open('sublist') as f:
 with open('evaluations') as f:
     evals = json.load(f)
 
+with open("course_six_renumbering.json") as f:
+    course_six_renumbering = json.loads(f.read())
+    course_six_renumbering_inv = {v: k for k, v in course_six_renumbering.items()}
+
     # Special case 6.871 evals.
     # evals['6.871'] = evals['HST.956']
 
@@ -74,13 +78,15 @@ for c in ws:
         classes[c]['u'] = ''
         classes[c]['f'] = False
 
-    if c in evals:
+    old_c = course_six_renumbering_inv.get(c, None)
+    if c in evals or (old_c and old_c in evals):
         total_rating = 0
         total_hours = 0
         total_size = 0
         terms = 0
         
-        for t in evals[c]:
+        evals_ = evals[old_c] if old_c else evals[c]
+        for t in evals_:
             if t['resp'] > 0:
                 total_rating += t['rating']
                 total_hours += t['oc_hours'] + t['ic_hours']
@@ -128,16 +134,6 @@ for c in ws:
 
 except Exception as e:
     print(e) """
-
-# manual fix: 6.s978
-classes['6.S978']['n'] = "Data Science: The Breadth of Challenges"
-classes['6.S978']['d'] = "Comprehensively presents the breadth of considerations needed to apply data science successfully. Students will learn the landscape of challenges, a unique rubric for systematically evaluating them, and then see the rubric’s application to a variety of case studies. Through a combination of lectures, student presentations, and in-class discussions, students will delve deeply into seven sets of implementation- and requirements-oriented challenges: from data gathering to meeting ethical, legal, and societal needs. Students (in groups of two) will have the opportunity to zoom in on specific problem areas via oral presentations and one short and one long paper. While the topic of this course is broadly data science, much of the class will discuss applications of machine learning/AI. Students will develop skills to lead data science efforts to successful completion and will better understand future research/commercial opportunities and public policy trade-offs."
-classes['6.S978']['s'] = ['l']
-classes['6.S978']['l'] = [[[[14,4]],"36-153"]]
-classes['6.S978']['lr'] = ['M3-5']
-classes['6.S978']['u1'] = 2
-classes['6.S978']['u3'] = 4
-classes['6.S978']['pr'] = "6.034, 6.036, 15.085, 15.077, 15.286, 15.386, or permission of instructor"
 
 with open('full.json', 'w') as f:
     f.write('var last_update = "' + datetime.datetime.now().strftime('%Y-%m-%d %l:%M %p') + '";\n')

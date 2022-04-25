@@ -2,7 +2,7 @@ import json
 import requests
 import itertools
 
-term = '2022SP'
+term = '2023FA'
 
 # copied from csb.py
 
@@ -147,14 +147,15 @@ instructors = 'fall_instructors' if term[-2:] == 'FA' else 'spring_instructors'
 
 with open("course_six_renumbering.json") as f:
     course_six_renumbering = json.loads(f.read())
+    course_six_renumbering_inv = {v: k for k, v in course_six_renumbering.items()}
 
 for c in raw_classes:
     if c['type'] == 'Class':
         number = c['id']
         name = c['label']
 
-        if number in course_six_renumbering:
-            name = "[" + course_six_renumbering[number] + "] " + name
+        if number in course_six_renumbering_inv:
+            name = "[" + course_six_renumbering_inv[number] + "] " + name
 
         units1, units2, units3 = parse_units(c['units'])
 

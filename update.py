@@ -3,23 +3,22 @@ import os
 import shutil
 import subprocess
 
-OLD_TERM = "2022JA"
-NEW_TERM = "2022SP"
+OLD_TERM = "2022SP"
+NEW_TERM = "2023FA"
 
 # this are inclusive
-START_DATE = "2022-01-31"
+START_DATE = "2022-09-07"
 HALF_1_END_DATE = "2022-03-18"
 HALF_2_START_DATE = "2022-03-28"
-END_DATE = "2022-05-10"
-MONDAY_SCHEDULE = "2022-02-22"
+END_DATE = "2022-12-14"
+MONDAY_SCHEDULE = "2022-09-12"
 HOLIDAYS = [
-    "2022-02-21",
-    "2022-03-21",
-    "2022-03-22",
-    "2022-03-23",
-    "2022-03-24",
-    "2022-03-25",
-    "2022-04-18",
+    "2022-09-23",
+    "2022-10-10",
+    "2022-10-11",
+    "2022-11-11",
+    "2022-11-24",
+    "2022-11-25",
 ]
 
 
