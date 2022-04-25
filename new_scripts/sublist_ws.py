@@ -57,9 +57,13 @@ for c in class_list:
         for other in others:
             if 'repeat.gif' in str(other):
                 classes[num]['repeat'] = True
-            if 'first half' in str(other):
+
+        half = soup.getText().split(' half of term')
+        if len(half) > 1:
+            term = half[0].split(' ')[-1].strip()
+            if term == "first":
                 classes[num]['half'] = 1
-            elif 'second half' in str(other):
+            if term == "second":
                 classes[num]['half'] = 2
             
         url = soup.getText().split('URL: ')
