@@ -554,13 +554,13 @@ function is_selected(number) {
 	}
 
 	if (half_active) {
- 	 	if (!classes[number]['half']) {
+ 	 	if (!classes[number]['hf']) {
 			return false;
 		}
 	}
 
 	if (limited_active) {
- 	 	if (!classes[number]['limited']) {
+ 	 	if (!classes[number]['lm']) {
 			return false;
 		}
 	}

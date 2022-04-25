@@ -56,6 +56,7 @@ for c in ws:
     classes[c]['le'] = ws[c]['level']
     classes[c]['sa'] = ws[c]['same_as']
     classes[c]['mw'] = ws[c]['meets_with']
+    classes[c]['lm'] = ws[c]['limited']
     classes[c]['t'] = ws[c]['terms']
     classes[c]['pr'] = ws[c]['prereq']
     classes[c]['d'] = ws[c]['desc']
@@ -65,6 +66,7 @@ for c in ws:
 
     if c in sublist:
         classes[c]['nx'] = sublist[c]['no_next']
+        classes[c]['hf'] = sublist[c]['half']
         classes[c]['rp'] = sublist[c]['repeat']
         classes[c]['u'] = sublist[c]['url']
         try:
@@ -74,6 +76,7 @@ for c in ws:
             classes[c]['f'] = False
     else:
         classes[c]['nx'] = False
+        classes[c]['hf'] = False
         classes[c]['rp'] = False
         classes[c]['u'] = ''
         classes[c]['f'] = False
