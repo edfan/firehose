@@ -28,6 +28,10 @@ for c in class_list:
                         'half': False,
                         'url': ''}
 
+        name_split = start.getText().split("\n")
+        if len(name_split) > 2 and name_split[1] != "(New)":
+            classes[num]['old_num'] = name_split[1][1:-1]
+
         level = start.findNext('img').findNext('img')
 
         if 'nonext' in str(level):

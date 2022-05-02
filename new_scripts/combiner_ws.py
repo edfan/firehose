@@ -61,8 +61,10 @@ for c in ws:
     classes[c]['pr'] = ws[c]['prereq']
     classes[c]['d'] = ws[c]['desc']
     classes[c]['n'] = ws[c]['name']
+
     classes[c]['i'] = ws[c]['in-charge']
     classes[c]['v'] = all_virtual(ws[c]['l'] + ws[c]['r'] + ws[c]['b'])
+
 
     if c in sublist:
         classes[c]['nx'] = sublist[c]['no_next']
@@ -74,6 +76,9 @@ for c in ws:
         except:
             print('failed to get final for', c)
             classes[c]['f'] = False
+        if 'old_num' in ws[c]:
+            classes[c]['on'] = ws[c]['old_num']
+            classes[c]['n'] = "[" + ws[c]['old_num'] + "] " + classes[c]['n']
     else:
         classes[c]['nx'] = False
         classes[c]['hf'] = False
@@ -81,7 +86,7 @@ for c in ws:
         classes[c]['u'] = ''
         classes[c]['f'] = False
 
-    old_c = course_six_renumbering_inv.get(c, None)
+    old_c = classes[c].get('old_num', None)
     if c in evals or (old_c and old_c in evals):
         total_rating = 0
         total_hours = 0

@@ -154,8 +154,8 @@ for c in raw_classes:
         number = c['id']
         name = c['label']
 
-        if number in course_six_renumbering_inv:
-            name = "[" + course_six_renumbering_inv[number] + "] " + name
+        # if number in course_six_renumbering_inv:
+        #     name = "[" + course_six_renumbering_inv[number] + "] " + name
 
         units1, units2, units3 = parse_units(c['units'])
 
