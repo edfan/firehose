@@ -100,9 +100,16 @@ export class Firehose {
     return this.selectedClasses.some((cls_) => cls_.number === cls.number);
   }
 
+  /** TODO */
+  isSelectedNonClass(activity: NonClass): boolean {
+    return this.selectedNonClasses.some(
+      (activity_) => activity_.id === activity.id
+    );
+  }
+
   /** Adds a non-class, selects it, and updates. */
-  addNonClass(): void {
-    const nonClass = new NonClass();
+  addNonClass(activity?: NonClass): void {
+    const nonClass = activity ?? new NonClass();
     this.selectedNonClasses.push(nonClass);
     this.setViewedActivity(nonClass);
     this.updateActivities();
@@ -126,11 +133,28 @@ export class Firehose {
     this.fitsScheduleCallback?.();
   }
 
+  /** TODO */
+  toggleNonClass(activity?: NonClass): void {
+    if (!activity) return;
+    this.isSelectedNonClass(activity)
+      ? this.removeNonClass(activity)
+      : this.addNonClass(activity);
+  }
+
+  /** TODO: reconsider class/nonclass distinction again... */
+  removeActivity(activity: Class | NonClass): void {
+    return activity instanceof Class
+      ? this.removeClass(activity)
+      : this.removeNonClass(activity);
+  }
+
   /**
    * Add the timeslot to currently viewed activity. Both {@param startDate} and
    * {@param endDate} should be dates in the week of 2001-01-01, with times
    * between 8 AM and 9 PM. Will not add if equal to an existing timeslot.
    * Will not add if startDate and endDate are on different dates.
+   *
+   * TODO: incl. activity in params, change interface to slots...?
    */
   addTimeslot(startDate: Date, endDate: Date): void {
     if (startDate.getDate() !== endDate.getDate()) return;

@@ -63,6 +63,7 @@ export function classNumberMatch(
 }
 
 // Date utilities:
+// TODO: rename these
 
 /**
  * Converts a timeslot (as in {@link Timeslot}) to a date in the week of
@@ -87,7 +88,7 @@ export function toSlot(date: Date): number {
 }
 
 /** Strings for each weekday. */
-const WEEKDAY_STRINGS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+export const WEEKDAY_STRINGS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
 /** See {@link TIMESLOT_STRINGS}. */
 function generateTimeslotStrings(): Array<string> {
@@ -106,7 +107,7 @@ function generateTimeslotStrings(): Array<string> {
 }
 
 /** Strings for each timeslot, in order. */
-const TIMESLOT_STRINGS = generateTimeslotStrings();
+export const TIMESLOT_STRINGS = generateTimeslotStrings();
 
 /** Convert a timeslot to a day string. */
 export function slotToDayString(slot: number): string {
@@ -116,6 +117,11 @@ export function slotToDayString(slot: number): string {
 /** Convert a timeslot to a time string. */
 export function slotToTimeString(slot: number): string {
   return TIMESLOT_STRINGS[slot % 30]!;
+}
+
+/** TODO */
+export function dayTimeToSlot(day: string, time: string): number {
+  return 30 * WEEKDAY_STRINGS.indexOf(day) + TIMESLOT_STRINGS.indexOf(time);
 }
 
 // Color utilities:

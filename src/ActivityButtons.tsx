@@ -2,6 +2,12 @@ import { useState } from "react";
 
 import { Class, NonClass, Section, Sections } from "./class";
 import { Firehose } from "./firehose";
+import {
+  WEEKDAY_STRINGS,
+  TIMESLOT_STRINGS,
+  dayTimeToSlot,
+  toDate,
+} from "./utils";
 
 /** A single, manual section option, under {@link ClassManualSections}. */
 function ClassManualOption(props: {
@@ -109,6 +115,56 @@ export function ClassButtons(props: { cls: Class; firehose: Firehose }) {
   }
 }
 
+/** TODO */
+function NonClassAddTime(props: { activity: NonClass; firehose: Firehose }) {
+  const { activity, firehose } = props;
+  const [days, setDays] = useState(
+    Object.fromEntries(WEEKDAY_STRINGS.map((day) => [day, false]))
+  );
+  const [times, setTimes] = useState({ start: "10:00 AM", end: "1:00 PM" });
+
+  const timeDrop = (key: "start" | "end") => (
+    <select
+      value={times[key]}
+      onChange={(e) => setTimes({ ...times, [key]: e.target.value })}
+    >
+      {TIMESLOT_STRINGS.map((time) => (
+        <option key={time} value={time}>
+          {time}
+        </option>
+      ))}
+    </select>
+  );
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        for (const day in days) {
+          if (!days[day]) continue;
+          firehose.addTimeslot(
+            toDate(dayTimeToSlot(day, times.start)),
+            toDate(dayTimeToSlot(day, times.end))
+          );
+        }
+      }}
+    >
+      <button type="submit">add time</button>{" "}
+      {WEEKDAY_STRINGS.map((day) => (
+        <label key={day}>
+          <input
+            type="checkbox"
+            checked={days[day]}
+            onChange={(e) => setDays({ ...days, [day]: e.target.checked })}
+          />
+          {day}
+        </label>
+      ))}
+      {timeDrop("start")} – {timeDrop("end")}
+    </form>
+  );
+}
+
 /** Buttons in non-class description to rename it, or add/edit/remove timeslots. */
 export function NonClassButtons(props: {
   activity: NonClass;
@@ -118,7 +174,6 @@ export function NonClassButtons(props: {
 
   const [name, setName] = useState("");
 
-  // TODO add manually adding times
   return (
     <>
       <button
@@ -147,8 +202,10 @@ export function NonClassButtons(props: {
         <button type="submit">Rename</button>
       </form>
       <div id="class-buttons-div">
-        Drag on the calendar to add the times for your activity.
+        Click and drag on an empty time in the calendar to add the times for
+        your activity. Or add one manually:
       </div>
+      <NonClassAddTime activity={activity} firehose={firehose} />
     </>
   );
 }

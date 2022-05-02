@@ -171,6 +171,11 @@ export class Timeslot {
     return toDate(this.endSlot + 1);
   }
 
+  /** The number of hours this timeslot spans. */
+  get hours(): number {
+    return this.numSlots / 2;
+  }
+
   /**
    * @param other - timeslot to compare to
    * @returns True if this timeslot conflicts with the other timeslot
@@ -183,7 +188,7 @@ export class Timeslot {
   toString(): string {
     return `${slotToDayString(this.startSlot)}, ${slotToTimeString(
       this.startSlot
-    )} – ${slotToTimeString(this.endSlot)}`;
+    )} – ${slotToTimeString(this.endSlot + 1)}`;
   }
 
   /** @returns True if this timeslot is equal to other timeslot */
@@ -591,7 +596,7 @@ export class NonClass {
   }
 
   get hours(): number {
-    return 0; // TODO
+    return this.timeslots.reduce((acc, cur) => acc + cur.hours, 0);
   }
 
   get events(): Array<Event> {

@@ -15,6 +15,7 @@ function Activity(props: { activity: Class | NonClass; firehose: Firehose }) {
       type="button"
       className="btn btn-primary"
       onClick={() => firehose.setViewedActivity(activity)}
+      onDoubleClick={() => firehose.removeActivity(activity)}
       style={{
         backgroundColor: activity.backgroundColor,
         borderColor: activity.backgroundColor,
