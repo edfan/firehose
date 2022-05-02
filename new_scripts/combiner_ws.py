@@ -76,9 +76,9 @@ for c in ws:
         except:
             print('failed to get final for', c)
             classes[c]['f'] = False
-        if 'old_num' in ws[c]:
-            classes[c]['on'] = ws[c]['old_num']
-            classes[c]['n'] = "[" + ws[c]['old_num'] + "] " + classes[c]['n']
+        if 'old_num' in sublist[c]:
+            classes[c]['on'] = sublist[c]['old_num']
+            classes[c]['n'] = "[" + sublist[c]['old_num'] + "] " + classes[c]['n']
     else:
         classes[c]['nx'] = False
         classes[c]['hf'] = False
