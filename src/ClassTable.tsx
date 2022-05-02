@@ -9,7 +9,7 @@ import "@ag-grid-community/core/dist/styles/ag-grid.css";
 import "./ClassTable.scss";
 
 import { Class, Flags } from "./class";
-import { classSort, classNumberMatch } from "./utils";
+import { classSort, classNumberMatch, simplifyString } from "./utils";
 import { Firehose } from "./firehose";
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
@@ -36,37 +36,57 @@ function ClassInput(props: {
   rowData: Array<ClassTableRow>;
   /** Callback for updating the class filter. */
   setInputFilter: SetClassFilter;
-  /** Callback after pressing Enter in the textbox. */
-  onEnter: () => void;
+  firehose: Firehose;
 }) {
-  const { rowData, setInputFilter, onEnter } = props;
+  const { rowData, setInputFilter, firehose } = props;
 
   // State for textbox input.
   const [classInput, setClassInput] = useState("");
 
+  // Search results for classes.
+  const searchResults = useRef<Array<ClassTableRow>>();
+
   // Fuse is a fuzzy search library; this is set-up that gets called once.
   const fuse = useMemo(() => {
-    return new Fuse(rowData, {
-      ignoreLocation: true,
-      keys: ["name"],
-      shouldSort: false,
-      threshold: 0.2,
-    });
+    return new Fuse(
+      rowData.map((data) => ({
+        ...data,
+        number_: simplifyString(data.number),
+        name_: simplifyString(data.name),
+      })),
+      {
+        ignoreLocation: true,
+        keys: ["number_", "name_"],
+        shouldSort: true,
+        threshold: 0.2,
+      }
+    );
   }, [rowData]);
 
   const onClassInputChange = (input: string) => {
     if (input) {
-      const results = fuse.search(input).map(({ item }) => item.number);
+      searchResults.current = fuse
+        .search(simplifyString(input))
+        .map(({ item }) => item);
 
       // careful! we have to wrap it with a () => because otherwise react will
       // think it's an updater function instead of the actual function.
       setInputFilter(() => (cls: Class) =>
-        results.includes(cls.number) || classNumberMatch(input, cls.number)
+        searchResults.current?.some((item) => item.number === cls.number) ||
+        false
       );
     } else {
+      searchResults.current = undefined;
       setInputFilter(null);
     }
     setClassInput(input);
+  };
+
+  const onEnter = () => {
+    let cls = searchResults.current?.[0]?.class;
+    if (!cls) return;
+    firehose.toggleClass(cls);
+    onClassInputChange("");
   };
 
   return (
@@ -298,11 +318,7 @@ export function ClassTable(props: {
         <ClassInput
           rowData={rowData}
           setInputFilter={setInputFilter}
-          onEnter={() =>
-            firehose.toggleClass(
-              gridRef.current?.api?.getDisplayedRowAtIndex(0)?.data.class
-            )
-          }
+          firehose={firehose}
         />
         <ClassFlags
           setFlagsFilter={setFlagsFilter}

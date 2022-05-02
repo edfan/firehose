@@ -41,17 +41,24 @@ export function classSort(a: string, b: string) {
   return 0;
 }
 
+/** Turn a string lowercase and keep only alphanumeric characters. */
+export function simplifyString(s: string): string {
+  return s.toLowerCase().replaceAll(/[^a-z0-9]/g, "");
+}
+
 /**
  * Smart class number matching. Case-insensitive. Punctuation-insensitive when
  * the searchString has no punctuation, but cares otherwise.
  */
-export function classNumberMatch(searchString: string, classNumber: string) {
-  const lower = (s: string) => s.toLowerCase();
-  const simplify = (s: string) => lower(s).replaceAll(/[^a-z0-9]/g, "");
+export function classNumberMatch(
+  searchString: string,
+  classNumber: string
+): boolean {
   if (searchString.includes(".")) {
-    return lower(classNumber).includes(lower(searchString));
+    const lower = (s: string) => s.toLowerCase();
+    return lower(classNumber).startsWith(lower(searchString));
   } else {
-    return simplify(classNumber).includes(simplify(searchString));
+    return simplifyString(classNumber).startsWith(simplifyString(searchString));
   }
 }
 
