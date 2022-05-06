@@ -143,6 +143,9 @@ for c in ws:
 except Exception as e:
     print(e) """
 
+classes['22.05']['l'] = [[[[33,3],[93,3]],"24-121"]]
+classes['22.05']['r'] = [[[[124,2]],"24-121"]]
+
 with open('full.json', 'w') as f:
     f.write('var last_update = "' + datetime.datetime.now().strftime('%Y-%m-%d %l:%M %p') + '";\n')
     f.write('var classes = ')
