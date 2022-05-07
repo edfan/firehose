@@ -2,7 +2,7 @@ import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 
-import { Class, NonClass } from "./class";
+import { Activity } from "./activity";
 import { Firehose } from "./firehose";
 
 /**
@@ -12,7 +12,7 @@ import { Firehose } from "./firehose";
  * TODO: warning for too many choices
  */
 export function Calendar(props: {
-  selectedActivities: Array<Class | NonClass>;
+  selectedActivities: Array<Activity>;
   selectedOption: number;
   totalOptions: number;
   selectable: boolean;

@@ -1,4 +1,4 @@
-import { Class, NonClass } from "./class";
+import { Activity } from "./activity";
 
 /**
  * Rounds {@param x} to {@param n} decimal places?
@@ -157,14 +157,12 @@ function murmur3(str: string): () => number {
  * Assign background colors to a list of activities. Mutates each activity
  * in the list.
  */
-export function chooseColors(activities: Array<Class | NonClass>): void {
+export function chooseColors(activities: Array<Activity>): void {
   // above this length, we give up trying to be nice:
   const colorLen = BACKGROUND_COLORS.length;
   const indices: Array<number> = [];
   for (const activity of activities) {
-    const hash = murmur3(
-      activity instanceof Class ? activity.number : activity.id
-    );
+    const hash = murmur3(activity.id);
     let index = hash() % colorLen;
     // try to pick distinct colors if possible; hash to try to make each
     // activity have a consistent color.

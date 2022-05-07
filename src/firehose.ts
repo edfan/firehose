@@ -1,20 +1,12 @@
-import {
-  RawClass,
-  Timeslot,
-  Class,
-  NonClass,
-  Section,
-  Sections,
-} from "./class";
+import { Timeslot, NonClass, Activity } from "./activity";
 import { scheduleSlots } from "./calendarSlots";
+import { RawClass, Class, Section, Sections } from "./class";
 import { chooseColors } from "./utils";
 
-/**
- * React / localStorage state.
- */
+/** React / localStorage state. */
 export type FirehoseState = {
-  selectedActivities: Array<Class | NonClass>;
-  viewedActivity: Class | NonClass | undefined;
+  selectedActivities: Array<Activity>;
+  viewedActivity: Activity | undefined;
   selectedOption: number;
   totalOptions: number;
   units: number;
@@ -44,7 +36,7 @@ export class Firehose {
   // directly; they should have it passed down to them as props from App.
 
   /** Activity whose description is being viewed. */
-  private viewedActivity: Class | NonClass | undefined;
+  private viewedActivity: Activity | undefined;
   /** Selected class activities. */
   private selectedClasses: Array<Class> = [];
   /** Selected non-class activities. */
@@ -65,87 +57,81 @@ export class Firehose {
   }
 
   /** All activities. */
-  get selectedActivities(): Array<Class | NonClass> {
+  get selectedActivities(): Array<Activity> {
     return [...this.selectedClasses, ...this.selectedNonClasses];
   }
 
-  /** Update React state by calling React callback. */
-  updateState(): void {
-    this.callback?.({
-      selectedActivities: this.selectedActivities,
-      viewedActivity: this.viewedActivity,
-      selectedOption: this.selectedOption,
-      totalOptions: this.options.length,
-      units: this.selectedClasses.reduce(
-        (total, cls) => total + cls.totalUnits,
-        0
-      ),
-      hours: this.selectedActivities.reduce(
-        (total, activity) => total + activity.hours,
-        0
-      ),
-      warnings: [], // TODO
-      selectable: this.viewedActivity instanceof NonClass,
-    });
-  }
+  ///////////////////////
+  // Activity handlers //
+  ///////////////////////
 
   /** Set the current class description being viewed. */
-  setViewedActivity(cls: Class | NonClass | undefined): void {
+  setViewedActivity(cls: Activity | undefined): void {
     this.viewedActivity = cls;
     this.updateState();
   }
 
-  /** @returns True if cls is one of the currently selected classes. */
-  isSelectedClass(cls: Class): boolean {
-    return this.selectedClasses.some((cls_) => cls_.number === cls.number);
-  }
-
-  /** TODO */
-  isSelectedNonClass(activity: NonClass): boolean {
-    return this.selectedNonClasses.some(
+  /** @returns True if activity is one of the currently selected activities. */
+  isSelectedActivity(activity: Activity): boolean {
+    return this.selectedActivities.some(
       (activity_) => activity_.id === activity.id
     );
   }
 
-  /** Adds a non-class, selects it, and updates. */
-  addNonClass(activity?: NonClass): void {
-    const nonClass = activity ?? new NonClass();
-    this.selectedNonClasses.push(nonClass);
-    this.setViewedActivity(nonClass);
+  /**
+   * Adds an activity, selects it, and updates.
+   *
+   * @param activity - Activity to be added. If null, creates a new NonClass
+   *   and adds it.
+   */
+  addActivity(activity?: Activity): void {
+    const toAdd = activity ?? new NonClass();
+    this.setViewedActivity(toAdd);
+    if (this.isSelectedActivity(toAdd)) return;
+    if (toAdd instanceof Class) {
+      this.selectedClasses.push(toAdd);
+    } else {
+      this.selectedNonClasses.push(toAdd);
+    }
     this.updateActivities();
+    this.fitsScheduleCallback?.();
   }
 
-  /** TODO */
+  /** Remove an activity and update. */
+  removeActivity(activity: Activity): void {
+    if (!this.isSelectedActivity(activity)) return;
+    if (activity instanceof Class) {
+      this.selectedClasses = this.selectedClasses.filter(
+        (activity_) => activity_.id !== activity.id
+      );
+    } else {
+      this.selectedNonClasses = this.selectedNonClasses.filter(
+        (activity_) => activity_.id !== activity.id
+      );
+    }
+    this.updateActivities();
+    this.fitsScheduleCallback?.();
+  }
+
+  /** Add activity if it exists, remove if it doesn't. */
+  toggleActivity(activity?: Activity): void {
+    if (!activity) return;
+    this.isSelectedActivity(activity)
+      ? this.removeActivity(activity)
+      : this.addActivity(activity);
+  }
+
+  ///////////////////////
+  // NonClass handlers //
+  ///////////////////////
+
+  /** Rename a given non-activity. */
   renameNonClass(activity: NonClass, name: string): void {
     const nonClass = this.selectedNonClasses.find(
       (activity_) => activity_.id === activity.id
     )!;
     nonClass.name = name;
     this.updateState();
-  }
-
-  /** TODO */
-  removeNonClass(activity: NonClass): void {
-    this.selectedNonClasses = this.selectedNonClasses.filter(
-      (activity_) => activity_.id !== activity.id
-    )!;
-    this.updateActivities();
-    this.fitsScheduleCallback?.();
-  }
-
-  /** TODO */
-  toggleNonClass(activity?: NonClass): void {
-    if (!activity) return;
-    this.isSelectedNonClass(activity)
-      ? this.removeNonClass(activity)
-      : this.addNonClass(activity);
-  }
-
-  /** TODO: reconsider class/nonclass distinction again... */
-  removeActivity(activity: Class | NonClass): void {
-    return activity instanceof Class
-      ? this.removeClass(activity)
-      : this.removeNonClass(activity);
   }
 
   /**
@@ -172,28 +158,6 @@ export class Firehose {
     this.fitsScheduleCallback?.();
   }
 
-  /** Adds a {@param cls} and updates. */
-  addClass(cls: Class): void {
-    if (!this.isSelectedClass(cls)) this.selectedClasses.push(cls);
-    this.updateActivities();
-    this.fitsScheduleCallback?.();
-  }
-
-  /** Removes a {@param cls} and updates. */
-  removeClass(cls: Class): void {
-    this.selectedClasses = this.selectedClasses.filter(
-      (cls_) => cls_.number !== cls.number
-    );
-    this.updateActivities();
-    this.fitsScheduleCallback?.();
-  }
-
-  /** Add class if it exists, remove if it doesn't. */
-  toggleClass(cls?: Class): void {
-    if (!cls) return;
-    this.isSelectedClass(cls) ? this.removeClass(cls) : this.addClass(cls);
-  }
-
   /**
    * Lock a specific section of a class. This is here because we need to update
    * the React state after doing this.
@@ -211,19 +175,28 @@ export class Firehose {
     this.updateActivities();
   }
 
-  /**
-   * Update selected activities: reschedule them and assign colors. Call after
-   * every update of this.selectedClasses or this.selectedActivities.
-   *
-   * TODO: measure performance; if it takes a hit, then add option to only
-   *    reschedule slash recolor.
-   */
-  updateActivities(): void {
-    chooseColors(this.selectedActivities);
-    const result = scheduleSlots(this.selectedClasses, this.selectedNonClasses);
-    this.options = result.options;
-    this.conflicts = result.conflicts;
-    this.selectOption();
+  //////////////////////
+  // State management //
+  //////////////////////
+
+  /** Update React state by calling React callback. */
+  updateState(): void {
+    this.callback?.({
+      selectedActivities: this.selectedActivities,
+      viewedActivity: this.viewedActivity,
+      selectedOption: this.selectedOption,
+      totalOptions: this.options.length,
+      units: this.selectedClasses.reduce(
+        (total, cls) => total + cls.totalUnits,
+        0
+      ),
+      hours: this.selectedActivities.reduce(
+        (total, activity) => total + activity.hours,
+        0
+      ),
+      warnings: [], // TODO
+      selectable: this.viewedActivity instanceof NonClass,
+    });
   }
 
   /**
@@ -242,6 +215,21 @@ export class Firehose {
   }
 
   /**
+   * Update selected activities: reschedule them and assign colors. Call after
+   * every update of this.selectedClasses or this.selectedActivities.
+   *
+   * TODO: measure performance; if it takes a hit, then add option to only
+   *    reschedule slash recolor.
+   */
+  updateActivities(): void {
+    chooseColors(this.selectedActivities);
+    const result = scheduleSlots(this.selectedClasses, this.selectedNonClasses);
+    this.options = result.options;
+    this.conflicts = result.conflicts;
+    this.selectOption();
+  }
+
+  /**
    * Does {@param cls} fit into current schedule without increasing conflicts?
    * Used for the "fits schedule" filter in ClassTable. Might be slow; careful
    * with using this too frequently.
@@ -250,7 +238,7 @@ export class Firehose {
    */
   fitsSchedule(cls: Class): boolean {
     return (
-      !this.isSelectedClass(cls) &&
+      !this.isSelectedActivity(cls) &&
       (cls.sections.length === 0 ||
         this.selectedClasses.length === 0 ||
         scheduleSlots(

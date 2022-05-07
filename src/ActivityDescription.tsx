@@ -1,4 +1,5 @@
-import { Class, NonClass, Flags } from "./class";
+import { Activity, NonClass } from "./activity";
+import { Class, Flags } from "./class";
 import { Firehose } from "./firehose";
 
 import { ClassButtons, NonClassButtons } from "./ActivityButtons";
@@ -219,7 +220,7 @@ function NonClassDescription(props: {
  * TODO: styling
  */
 export function ActivityDescription(props: {
-  activity: Class | NonClass;
+  activity: Activity;
   firehose: Firehose;
 }) {
   const { activity, firehose } = props;

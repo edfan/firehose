@@ -1,4 +1,5 @@
-import { Section, Timeslot, Sections, Class, NonClass } from "./class";
+import { NonClass, Timeslot } from "./activity";
+import { Section, Sections, Class } from "./class";
 
 /**
  * Helper function for selectSlots. Implements backtracking: we try to place
@@ -22,7 +23,6 @@ function selectHelper(
   options: Array<Array<Section>>;
   minConflicts: number;
 } {
-  console.log(freeSections, filledSlots, foundOptions, curConflicts, foundMinConflicts);
   if (freeSections.length === 0) {
     return { options: [foundOptions], minConflicts: curConflicts };
   }

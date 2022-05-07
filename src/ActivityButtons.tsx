@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-import { Class, NonClass, Section, Sections } from "./class";
+import { NonClass } from "./activity";
+import { Class, Section, Sections } from "./class";
 import { Firehose } from "./firehose";
 import {
   WEEKDAY_STRINGS,
@@ -80,13 +81,13 @@ export function ClassButtons(props: { cls: Class; firehose: Firehose }) {
 
   const [showManual, setShowManual] = useState(false);
 
-  if (!firehose.isSelectedClass(cls)) {
+  if (!firehose.isSelectedActivity(cls)) {
     return (
       <div id="class-buttons-div">
         <button
           type="button"
           className="btn btn-primary"
-          onClick={() => firehose.addClass(cls)}
+          onClick={() => firehose.addActivity(cls)}
         >
           Add class
         </button>
@@ -98,7 +99,7 @@ export function ClassButtons(props: { cls: Class; firehose: Firehose }) {
         <button
           type="button"
           className="btn btn-primary"
-          onClick={() => firehose.removeClass(cls)}
+          onClick={() => firehose.removeActivity(cls)}
         >
           Remove class
         </button>
@@ -181,7 +182,7 @@ export function NonClassButtons(props: {
         className="btn btn-primary"
         onClick={() => {
           // TODO: this should change back to add activity if removed
-          firehose.removeNonClass(activity);
+          firehose.removeActivity(activity);
         }}
       >
         Remove activity

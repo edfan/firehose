@@ -1,4 +1,5 @@
-import { Class, NonClass } from "./class";
+import { Class } from "./class";
+import { Activity } from "./activity";
 import { Firehose } from "./firehose";
 import { formatNumber } from "./utils";
 
@@ -8,7 +9,7 @@ import { formatNumber } from "./utils";
  * TODO: double click functionality
  * TODO: warning symbols like * and +
  */
-function Activity(props: { activity: Class | NonClass; firehose: Firehose }) {
+function ActivityButton(props: { activity: Activity; firehose: Firehose }) {
   const { activity, firehose } = props;
   return (
     <button
@@ -33,7 +34,7 @@ function Activity(props: { activity: Class | NonClass; firehose: Firehose }) {
  * TODO: make buttons draggable
  */
 export function SelectedActivities(props: {
-  selectedActivities: Array<Class | NonClass>;
+  selectedActivities: Array<Activity>;
   units: number;
   hours: number;
   warnings: Array<string>;
@@ -63,7 +64,7 @@ export function SelectedActivities(props: {
       ))}
       <div id="selected-div">
         {selectedActivities.map((activity) => (
-          <Activity
+          <ActivityButton
             key={activity instanceof Class ? activity.number : activity.id}
             activity={activity}
             firehose={firehose}
@@ -79,7 +80,7 @@ export function SelectedActivities(props: {
         <button
           type="button"
           className="btn btn-secondary"
-          onClick={() => firehose.addNonClass()}
+          onClick={() => firehose.addActivity()}
         >
           + Non-class
         </button>

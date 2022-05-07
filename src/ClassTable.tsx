@@ -85,7 +85,7 @@ function ClassInput(props: {
   const onEnter = () => {
     let cls = searchResults.current?.[0]?.class;
     if (!cls) return;
-    firehose.toggleClass(cls);
+    firehose.toggleActivity(cls);
     onClassInputChange("");
   };
 
@@ -336,7 +336,7 @@ export function ClassTable(props: {
           isExternalFilterPresent={() => true}
           doesExternalFilterPass={doesExternalFilterPass}
           onRowClicked={(e) => firehose.setViewedActivity(e.data.class)}
-          onRowDoubleClicked={(e) => firehose.toggleClass(e.data.class)}
+          onRowDoubleClicked={(e) => firehose.toggleActivity(e.data.class)}
           onGridReady={() => gridRef.current?.columnApi?.autoSizeAllColumns()}
           // these have to be set here, not in css:
           headerHeight={40}
