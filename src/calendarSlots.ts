@@ -22,6 +22,7 @@ function selectHelper(
   options: Array<Array<Section>>;
   minConflicts: number;
 } {
+  console.log(freeSections, filledSlots, foundOptions, curConflicts, foundMinConflicts);
   if (freeSections.length === 0) {
     return { options: [foundOptions], minConflicts: curConflicts };
   }
@@ -81,8 +82,8 @@ export function scheduleSlots(
 
   for (const cls of selectedClasses) {
     for (const secs of cls.sections) {
-      if (cls.lockedSections.get(secs.kind)) {
-        const sec = cls.selectedSections.get(secs.kind);
+      if (secs.locked) {
+        const sec = secs.selected;
         if (sec) {
           lockedSections.push(secs);
           lockedOptions.push(sec);

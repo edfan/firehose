@@ -18,7 +18,7 @@ function ClassManualOption(props: {
   const { secs, sec, firehose } = props;
   const checked =
     sec instanceof Section
-      ? secs.locked && secs.selected?.index === sec.index
+      ? secs.locked && secs.selected === sec
       : sec === "auto"
       ? !secs.locked
       : secs.selected === null;

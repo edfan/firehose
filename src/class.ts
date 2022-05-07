@@ -241,14 +241,11 @@ class Event {
 /**
  * A section is an array of timeslots that meet in the same room for the same
  * purpose. Sections can be lectures, recitations, or labs, for a given class.
+ * All instances of Section belong to a Sections.
  */
 export class Section {
-  /** Class this section belongs to */
-  cls: Class;
-  /** Index among sections of the same kind, e.g. 0th LAB, 1st LAB, etc. */
-  index: number;
-  /** Is it LECTURE, RECITATION, or LAB? */
-  kind: SectionKind;
+  /** Group of sections this section belongs to */
+  secs: Sections;
   /** Timeslots this section meets */
   timeslots: Array<Timeslot>;
   /** String representing raw timeslots, e.g. MW9-11 or T2,F1. */
@@ -257,16 +254,8 @@ export class Section {
   room: string;
 
   /** @param section - raw section info (timeslot and room) */
-  constructor(
-    cls: Class,
-    index: number,
-    kind: SectionKind,
-    rawTime: string,
-    section: RawSection
-  ) {
-    this.cls = cls;
-    this.index = index;
-    this.kind = kind;
+  constructor(secs: Sections, rawTime: string, section: RawSection) {
+    this.secs = secs;
     this.rawTime = rawTime;
     const [rawSlots, room] = section;
     this.timeslots = rawSlots.map((slot) => new Timeslot(slot));
@@ -289,24 +278,32 @@ export class Section {
 }
 
 /**
- * A group of {@link Section}s, all the same kind.
+ * A group of {@link Section}s, all the same kind (like lec, rec, or lab). At
+ * most one of these can be selected at a time, and that selection is possibly
+ * locked.
  */
 export class Sections {
   cls: Class;
   kind: SectionKind;
   sections: Array<Section>;
+  /** Are these sections locked? None counts as locked. */
+  locked: boolean;
+  /** Currently selected section out of these. None is null. */
+  selected: Section | null;
 
   constructor(
     cls: Class,
     kind: SectionKind,
     rawTimes: Array<string>,
-    secs: Array<RawSection>
+    secs: Array<RawSection>,
+    locked?: boolean,
+    selected?: Section | null
   ) {
     this.cls = cls;
     this.kind = kind;
-    this.sections = secs.map(
-      (sec, i) => new Section(cls, i, kind, rawTimes[i]!, sec)
-    );
+    this.sections = secs.map((sec, i) => new Section(this, rawTimes[i]!, sec));
+    this.locked = locked ?? false;
+    this.selected = selected ?? null;
   }
 
   /** Short name for the kind of sections these are. */
@@ -333,16 +330,6 @@ export class Sections {
     }
   }
 
-  /** Are these sections locked? */
-  get locked(): boolean {
-    return this.cls.lockedSections.get(this.kind) ?? false;
-  }
-
-  /** Currently selected section out of these. */
-  get selected(): Section | null {
-    return this.cls.selectedSections.get(this.kind)!;
-  }
-
   /** The event (possibly none) for this group of sections. */
   get event(): Event | null {
     return this.selected
@@ -356,28 +343,31 @@ export class Sections {
   }
 }
 
-/** An entire class, e.g. 6.036, and its selected sections. */
+/**
+ * An entire class, e.g. 6.036, and its selected sections.
+ *
+ * TODO: should we allow users to add their own custom sections? and if so,
+ * should they go here or Sections?
+ */
 export class Class {
   /** The RawClass being wrapped around. */
   readonly rawClass: RawClass;
-  /**
-   * Map from SectionKind to whether that SectionKind is locked, i.e. not auto.
-   * None counts as locked.
-   */
-  lockedSections: Map<SectionKind, boolean>;
-  /** Map from SectionKind to currently scheduled section. None is null. */
-  selectedSections: Map<SectionKind, Section | null>;
+  /** The sections associated with this class. */
+  readonly sections: Array<Sections>;
   /** The background color for the class, used for buttons and calendar. */
   backgroundColor: string | undefined;
 
-  constructor(
-    rawClass: RawClass,
-    lockedSections?: Map<SectionKind, boolean>,
-    selectedSections?: Map<SectionKind, Section | null>
-  ) {
+  constructor(rawClass: RawClass) {
     this.rawClass = rawClass;
-    this.lockedSections = lockedSections ?? new Map();
-    this.selectedSections = selectedSections ?? new Map();
+    this.sections = rawClass.s
+      .map((kind) =>
+        kind === "l"
+          ? new Sections(this, SectionKind.LECTURE, rawClass.lr, rawClass.l)
+          : kind === "r"
+          ? new Sections(this, SectionKind.RECITATION, rawClass.rr, rawClass.r)
+          : new Sections(this, SectionKind.LAB, rawClass.br, rawClass.b)
+      )
+      .sort((a, b) => a.kind - b.kind);
   }
 
   /** Name, e.g. "Introduction to Machine Learning". */
@@ -408,51 +398,6 @@ export class Class {
   /** Hours per week, taking from evals if exists, or units if not. */
   get hours(): number {
     return this.rawClass.h ?? this.totalUnits;
-  }
-
-  /** Array of section kinds: [LECTURE, RECITATION, LAB], in order. */
-  get sectionKinds(): Array<SectionKind> {
-    // TODO these are so bad
-    const map = new Map<"l" | "r" | "b", SectionKind>([
-      ["l", SectionKind.LECTURE],
-      ["r", SectionKind.RECITATION],
-      ["b", SectionKind.LAB],
-    ]);
-    return this.rawClass.s.map((kind) => map.get(kind)!).sort();
-  }
-
-  /**
-   * @param kind - LECTURE, RECITATION, or LAB
-   * @returns all sections with that kind
-   */
-  sectionsOfKind(kind: SectionKind): Sections {
-    const map = new Map<SectionKind, "lr" | "rr" | "br">([
-      [SectionKind.LECTURE, "lr"],
-      [SectionKind.RECITATION, "rr"],
-      [SectionKind.LAB, "br"],
-    ]);
-    const map2 = new Map<SectionKind, "l" | "r" | "b">([
-      [SectionKind.LECTURE, "l"],
-      [SectionKind.RECITATION, "r"],
-      [SectionKind.LAB, "b"],
-    ]);
-    return new Sections(
-      this,
-      kind,
-      this.rawClass[map.get(kind)!],
-      this.rawClass[map2.get(kind)!]
-    );
-  }
-
-  /**
-   * All class sections.
-   * TODO: should this exist, or should this be in the constructor instead,
-   *    so that this is an actual property?
-   * TODO: if this is an actual property, we should move lockedSections and
-   *    selectedSections to Sections instead of this
-   */
-  get sections(): Array<Sections> {
-    return this.sectionKinds.map((kind) => this.sectionsOfKind(kind));
   }
 
   /** Get all calendar events corresponding to this class. */
@@ -575,10 +520,10 @@ export class Class {
     };
   }
 
-  /** TODO */
+  /** Doesn't actually do anything (yet?), just makes compiler happy. */
   addTimeslot(startDate: Date, endDate: Date): void {}
 
-  /** TODO */
+  /** Doesn't actually do anything (yet?), just makes compiler happy. */
   removeTimeslot(slot: Timeslot): void {}
 }
 
@@ -603,7 +548,10 @@ export class NonClass {
     return [new Event(this, this.name, this.timeslots, undefined)];
   }
 
-  /** TODO */
+  /**
+   * Add a timeslot to this non-class activity spanning from startDate to
+   * endDate. Dates must be within 8 AM to 9 PM.
+   */
   addTimeslot(startDate: Date, endDate: Date): void {
     const startSlot = toSlot(startDate);
     const slotLength = toSlot(endDate) - startSlot;
@@ -613,7 +561,7 @@ export class NonClass {
     }
   }
 
-  /** TODO */
+  /** Remove a given timeslot from the non-class activity. */
   removeTimeslot(slot: Timeslot): void {
     this.timeslots = this.timeslots.filter((slot_) => !slot_.equals(slot));
   }

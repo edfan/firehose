@@ -200,13 +200,13 @@ export class Firehose {
    */
   lockSection(secs: Sections, sec: Section | "auto" | "none"): void {
     if (sec === "auto") {
-      secs.cls.lockedSections.set(secs.kind, false);
+      secs.locked = false;
     } else if (sec === "none") {
-      secs.cls.lockedSections.set(secs.kind, true);
-      secs.cls.selectedSections.set(secs.kind, null);
+      secs.locked = true;
+      secs.selected = null;
     } else {
-      secs.cls.lockedSections.set(secs.kind, true);
-      secs.cls.selectedSections.set(secs.kind, sec);
+      secs.locked = true;
+      secs.selected = sec;
     }
     this.updateActivities();
   }
@@ -236,7 +236,7 @@ export class Firehose {
       this.selectedOption = 0;
     }
     for (const sec of this.options[this.selectedOption]) {
-      sec.cls.selectedSections.set(sec.kind, sec);
+      sec.secs.selected = sec;
     }
     this.updateState();
   }
