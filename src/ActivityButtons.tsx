@@ -1,14 +1,9 @@
 import { useState } from "react";
 
-import { NonClass } from "./activity";
+import { NonClass, Timeslot } from "./activity";
 import { Class, Section, Sections } from "./class";
 import { Firehose } from "./firehose";
-import {
-  WEEKDAY_STRINGS,
-  TIMESLOT_STRINGS,
-  dayTimeToSlot,
-  toDate,
-} from "./utils";
+import { WEEKDAY_STRINGS, TIMESLOT_STRINGS, dayStringToSlot } from "./utils";
 
 /** A single, manual section option, under {@link ClassManualSections}. */
 function ClassManualOption(props: {
@@ -144,8 +139,11 @@ function NonClassAddTime(props: { activity: NonClass; firehose: Firehose }) {
         for (const day in days) {
           if (!days[day]) continue;
           firehose.addTimeslot(
-            toDate(dayTimeToSlot(day, times.start)),
-            toDate(dayTimeToSlot(day, times.end))
+            activity,
+            Timeslot.fromStartEnd(
+              dayStringToSlot(day, times.start),
+              dayStringToSlot(day, times.end)
+            )
           );
         }
       }}

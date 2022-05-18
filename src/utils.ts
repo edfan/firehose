@@ -66,7 +66,7 @@ export function classNumberMatch(
 // TODO: rename these
 
 /**
- * Converts a timeslot (as in {@link Timeslot}) to a date in the week of
+ * Converts a slot number (as in {@link Timeslot}) to a date in the week of
  * 2001-01-01, which is the week the calendar shows.
  */
 export function toDate(slot: number): Date {
@@ -76,9 +76,7 @@ export function toDate(slot: number): Date {
   return new Date(2001, 0, day, hour, minute);
 }
 
-/**
- * Converts date (within 8 AM to 9 PM) to a timeslot (as in {@link Timeslot}).
- */
+/** Converts date (within 8 AM to 9 PM) to a slot number. */
 export function toSlot(date: Date): number {
   return (
     30 * (date.getDay() - 1) +
@@ -106,21 +104,21 @@ function generateTimeslotStrings(): Array<string> {
   return res;
 }
 
-/** Strings for each timeslot, in order. */
+/** Strings for each slot number, in order. */
 export const TIMESLOT_STRINGS = generateTimeslotStrings();
 
-/** Convert a timeslot to a day string. */
+/** Convert a slot number to a day string. */
 export function slotToDayString(slot: number): string {
   return WEEKDAY_STRINGS[Math.floor(slot / 30)]!;
 }
 
-/** Convert a timeslot to a time string. */
+/** Convert a slot number to a time string. */
 export function slotToTimeString(slot: number): string {
   return TIMESLOT_STRINGS[slot % 30]!;
 }
 
-/** TODO */
-export function dayTimeToSlot(day: string, time: string): number {
+/** Converts a day and time stirng to a slot number. */
+export function dayStringToSlot(day: string, time: string): number {
   return 30 * WEEKDAY_STRINGS.indexOf(day) + TIMESLOT_STRINGS.indexOf(time);
 }
 

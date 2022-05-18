@@ -3,7 +3,6 @@ import { EventInput } from "@fullcalendar/core";
 import { Class } from "./class";
 import {
   toDate,
-  toSlot,
   slotToDayString,
   slotToTimeString,
   FALLBACK_COLOR,
@@ -12,7 +11,16 @@ import {
 /**
  * A timeslot is a period of time, spanning several thirty-minute slots. Each
  * day has 30 thirty-minute slots from 8 AM to 11 PM, times five days a week.
- * Thus, Monday slots are 0 to 29, Tuesday are 30 to 59, etc.
+ *
+ * Each slot is assigned a slot number. Monday slots are 0 to 29, Tuesday are
+ * 30 to 59, etc., slot number 0 is Monday 8 AM to 8:30 AM, etc.
+ *
+ * Note that 8:30 AM is the ending time of slot number 0 and starting time of
+ * slot number 1. Most timeslot utilities will convert a time to the slot
+ * number that it starts, so 8:30 AM will be converted to 1.
+ *
+ * The interface ends at 9 PM, so we don't need to worry about the fencepost
+ * problem with respect to ending slots.
  */
 export class Timeslot {
   startSlot: number;
@@ -21,6 +29,11 @@ export class Timeslot {
   constructor(startSlot: number, numSlots: number) {
     this.startSlot = startSlot;
     this.numSlots = numSlots;
+  }
+
+  /** Construct a timeslot from [startSlot, endSlot). */
+  static fromStartEnd(startSlot: number, endSlot: number): Timeslot {
+    return new Timeslot(startSlot, endSlot - startSlot);
   }
 
   /** Ending slot, inclusive. */
@@ -134,13 +147,9 @@ export class NonClass {
    * Add a timeslot to this non-class activity spanning from startDate to
    * endDate. Dates must be within 8 AM to 9 PM.
    */
-  addTimeslot(startDate: Date, endDate: Date): void {
-    const startSlot = toSlot(startDate);
-    const slotLength = toSlot(endDate) - startSlot;
-    const slot = new Timeslot(startSlot, slotLength);
-    if (!this.timeslots.find((slot_) => slot_.equals(slot))) {
+  addTimeslot(slot: Timeslot): void {
+    if (!this.timeslots.find((slot_) => slot_.equals(slot)))
       this.timeslots.push(slot);
-    }
   }
 
   /** Remove a given timeslot from the non-class activity. */

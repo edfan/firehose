@@ -22,7 +22,6 @@ export function App(props: { firehose: Firehose }) {
     units: 0,
     hours: 0,
     warnings: [],
-    selectable: false,
   });
 
   const [showClassTable, setShowClassTable] = useState(true);
@@ -40,7 +39,7 @@ export function App(props: { firehose: Firehose }) {
           selectedActivities={state.selectedActivities}
           selectedOption={state.selectedOption}
           totalOptions={state.totalOptions}
-          selectable={state.selectable}
+          viewedActivity={state.viewedActivity}
           firehose={firehose}
         />
         <LeftFooter />

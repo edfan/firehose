@@ -2,8 +2,9 @@ import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 
-import { Activity } from "./activity";
+import { Activity, NonClass, Timeslot } from "./activity";
 import { Firehose } from "./firehose";
+import { toSlot } from "./utils";
 
 /**
  * Calendar showing all the activities, including the buttons on top that
@@ -15,14 +16,14 @@ export function Calendar(props: {
   selectedActivities: Array<Activity>;
   selectedOption: number;
   totalOptions: number;
-  selectable: boolean;
+  viewedActivity: Activity | undefined;
   firehose: Firehose;
 }) {
   const {
     selectedActivities,
     selectedOption,
     totalOptions,
-    selectable,
+    viewedActivity,
     firehose,
   } = props;
 
@@ -72,8 +73,14 @@ export function Calendar(props: {
             slotMinTime="08:00:00"
             slotMaxTime="22:00:00"
             weekends={false}
-            selectable={selectable}
-            select={(e) => firehose.addTimeslot(e.start, e.end)}
+            selectable={viewedActivity instanceof NonClass}
+            select={(e) => {
+              viewedActivity instanceof NonClass &&
+                firehose.addTimeslot(
+                  viewedActivity,
+                  Timeslot.fromStartEnd(toSlot(e.start), toSlot(e.end))
+                );
+            }}
           />
         </div>
       </div>

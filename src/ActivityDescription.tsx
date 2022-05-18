@@ -207,7 +207,7 @@ function NonClassDescription(props: {
       <NonClassButtons activity={activity} firehose={firehose} />
       {activity.timeslots.map((t) => (
         <p key={t.toString()}>
-          <button onClick={() => firehose.removeTimeslot(t)}>remove</button>{" "}
+          <button onClick={() => firehose.removeTimeslot(activity, t)}>remove</button>{" "}
           {t.toString()}
         </p>
       ))}

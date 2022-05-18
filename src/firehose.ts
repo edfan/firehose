@@ -12,7 +12,6 @@ export type FirehoseState = {
   units: number;
   hours: number;
   warnings: Array<string>;
-  selectable: boolean;
 };
 
 /**
@@ -126,25 +125,22 @@ export class Firehose {
   ///////////////////////
 
   /** Rename a given non-activity. */
-  renameNonClass(activity: NonClass, name: string): void {
-    const nonClass = this.selectedNonClasses.find(
-      (activity_) => activity_.id === activity.id
+  renameNonClass(nonClass: NonClass, name: string): void {
+    const nonClass_ = this.selectedNonClasses.find(
+      (nonClass_) => nonClass_.id === nonClass.id
     )!;
-    nonClass.name = name;
+    nonClass_.name = name;
     this.updateState();
   }
 
   /**
-   * Add the timeslot to currently viewed activity. Both {@param startDate} and
-   * {@param endDate} should be dates in the week of 2001-01-01, with times
-   * between 8 AM and 9 PM. Will not add if equal to an existing timeslot.
-   * Will not add if startDate and endDate are on different dates.
-   *
-   * TODO: incl. activity in params, change interface to slots...?
+   * Add the timeslot to currently viewed activity.  Will not add if equal to
+   * an existing timeslot. Will not add if slot's startDate and endDate are on
+   * different dates.
    */
-  addTimeslot(startDate: Date, endDate: Date): void {
-    if (startDate.getDate() !== endDate.getDate()) return;
-    this.viewedActivity?.addTimeslot(startDate, endDate);
+  addTimeslot(nonClass: NonClass, slot: Timeslot): void {
+    if (slot.startTime.getDate() !== slot.endTime.getDate()) return;
+    nonClass.addTimeslot(slot);
     this.updateActivities();
     this.fitsScheduleCallback?.();
   }
@@ -152,8 +148,8 @@ export class Firehose {
   /**
    * Remove all timeslots equal to {@param slot} from currently viewed activity.
    */
-  removeTimeslot(slot: Timeslot): void {
-    this.viewedActivity?.removeTimeslot(slot);
+  removeTimeslot(nonClass: NonClass, slot: Timeslot): void {
+    nonClass.removeTimeslot(slot);
     this.updateActivities();
     this.fitsScheduleCallback?.();
   }
@@ -195,7 +191,6 @@ export class Firehose {
         0
       ),
       warnings: [], // TODO
-      selectable: this.viewedActivity instanceof NonClass,
     });
   }
 

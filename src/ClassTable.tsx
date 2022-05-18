@@ -9,7 +9,7 @@ import "@ag-grid-community/core/dist/styles/ag-grid.css";
 import "./ClassTable.scss";
 
 import { Class, Flags } from "./class";
-import { classSort, classNumberMatch, simplifyString } from "./utils";
+import { classSort, simplifyString } from "./utils";
 import { Firehose } from "./firehose";
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
