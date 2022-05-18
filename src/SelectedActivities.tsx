@@ -6,7 +6,6 @@ import { formatNumber } from "./utils";
 /**
  * A button representing a single, selected activity.
  *
- * TODO: double click functionality
  * TODO: warning symbols like * and +
  */
 function ActivityButton(props: { activity: Activity; firehose: Firehose }) {

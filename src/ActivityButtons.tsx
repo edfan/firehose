@@ -75,29 +75,18 @@ export function ClassButtons(props: { cls: Class; firehose: Firehose }) {
   const { cls, firehose } = props;
 
   const [showManual, setShowManual] = useState(false);
+  const isSelected = firehose.isSelectedActivity(cls);
 
-  if (!firehose.isSelectedActivity(cls)) {
-    return (
-      <div id="class-buttons-div">
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => firehose.addActivity(cls)}
-        >
-          Add class
-        </button>
-      </div>
-    );
-  } else {
-    return (
-      <div id="class-buttons-div">
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => firehose.removeActivity(cls)}
-        >
-          Remove class
-        </button>
+  return (
+    <div id="class-buttons-div">
+      <button
+        type="button"
+        className="btn btn-primary"
+        onClick={() => firehose.toggleActivity(cls)}
+      >
+        {isSelected ? "Remove class" : "Add class"}
+      </button>
+      {isSelected && (
         <button
           type="button"
           className={"btn btn-primary" + (showManual ? " active" : "")}
@@ -105,13 +94,15 @@ export function ClassButtons(props: { cls: Class; firehose: Firehose }) {
         >
           Edit sections
         </button>
-        {showManual && <ClassManualSections cls={cls} firehose={firehose} />}
-      </div>
-    );
-  }
+      )}
+      {isSelected && showManual && (
+        <ClassManualSections cls={cls} firehose={firehose} />
+      )}
+    </div>
+  );
 }
 
-/** TODO */
+/** Form to add a timeslot to a non-class. */
 function NonClassAddTime(props: { activity: NonClass; firehose: Firehose }) {
   const { activity, firehose } = props;
   const [days, setDays] = useState(
@@ -178,12 +169,11 @@ export function NonClassButtons(props: {
       <button
         type="button"
         className="btn btn-primary"
-        onClick={() => {
-          // TODO: this should change back to add activity if removed
-          firehose.removeActivity(activity);
-        }}
+        onClick={() => firehose.toggleActivity(activity)}
       >
-        Remove activity
+        {firehose.isSelectedActivity(activity)
+          ? "Remove activity"
+          : "Add activity"}
       </button>
       <form
         onSubmit={(e) => {

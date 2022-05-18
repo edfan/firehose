@@ -134,6 +134,8 @@ const CLASS_FLAGS_2: Array<[keyof Flags | "fits", string]> = [
   ["le9units", "≤ 9 units"],
 ];
 
+const CLASS_FLAGS = CLASS_FLAGS_1.concat(CLASS_FLAGS_2);
+
 /** Div containing all the flags like "HASS". Maintains the flag filter. */
 function ClassFlags(props: {
   /** Callback for updating the class filter. */
@@ -147,12 +149,9 @@ function ClassFlags(props: {
   // Map from flag to whether it's on.
   const [flags, setFlags] = useState<Map<keyof Flags | "fits", boolean>>(() => {
     const result = new Map();
-    CLASS_FLAGS_1.forEach(([flag]) => {
+    for (const flag of CLASS_FLAGS) {
       result.set(flag, false);
-    });
-    CLASS_FLAGS_2.forEach(([flag]) => {
-      result.set(flag, false);
-    });
+    }
     return result;
   });
 

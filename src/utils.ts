@@ -4,9 +4,14 @@ import { Activity } from "./activity";
  * Rounds {@param x} to {@param n} decimal places?
  * TODO: figure out what this does and then remove it
  */
-export function formatNumber(x: number, n: number) {
+export function formatNumber(x: number, n: number): string {
   const re = "\\d(?=(\\d{" + (x || 3) + "})+" + (n > 0 ? "\\." : "$") + ")";
   return x.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, "g"), "$&,");
+}
+
+/** Takes the sum of an array. */
+export function sum(arr: Array<number>): number {
+  return arr.reduce((acc, cur) => acc + cur, 0);
 }
 
 /**

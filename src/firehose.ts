@@ -1,7 +1,7 @@
 import { Timeslot, NonClass, Activity } from "./activity";
 import { scheduleSlots } from "./calendarSlots";
 import { RawClass, Class, Section, Sections } from "./class";
-import { chooseColors } from "./utils";
+import { sum, chooseColors } from "./utils";
 
 /** React / localStorage state. */
 export type FirehoseState = {
@@ -33,6 +33,11 @@ export class Firehose {
   // The following are React state, so should be private. Even if we pass the
   // Firehose object to React components, they shouldn't be looking at these
   // directly; they should have it passed down to them as props from App.
+  //
+  // All of our program state is on this level as well; a user's schedule is
+  // determined by the current term (which determines rawClasses and therefore
+  // classes), plus the selected activities. So to save/load schedules, all we
+  // need is to save/load selected activities.
 
   /** Activity whose description is being viewed. */
   private viewedActivity: Activity | undefined;
@@ -133,21 +138,14 @@ export class Firehose {
     this.updateState();
   }
 
-  /**
-   * Add the timeslot to currently viewed activity.  Will not add if equal to
-   * an existing timeslot. Will not add if slot's startDate and endDate are on
-   * different dates.
-   */
+  /** Add the timeslot to currently viewed activity. */
   addTimeslot(nonClass: NonClass, slot: Timeslot): void {
-    if (slot.startTime.getDate() !== slot.endTime.getDate()) return;
     nonClass.addTimeslot(slot);
     this.updateActivities();
     this.fitsScheduleCallback?.();
   }
 
-  /**
-   * Remove all timeslots equal to {@param slot} from currently viewed activity.
-   */
+  /** Remove all equal timeslots from currently viewed activity. */
   removeTimeslot(nonClass: NonClass, slot: Timeslot): void {
     nonClass.removeTimeslot(slot);
     this.updateActivities();
@@ -155,8 +153,9 @@ export class Firehose {
   }
 
   /**
-   * Lock a specific section of a class. This is here because we need to update
-   * the React state after doing this.
+   * Lock a specific section of a class. This is here (as opposed to in the
+   * Sections class) because we need to update the React state after this,
+   * and only Firehose should update the React state.
    */
   lockSection(secs: Sections, sec: Section | "auto" | "none"): void {
     if (sec === "auto") {
@@ -182,14 +181,8 @@ export class Firehose {
       viewedActivity: this.viewedActivity,
       selectedOption: this.selectedOption,
       totalOptions: this.options.length,
-      units: this.selectedClasses.reduce(
-        (total, cls) => total + cls.totalUnits,
-        0
-      ),
-      hours: this.selectedActivities.reduce(
-        (total, activity) => total + activity.hours,
-        0
-      ),
+      units: sum(this.selectedClasses.map((cls) => cls.totalUnits)),
+      hours: sum(this.selectedActivities.map((activity) => activity.hours)),
       warnings: [], // TODO
     });
   }
@@ -199,10 +192,7 @@ export class Firehose {
    * If index does not exist, change it to this.options[0].
    */
   selectOption(index?: number): void {
-    this.selectedOption = index ?? 0;
-    if (this.selectedOption >= this.options.length || this.selectedOption < 0) {
-      this.selectedOption = 0;
-    }
+    this.selectedOption = (this.options[index ?? 0]) ? (index ?? 0) : 0;
     for (const sec of this.options[this.selectedOption]) {
       sec.secs.selected = sec;
     }

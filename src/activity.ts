@@ -2,6 +2,7 @@ import { EventInput } from "@fullcalendar/core";
 
 import { Class } from "./class";
 import {
+  sum,
   toDate,
   slotToDayString,
   slotToTimeString,
@@ -135,7 +136,7 @@ export class NonClass {
 
   /** Hours per week. */
   get hours(): number {
-    return this.timeslots.reduce((acc, cur) => acc + cur.hours, 0);
+    return sum(this.timeslots.map((slot) => slot.hours));
   }
 
   /** Get all calendar events corresponding to this activity. */
@@ -145,11 +146,16 @@ export class NonClass {
 
   /**
    * Add a timeslot to this non-class activity spanning from startDate to
-   * endDate. Dates must be within 8 AM to 9 PM.
+   * endDate. Dates must be within 8 AM to 9 PM. Will not add if equal to
+   * existing timeslot. Will not add if slot spans multiple days.
    */
   addTimeslot(slot: Timeslot): void {
-    if (!this.timeslots.find((slot_) => slot_.equals(slot)))
-      this.timeslots.push(slot);
+    if (
+      this.timeslots.find((slot_) => slot_.equals(slot)) ||
+      slot.startTime.getDate() !== slot.endTime.getDate()
+    )
+      return;
+    this.timeslots.push(slot);
   }
 
   /** Remove a given timeslot from the non-class activity. */
