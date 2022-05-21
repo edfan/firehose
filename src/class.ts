@@ -2,7 +2,7 @@ import { Timeslot, Event } from "./activity";
 import { formatNumber } from "./utils";
 
 /** Raw timeslot format: [start slot, length of timeslot]. */
-type RawTimeslot = [number, number];
+export type RawTimeslot = [number, number];
 
 /** Raw section format: [[[10, 2], [70, 2]], "34-101". */
 type RawSection = [Array<RawTimeslot>, string];
@@ -28,11 +28,11 @@ export type RawClass = {
 
   /** Kinds of sections (among LECTURE, RECITATION, LAB) that exist */
   s: Array<"l" | "r" | "b">;
-  /** Possible lecture sections */
+  /** Lecture timeslots and rooms */
   l: Array<RawSection>;
-  /** Possible recitation sections */
+  /** Recitation timeslots and rooms */
   r: Array<RawSection>;
-  /** Possible lab sections */
+  /** Lab timeslots and rooms */
   b: Array<RawSection>;
   /** Raw lecture times, e.g. T9.301-11 or TR1,F2 */
   lr: Array<string>;
@@ -427,4 +427,33 @@ export class Class {
 
   /** Doesn't actually do anything (yet?), just makes compiler happy. */
   removeTimeslot(slot: Timeslot): void {}
+
+  /** Deflate a class to something JSONable. */
+  deflate(): Array<string | number> {
+    const sections = this.sections.map((secs) =>
+      !secs.locked
+        ? ""
+        : secs.sections.findIndex((sec) => sec === secs.selected)
+    );
+    return [this.number, ...sections];
+  }
+
+  /**
+   * Inflate a class with info from the output of deflate.
+   *
+   * TODO: it's possible that sections change between when this class was
+   * serialized and when it becomes parsed; we currently don't guard that.
+   */
+  inflate(parsed: Array<string | number>): void {
+    this.sections.forEach((secs, i) => {
+      // we ignore parsed[0] as that has the class number
+      const parse = parsed[i + 1];
+      if (typeof parse === "string") {
+        secs.locked = false;
+      } else {
+        secs.locked = true;
+        secs.selected = secs.sections[parse];
+      }
+    });
+  }
 }

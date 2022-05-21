@@ -98,7 +98,6 @@ export class Firehose {
       this.selectedNonClasses.push(toAdd);
     }
     this.updateActivities();
-    this.fitsScheduleCallback?.();
   }
 
   /** Remove an activity and update. */
@@ -114,7 +113,6 @@ export class Firehose {
       );
     }
     this.updateActivities();
-    this.fitsScheduleCallback?.();
   }
 
   /** Add activity if it exists, remove if it doesn't. */
@@ -142,14 +140,12 @@ export class Firehose {
   addTimeslot(nonClass: NonClass, slot: Timeslot): void {
     nonClass.addTimeslot(slot);
     this.updateActivities();
-    this.fitsScheduleCallback?.();
   }
 
   /** Remove all equal timeslots from currently viewed activity. */
   removeTimeslot(nonClass: NonClass, slot: Timeslot): void {
     nonClass.removeTimeslot(slot);
     this.updateActivities();
-    this.fitsScheduleCallback?.();
   }
 
   /**
@@ -192,7 +188,7 @@ export class Firehose {
    * If index does not exist, change it to this.options[0].
    */
   selectOption(index?: number): void {
-    this.selectedOption = (this.options[index ?? 0]) ? (index ?? 0) : 0;
+    this.selectedOption = this.options[index ?? 0] ? index ?? 0 : 0;
     for (const sec of this.options[this.selectedOption]) {
       sec.secs.selected = sec;
     }
@@ -212,6 +208,7 @@ export class Firehose {
     this.options = result.options;
     this.conflicts = result.conflicts;
     this.selectOption();
+    this.fitsScheduleCallback?.();
   }
 
   /**
@@ -231,5 +228,30 @@ export class Firehose {
           this.selectedNonClasses
         ).conflicts === this.conflicts)
     );
+  }
+
+  /** Stringify all program state. */
+  stringify(): string {
+    return JSON.stringify([
+      this.selectedClasses.map((cls) => cls.deflate()),
+      this.selectedNonClasses.map((nonClass) => nonClass.deflate()),
+      this.selectedOption,
+    ]);
+  }
+
+  parse(str: string): void {
+    const [classes, nonClasses, selectedOption] = JSON.parse(str);
+    for (const deflated of classes) {
+      const cls = this.classes.get(deflated[0])!;
+      cls.inflate(deflated);
+      this.selectedClasses.push(cls);
+    }
+    for (const deflated of nonClasses) {
+      const nonClass = new NonClass();
+      nonClass.inflate(deflated);
+      this.selectedNonClasses.push(nonClass);
+    }
+    this.selectedOption = selectedOption;
+    this.updateActivities();
   }
 }

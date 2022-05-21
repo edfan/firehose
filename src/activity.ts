@@ -1,6 +1,6 @@
 import { EventInput } from "@fullcalendar/core";
 
-import { Class } from "./class";
+import { Class, RawTimeslot } from "./class";
 import {
   sum,
   toDate,
@@ -161,6 +161,31 @@ export class NonClass {
   /** Remove a given timeslot from the non-class activity. */
   removeTimeslot(slot: Timeslot): void {
     this.timeslots = this.timeslots.filter((slot_) => !slot_.equals(slot));
+  }
+
+  /** Deflate an activity to something JSONable. */
+  deflate(): Array<Array<RawTimeslot> | string> {
+    const res = [
+      this.timeslots.map<RawTimeslot>((slot) => [
+        slot.startSlot,
+        slot.numSlots,
+      ]),
+      this.name,
+    ];
+    if (this.backgroundColor !== undefined) {
+      res.push(this.backgroundColor);
+    }
+    return res;
+  }
+
+  /** Inflate a non-class activity with info from the output of deflate. */
+  inflate(parsed: Array<Array<RawTimeslot> | string>) {
+    const [timeslots, name, backgroundColor] = parsed;
+    this.timeslots = (timeslots as Array<RawTimeslot>).map(
+      (slot) => new Timeslot(...slot)
+    );
+    this.name = name as string;
+    this.backgroundColor = backgroundColor as string;
   }
 }
 
