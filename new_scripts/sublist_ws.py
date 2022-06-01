@@ -25,7 +25,12 @@ for c in class_list:
 
         classes[num] = {'no_next': False,
                         'repeat': False,
+                        'half': False,
                         'url': ''}
+
+        name_split = start.getText().split("\n")
+        if len(name_split) > 2 and name_split[1] != "(New)":
+            classes[num]['old_num'] = name_split[1][1:-1]
 
         level = start.findNext('img').findNext('img')
 
@@ -56,6 +61,14 @@ for c in class_list:
         for other in others:
             if 'repeat.gif' in str(other):
                 classes[num]['repeat'] = True
+
+        half = soup.getText().split(' half of term')
+        if len(half) > 1:
+            term = half[0].split(' ')[-1].strip()
+            if term == "first":
+                classes[num]['half'] = 1
+            if term == "second":
+                classes[num]['half'] = 2
             
         url = soup.getText().split('URL: ')
         if len(url) > 1:
