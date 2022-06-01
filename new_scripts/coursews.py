@@ -2,7 +2,7 @@ import json
 import requests
 import itertools
 
-term = '2022SP'
+term = '2023FA'
 
 # copied from csb.py
 
@@ -145,15 +145,23 @@ def parse_joint(joint):
 
 instructors = 'fall_instructors' if term[-2:] == 'FA' else 'spring_instructors'
 
+with open("course_six_renumbering.json") as f:
+    course_six_renumbering = json.loads(f.read())
+    course_six_renumbering_inv = {v: k for k, v in course_six_renumbering.items()}
+
 for c in raw_classes:
     if c['type'] == 'Class':
         number = c['id']
+        name = c['label']
+
+        # if number in course_six_renumbering_inv:
+        #     name = "[" + course_six_renumbering_inv[number] + "] " + name
 
         units1, units2, units3 = parse_units(c['units'])
 
         classes[number] = {
             'number': number,
-            'name':c['label'],
+            'name':name,
             'course': number.split('.')[0],
             'class': number.split('.')[1],
             'sections': [],
@@ -186,6 +194,7 @@ for c in raw_classes:
             'same_as': parse_joint(c['joint_subjects']),
             'meets_with': parse_joint(c['meets_with_subjects']),
             'sat': False,
+            'limited': 'limited' in c['description'].lower(),
             # 'instructors': ', '.join(c[instructors]),
             'in-charge': c['in-charge']}
 
@@ -211,10 +220,6 @@ for c in raw_classes:
         print('section for nonexistent class', number)
         continue
 
-    # manual fix: 21G.612
-    if number == "21G.612":
-        c['timeAndPlace'] = "MTRF 16-668"
-
     cl = classes[number]
 
     if 'EVE' in c['timeAndPlace']:
@@ -223,14 +228,13 @@ for c in raw_classes:
     else:
         # For some reason, a couple classes are totally inconsistent.
         tp = c['timeAndPlace']
-        if "33-014, " in tp:
-            tp = tp[:-5]
         if ":00" in tp or ":30" in tp:
             tp = tp.replace(":00", "").replace(":30", ".30")
         split = tp.rsplit(' ', 1)
         t = split[0].replace(' ', '')
 
-    if 'ENDS' in t:
+    # e.g. F1 (BEGINS OCT 31)
+    if 'ENDS' in t or 'BEGINS' in t:
         t = t.split('(')[0].strip()
 
     p = split[1]
@@ -239,7 +243,7 @@ for c in raw_classes:
         p = 'Virtual'
 
     # Check for TBA.
-    if t == '*TO BE ARRANGED' or t == 'null' or t.lower() == 'tbd' or t.lower() == 'tba':
+    if t == '*TO BE ARRANGED' or t == 'null' or t.lower() == 'tbd' or t.lower() == 'tba' or t == '*TOBEARRANGED':
         cl['tba'] = True
         continue
 
