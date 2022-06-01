@@ -58,6 +58,7 @@ export class Firehose {
     rawClasses.forEach((cls, number) => {
       this.classes.set(number, new Class(cls));
     });
+    this.parse(localStorage.getItem("firehose")!);
   }
 
   /** All activities. */
@@ -170,7 +171,12 @@ export class Firehose {
   // State management //
   //////////////////////
 
-  /** Update React state by calling React callback. */
+  /**
+   * Update React state by calling React callback, and store state into
+   * localStorage.
+   *
+   * TODO: use term name for localStorage key.
+   */
   updateState(): void {
     this.callback?.({
       selectedActivities: this.selectedActivities,
@@ -181,6 +187,7 @@ export class Firehose {
       hours: sum(this.selectedActivities.map((activity) => activity.hours)),
       warnings: [], // TODO
     });
+    localStorage.setItem("firehose", this.stringify());
   }
 
   /**
@@ -239,6 +246,7 @@ export class Firehose {
     ]);
   }
 
+  /** Parse all program state. */
   parse(str: string): void {
     const [classes, nonClasses, selectedOption] = JSON.parse(str);
     for (const deflated of classes) {
