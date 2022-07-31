@@ -28,8 +28,6 @@ export class Firehose {
   options: Array<Array<Section>> = [[]];
   /** Current number of schedule conflicts. */
   conflicts: number = 0;
-  /** The term of the firehose object. */
-  term: string = "";
 
   // The following are React state, so should be private. Even if we pass the
   // Firehose object to React components, they shouldn't be looking at these
@@ -56,12 +54,17 @@ export class Firehose {
   /** React callback to update fits schedule filter. */
   fitsScheduleCallback: (() => void) | undefined;
 
-  constructor(rawClasses: Map<string, RawClass>, term: string) {
+  constructor(
+    rawClasses: Map<string, RawClass>,
+    /** The term, e.g. f22, i19. */
+    public readonly term: string,
+    /** String representing last update time. */
+    public readonly lastUpdated: string
+  ) {
     this.classes = new Map();
     rawClasses.forEach((cls, number) => {
       this.classes.set(number, new Class(cls));
     });
-    this.term = term;
     this.load();
   }
 

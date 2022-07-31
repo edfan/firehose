@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Spinner } from "react-bootstrap";
 
 import { Firehose, FirehoseState } from "./firehose";
+import { RawClass } from "./class";
 
 import { Calendar } from "./Calendar";
 import { ActivityDescription } from "./ActivityDescription";
@@ -12,8 +14,10 @@ import { LeftFooter, RightFooter } from "./Footers";
 import "./stylesheet.scss";
 
 /** The main application. */
-export function App(props: { firehose: Firehose }) {
-  const { firehose } = props;
+export function App() {
+  const firehoseRef = useRef<Firehose>();
+  const firehose = firehoseRef.current;
+
   const [state, setState] = useState<FirehoseState>({
     selectedActivities: [],
     viewedActivity: undefined,
@@ -28,11 +32,32 @@ export function App(props: { firehose: Firehose }) {
   const [showClassTable, setShowClassTable] = useState(true);
 
   useEffect(() => {
-    firehose.callback = setState;
-    firehose.updateState();
-  }, [firehose]);
+    fetch("full.json")
+      .then(
+        (res) =>
+          res.json() as Promise<{
+            classes: { [cls: string]: RawClass };
+            lastUpdated: string;
+          }>
+      )
+      .then((data) => {
+        const classesMap = new Map(Object.entries(data.classes));
+        const firehoseObj = new Firehose(classesMap, "f22", data.lastUpdated);
+        firehoseObj.callback = setState;
+        firehoseObj.updateState();
+        firehoseRef.current = firehoseObj;
+        // @ts-ignore
+        window.firehose = firehoseObj;
+      });
+  }, []);
 
-  return (
+  return !firehose ? (
+    <div id="spinner">
+      <Spinner animation="border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </Spinner>
+    </div>
+  ) : (
     <>
       <div id="left-div">
         <Header />
@@ -68,7 +93,7 @@ export function App(props: { firehose: Firehose }) {
           />
         ) : null}
         <hr />
-        <RightFooter />
+        <RightFooter firehose={firehose} />
       </div>
     </>
   );

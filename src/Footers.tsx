@@ -1,3 +1,5 @@
+import { Firehose } from "./firehose";
+
 /**
  * The footer on the bottom of the calendar.
  *
@@ -13,7 +15,7 @@ export function LeftFooter() {
         <span id="toggle-css">Toggle high-contrast</span> |{" "}
         <span id="toggle-dark-mode">Toggle dark-mode</span> |{" "}
         <span id="clear-all">Clear all</span>
-        <br /> */}
+        <br />
         <span
           id="calendar-link"
           data-toggle="tooltip"
@@ -22,7 +24,7 @@ export function LeftFooter() {
           data-trigger="hover"
         >
           <img src="img/calendar-button.svg" alt="" />
-        </span>
+        </span> */}
       </div>
       <div id="footer-div">
         &copy; 2021 <a href="mailto:edwardf@alum.mit.edu">Edward Fan</a>.
@@ -35,9 +37,11 @@ export function LeftFooter() {
 }
 
 /** The footer on the bottom of the activity description. */
-export function RightFooter() {
+export function RightFooter(props: { firehose: Firehose }) {
+  const { firehose } = props;
   return (
     <div id="info2-div">
+      <p>Last updated: {firehose.lastUpdated}</p>
       <p>
         Questions? Issues? Feedback?{" "}
         <a href="mailto:cjq@mit.edu">Send me an email!</a>
