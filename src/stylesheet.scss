@@ -475,6 +475,16 @@ hr {
     height: 100vh;
 }
 
+#schedule-switcher-div {
+    text-align: center;
+
+    .form-select {
+        display: inline;
+        margin-right: 1em;
+        width: fit-content;
+    }
+}
+
 /* text boxes */
 
 input {

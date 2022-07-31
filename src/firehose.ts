@@ -1,7 +1,15 @@
+import { nanoid } from "nanoid";
+
 import { Timeslot, NonClass, Activity } from "./activity";
 import { scheduleSlots } from "./calendarSlots";
 import { RawClass, Class, Section, Sections } from "./class";
 import { sum, chooseColors, urlencode, urldecode } from "./utils";
+
+/** A save has an ID and a name. */
+export type Save = {
+  id: string;
+  name: string;
+};
 
 /** React / localStorage state. */
 export type FirehoseState = {
@@ -12,14 +20,13 @@ export type FirehoseState = {
   units: number;
   hours: number;
   warnings: Array<string>;
-  saveSlot: number;
+  saveId?: string;
+  saves: Array<Save>;
 };
 
 /**
  * Global Firehose object. Maintains global program state (selected classes,
  * schedule options selected, activities, etc.).
- *
- * TODO: serialize into urls too?
  */
 export class Firehose {
   /** Map from class number to Class object. */
@@ -46,8 +53,10 @@ export class Firehose {
   private selectedNonClasses: Array<NonClass> = [];
   /** Selected schedule option; zero-indexed. */
   private selectedOption: number = 0;
-  /** Slot in localStorage to save in; -1 for don't save. */
-  private saveSlot: number = 0;
+  /** Currently loaded save slot, undefined for none of them. */
+  private saveId?: string;
+  /** Names of each save slot. */
+  private saves: Array<Save> = [];
 
   /** React callback to update state. */
   callback: ((state: FirehoseState) => void) | undefined;
@@ -65,7 +74,7 @@ export class Firehose {
     rawClasses.forEach((cls, number) => {
       this.classes.set(number, new Class(cls));
     });
-    this.load();
+    this.initState();
   }
 
   /** All activities. */
@@ -179,7 +188,7 @@ export class Firehose {
    * Update React state by calling React callback, and store state into
    * localStorage.
    */
-  updateState(): void {
+  updateState(save: boolean = true): void {
     this.callback?.({
       selectedActivities: this.selectedActivities,
       viewedActivity: this.viewedActivity,
@@ -190,14 +199,10 @@ export class Firehose {
       warnings: Array.from(
         new Set(this.selectedClasses.flatMap((cls) => cls.warnings.messages))
       ),
-      saveSlot: this.saveSlot,
+      saveId: this.saveId,
+      saves: this.saves,
     });
-    if (this.saveSlot >= 0) {
-      localStorage.setItem(
-        `firehose-${this.term}-${this.saveSlot}`,
-        JSON.stringify(this.deflate())
-      );
-    }
+    if (save) this.storeSave(this.saveId);
   }
 
   /**
@@ -209,7 +214,7 @@ export class Firehose {
     for (const sec of this.options[this.selectedOption]) {
       sec.secs.selected = sec;
     }
-    this.updateState();
+    this.updateState(false);
   }
 
   /**
@@ -219,13 +224,14 @@ export class Firehose {
    * TODO: measure performance; if it takes a hit, then add option to only
    *    reschedule slash recolor.
    */
-  updateActivities(): void {
+  updateActivities(save: boolean = true): void {
     chooseColors(this.selectedActivities);
     const result = scheduleSlots(this.selectedClasses, this.selectedNonClasses);
     this.options = result.options;
     this.conflicts = result.conflicts;
     this.selectOption();
     this.fitsScheduleCallback?.();
+    if (save) this.storeSave(this.saveId);
   }
 
   /**
@@ -247,6 +253,16 @@ export class Firehose {
     );
   }
 
+  //========================================================================
+  // Loading and saving
+
+  /** Clear (almost) all program state. This doesn't clear class state. */
+  reset(): void {
+    this.selectedClasses = [];
+    this.selectedNonClasses = [];
+    this.selectedOption = 0;
+  }
+
   /** Deflate program state to something JSONable. */
   deflate(): any {
     return [
@@ -259,6 +275,7 @@ export class Firehose {
   /** Parse all program state. */
   inflate(obj: any[] | null): void {
     if (!obj) return;
+    this.reset();
     const [classes, nonClasses, selectedOption] = obj;
     for (const deflated of classes) {
       const cls = this.classes.get(deflated[0])!;
@@ -271,7 +288,58 @@ export class Firehose {
       this.selectedNonClasses.push(nonClass);
     }
     this.selectedOption = selectedOption;
-    this.updateActivities();
+    this.updateActivities(false);
+  }
+
+  /** Attempt to load from a slot. Return whether it succeeds. */
+  loadSave(id: string): void {
+    const storage = localStorage.getItem(`firehose-${this.term}-${id}`);
+    if (!storage) return;
+    this.inflate(JSON.parse(storage));
+    this.saveId = id;
+    this.updateState(false);
+  }
+
+  /** Store state as a save in localStorage, and store save metadata. */
+  storeSave(id?: string): void {
+    if (id) {
+      localStorage.setItem(
+        `firehose-${this.term}-${id}`,
+        JSON.stringify(this.deflate())
+      );
+    }
+    localStorage.setItem(`firehose-${this.term}`, JSON.stringify(this.saves));
+    this.updateState(false);
+  }
+
+  /** Add a new save. If reset, then make the new save blank. */
+  addSave(reset: boolean): void {
+    const id = nanoid(8);
+    this.saveId = id;
+    const name = `Schedule ${this.saves.length + 1}`;
+    this.saves.push({ id, name });
+    if (reset) this.reset();
+    this.storeSave(id);
+  }
+
+  /** Rename a given save. */
+  renameSave(id: string, name: string): void {
+    const save = this.saves.find((save) => save.id === id);
+    if (!save || !name) return;
+    save.name = name;
+    this.storeSave();
+  }
+
+  /** Remove the given slot.  */
+  removeSave(id: string): void {
+    this.saves = this.saves.filter((save) => save.id !== id);
+    if (this.saves.length === 0) {
+      this.addSave(true);
+    }
+    if (id === this.saveId) {
+      this.loadSave(this.saves[0]!.id);
+    }
+    this.storeSave();
   }
 
   /** Return a URL that can be opened to recover the state. */
@@ -280,18 +348,22 @@ export class Firehose {
     return `${document.location.origin}?s=${encoded}`;
   }
 
-  /** Load the state from the URL (if given) or localStorage. */
-  load(): void {
+  /** Initialize the state from either the URL or localStorage. */
+  initState(): void {
     const params = new URLSearchParams(document.location.search);
     const param = params.get("s");
-    const storage = localStorage.getItem(
-      `firehose-${this.term}-${this.saveSlot}`
-    );
+    const saves = localStorage.getItem(`firehose-${this.term}`);
+    if (saves) {
+      this.saves = JSON.parse(saves) as Array<Save>;
+    }
+    if (!this.saves || !this.saves.length){
+      this.saves = [];
+      this.addSave(true);
+    }
     if (param) {
-      this.saveSlot = -1;
       this.inflate(urldecode(param));
-    } else if (storage) {
-      this.inflate(JSON.parse(storage));
+    } else {
+      this.loadSave(this.saves[0]!.id);
     }
   }
 }

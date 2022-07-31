@@ -7,6 +7,7 @@ import { RawClass } from "./class";
 import { Calendar } from "./Calendar";
 import { ActivityDescription } from "./ActivityDescription";
 import { ClassTable } from "./ClassTable";
+import { ScheduleSwitcher } from "./ScheduleSwitcher";
 import { SelectedActivities } from "./SelectedActivities";
 import { Header } from "./Header";
 import { LeftFooter, RightFooter } from "./Footers";
@@ -26,7 +27,7 @@ export function App() {
     units: 0,
     hours: 0,
     warnings: [],
-    saveSlot: 0,
+    saves: [],
   });
 
   const [showClassTable, setShowClassTable] = useState(true);
@@ -74,6 +75,11 @@ export function App() {
         <p id="beta-warning">
           This version is in <b>beta</b>. Save your info frequently!
         </p>
+        <ScheduleSwitcher
+          firehose={firehose}
+          saveId={state.saveId}
+          saves={state.saves}
+        />
         <hr />
         <SelectedActivities
           selectedActivities={state.selectedActivities}

@@ -1,4 +1,5 @@
 import { EventInput } from "@fullcalendar/core";
+import { nanoid } from 'nanoid';
 
 import { Class, RawTimeslot } from "./class";
 import {
@@ -121,8 +122,6 @@ export class Event {
 
 /** A non-class activity. */
 export class NonClass {
-  /** Largest NonClass ID. */
-  static maxId = 0;
   /** ID unique over all Activities. */
   readonly id: string;
   name: string = "New Activity";
@@ -131,7 +130,7 @@ export class NonClass {
   timeslots: Array<Timeslot> = [];
 
   constructor() {
-    this.id = String(++NonClass.maxId);
+    this.id = nanoid(8);
   }
 
   /** Hours per week. */
