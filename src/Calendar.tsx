@@ -9,8 +9,6 @@ import { toSlot } from "./utils";
 /**
  * Calendar showing all the activities, including the buttons on top that
  * change the schedule option selected.
- *
- * TODO: warning for too many choices
  */
 export function Calendar(props: {
   selectedActivities: Array<Activity>;
@@ -48,7 +46,13 @@ export function Calendar(props: {
         >
           &rarr;
         </button>
-        {/* <div id="warning3-div" style="display: none;">Too many options? Use the "+ Manually set sections" button above the class description to lock recitation times.</div> */}
+        <div
+          id="warning3-div"
+          style={{ display: totalOptions > 15 ? "block" : "none" }}
+        >
+          Too many options? Use the "Edit sections" button above the
+          class description.
+        </div>
       </div>
       <div id="left-int-div">
         <div id="calendar">
