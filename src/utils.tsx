@@ -1,3 +1,6 @@
+import { useRef } from "react";
+import { OverlayTrigger, Tooltip as BootstrapTooltip } from "react-bootstrap";
+
 import { Activity } from "./activity";
 
 /**
@@ -176,3 +179,18 @@ export function chooseColors(activities: Array<Activity>): void {
     activity.backgroundColor = BACKGROUND_COLORS[index];
   }
 }
+
+export const Tooltip = (props: {
+  children: React.ReactNode;
+  content: string;
+}) => {
+  const { children, content } = props;
+  return (
+    <OverlayTrigger
+      placement="top"
+      overlay={<BootstrapTooltip>{content}</BootstrapTooltip>}
+    >
+      {children as React.ReactElement}
+    </OverlayTrigger>
+  );
+};

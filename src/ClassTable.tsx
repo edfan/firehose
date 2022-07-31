@@ -9,7 +9,7 @@ import "@ag-grid-community/core/dist/styles/ag-grid.css";
 import "./ClassTable.scss";
 
 import { Class, Flags } from "./class";
-import { classSort, simplifyString } from "./utils";
+import { classSort, simplifyString, Tooltip } from "./utils";
 import { Firehose } from "./firehose";
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
@@ -113,7 +113,7 @@ function ClassInput(props: {
 }
 
 /** List of top filter IDs and their displayed names. */
-const CLASS_FLAGS_1: Array<[keyof Flags | "fits", string]> = [
+const CLASS_FLAGS_1: Array<[keyof Flags | "fits", string, string?]> = [
   ["hass", "HASS"],
   ["cih", "CI-H"],
   ["fits", "Fits schedule"],
@@ -121,16 +121,16 @@ const CLASS_FLAGS_1: Array<[keyof Flags | "fits", string]> = [
 ];
 
 /** List of hidden filter IDs and their displayed names. */
-const CLASS_FLAGS_2: Array<[keyof Flags | "fits", string]> = [
-  ["hassA", "HASS-A"],
-  ["hassH", "HASS-H"],
-  ["hassS", "HASS-S"],
+const CLASS_FLAGS_2: Array<[keyof Flags | "fits", string, string?]> = [
+  ["hassA", "HASS-A", "img/hassA.gif"],
+  ["hassH", "HASS-H", "img/hassH.gif"],
+  ["hassS", "HASS-S", "img/hassS.gif"],
   ["cihw", "CI-HW"],
   ["notcih", "Not CI-H"],
-  ["rest", "REST"],
-  ["Lab", "Institute Lab"],
-  ["under", "Undergrad"],
-  ["grad", "Graduate"],
+  ["rest", "REST", "img/rest.gif"],
+  ["Lab", "Institute Lab", "img/Lab.gif"],
+  ["under", "Undergrad", "img/under.gif"],
+  ["grad", "Graduate", "img/grad.gif"],
   ["le9units", "≤ 9 units"],
 ];
 
@@ -206,19 +206,25 @@ function ClassFlags(props: {
       </p>
       <div className="btn-group">
         {allFlags &&
-          CLASS_FLAGS_2.map(([flag, label]) => (
-            <label
-              className={"btn btn-primary" + (flags.get(flag) ? " active" : "")}
-              key={flag}
-            >
-              <input
-                type="checkbox"
-                checked={flags.get(flag)}
-                onChange={(e) => onChange(flag, e.target.checked)}
-              />
-              {label}
-            </label>
-          ))}
+          CLASS_FLAGS_2.map(([flag, label, image]) => {
+            const className =
+              "btn btn-primary" + (flags.get(flag) ? " active" : "");
+            const content = (
+              <label className={className} key={flag}>
+                <input
+                  type="checkbox"
+                  checked={flags.get(flag)}
+                  onChange={(e) => onChange(flag, e.target.checked)}
+                />
+                {image ? <img src={image} alt={label} /> : label}
+              </label>
+            );
+            return image ? (
+              <Tooltip content={label}>{content}</Tooltip>
+            ) : (
+              content
+            );
+          })}
       </div>
     </>
   );

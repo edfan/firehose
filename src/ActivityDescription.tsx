@@ -3,27 +3,26 @@ import { Class, Flags } from "./class";
 import { Firehose } from "./firehose";
 
 import { ClassButtons, NonClassButtons } from "./ActivityButtons";
+import { Tooltip } from "./utils";
 
-/**
- * A small image indicating a flag, like Spring or CI-H.
- *
- * TODO: tooltips
- */
+/** A small image indicating a flag, like Spring or CI-H. */
 function TypeSpan(props: { flag: string; title: string }) {
   const { flag, title } = props;
   return (
-    <span className="type-span" id={`${flag}-span`}>
-      <img
-        alt={title}
-        height="16"
-        width="16"
-        src={`img/${flag}.gif`}
-        data-toggle="tooltip"
-        data-placement="top"
-        title={title}
-        data-trigger="hover"
-      />
-    </span>
+    <Tooltip content={title}>
+      <span className="type-span" id={`${flag}-span`}>
+        <img
+          alt={title}
+          height="16"
+          width="16"
+          src={`img/${flag}.gif`}
+          data-toggle="tooltip"
+          data-placement="top"
+          title={title}
+          data-trigger="hover"
+        />
+      </span>
+    </Tooltip>
   );
 }
 
@@ -206,7 +205,10 @@ function NonClassDescription(props: {
       <NonClassButtons activity={activity} firehose={firehose} />
       {activity.timeslots.map((t) => (
         <p className="timeslot" key={t.toString()}>
-          <button className="btn btn-secondary btn-sm" onClick={() => firehose.removeTimeslot(activity, t)}>
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => firehose.removeTimeslot(activity, t)}
+          >
             Remove
           </button>{" "}
           {t.toString()}
