@@ -71,6 +71,10 @@ export function App() {
         <LeftFooter />
       </div>
       <div id="right-div">
+        <p id="beta-warning">
+          This version is in <b>beta</b>. Save your info frequently!
+        </p>
+        <hr />
         <SelectedActivities
           selectedActivities={state.selectedActivities}
           units={state.units}

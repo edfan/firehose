@@ -148,9 +148,10 @@
     text-decoration: underline;
 }
 
-#warning-div, #warning2-div {
+#warning-div, #warning2-div, #beta-warning {
     margin: 10px auto 5px;
     font-size: 70%;
+    text-align: center;
 }
 
 #warning3-div {
@@ -184,7 +185,7 @@
 
 #units-div {
     // leave space for loading/saving... somehow...
-    margin: 2.25em auto 10px auto;
+    margin: 10px auto 10px auto;
 }
 
 #activity-button, #more-filters-button, #share-button {
