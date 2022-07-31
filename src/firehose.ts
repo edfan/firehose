@@ -280,7 +280,11 @@ export class Firehose {
     this.reset();
     const [classes, nonClasses, selectedOption] = obj;
     for (const deflated of classes) {
-      const cls = this.classes.get(deflated[0])!;
+      const cls =
+        typeof deflated === "string"
+          ? this.classes.get(deflated)
+          : this.classes.get(deflated[0]);
+      if (!cls) continue;
       cls.inflate(deflated);
       this.selectedClasses.push(cls);
     }
