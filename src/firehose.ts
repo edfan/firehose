@@ -18,7 +18,6 @@ export type FirehoseState = {
  * Global Firehose object. Maintains global program state (selected classes,
  * schedule options selected, activities, etc.).
  *
- * TODO: serialize/deserialize into localStorage.
  * TODO: serialize into urls too?
  * TODO: rename class to activity when needed.
  */
@@ -29,6 +28,8 @@ export class Firehose {
   options: Array<Array<Section>> = [[]];
   /** Current number of schedule conflicts. */
   conflicts: number = 0;
+  /** The term of the firehose object. */
+  term: string = "";
 
   // The following are React state, so should be private. Even if we pass the
   // Firehose object to React components, they shouldn't be looking at these
@@ -53,12 +54,13 @@ export class Firehose {
   /** React callback to update fits schedule filter. */
   fitsScheduleCallback: (() => void) | undefined;
 
-  constructor(rawClasses: Map<string, RawClass>) {
+  constructor(rawClasses: Map<string, RawClass>, term: string) {
     this.classes = new Map();
     rawClasses.forEach((cls, number) => {
       this.classes.set(number, new Class(cls));
     });
-    this.parse(localStorage.getItem("firehose")!);
+    this.term = term;
+    this.parse(localStorage.getItem(`firehose-${term}`));
   }
 
   /** All activities. */
@@ -66,9 +68,8 @@ export class Firehose {
     return [...this.selectedClasses, ...this.selectedNonClasses];
   }
 
-  ///////////////////////
-  // Activity handlers //
-  ///////////////////////
+  //========================================================================
+  // Activity handlers
 
   /** Set the current class description being viewed. */
   setViewedActivity(cls: Activity | undefined): void {
@@ -124,9 +125,8 @@ export class Firehose {
       : this.addActivity(activity);
   }
 
-  ///////////////////////
-  // NonClass handlers //
-  ///////////////////////
+  //========================================================================
+  // NonClass handlers
 
   /** Rename a given non-activity. */
   renameNonClass(nonClass: NonClass, name: string): void {
@@ -167,15 +167,12 @@ export class Firehose {
     this.updateActivities();
   }
 
-  //////////////////////
-  // State management //
-  //////////////////////
+  //========================================================================
+  // State management
 
   /**
    * Update React state by calling React callback, and store state into
    * localStorage.
-   *
-   * TODO: use term name for localStorage key.
    */
   updateState(): void {
     this.callback?.({
@@ -187,7 +184,7 @@ export class Firehose {
       hours: sum(this.selectedActivities.map((activity) => activity.hours)),
       warnings: [], // TODO
     });
-    localStorage.setItem("firehose", this.stringify());
+    localStorage.setItem(`firehose-${this.term}`, this.stringify());
   }
 
   /**
@@ -247,7 +244,8 @@ export class Firehose {
   }
 
   /** Parse all program state. */
-  parse(str: string): void {
+  parse(str: string | null): void {
+    if (!str) return;
     const [classes, nonClasses, selectedOption] = JSON.parse(str);
     for (const deflated of classes) {
       const cls = this.classes.get(deflated[0])!;

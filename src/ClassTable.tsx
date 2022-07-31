@@ -265,11 +265,12 @@ export function ClassTable(props: {
         headerName: "Class",
         comparator: classSort,
         initialSort,
+        maxWidth: 100,
         ...sortProps,
       },
       { field: "rating", ...numberSortProps },
       { field: "hours", ...numberSortProps },
-      { field: "name" },
+      { field: "name", flex: 1 },
     ];
   }, []);
 

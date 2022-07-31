@@ -1,4 +1,4 @@
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 
 import { Firehose } from "./firehose";
 import { App } from "./App";
@@ -9,14 +9,12 @@ fetch("full.json")
   .then((res) => res.json())
   .then((data) => {
     const classesMap = new Map(Object.entries(data.classes));
-    const firehose = new Firehose(classesMap);
+    const firehose = new Firehose(classesMap, "f22");
 
     // Expose Firehose as global.
     window.firehose = firehose;
 
-    // TODO switch to react 18 eventually (ag-grid doesn't like it yet)
-    ReactDOM.render(
-      <App firehose={firehose} />,
-      document.querySelector("#App")
+    ReactDOM.createRoot(document.querySelector("#App")).render(
+      <App firehose={firehose} />
     );
   });

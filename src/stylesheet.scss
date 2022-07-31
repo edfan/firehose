@@ -64,16 +64,16 @@
 }
 
 #export-div {
-    margin: 10 auto;
+    margin: 30px auto 10px;
     font-size: 90%;
 }
 
 #sbuttons-div {
-    margin: 0 auto 5 auto;
+    margin: 0 auto 5px auto;
 }
 
 #adv-buttons-div {
-    margin: 10 auto 0 auto;
+    margin: 10px auto 0 auto;
 }
 
 #export-div span {
@@ -91,7 +91,7 @@
 }
     
 #footer-div {
-    margin: 0 auto 375 auto;
+    margin: 0 auto 375px auto;
     font-size: 65%;
     color: #B0B0B0;
 }
@@ -121,7 +121,7 @@
 }
 
 #selected-div {
-    margin: 12 auto 0 auto;
+    margin: 12px auto 0 auto;
     text-align: left;
     min-height: 38px;
 
@@ -145,17 +145,17 @@
 }
 
 #warning-div, #warning2-div {
-    margin: 0 auto 5 auto;
+    margin: 0 auto 5px auto;
     font-size: 70%;
 }
 
 #warning3-div {
-    margin: 5 auto;
+    margin: 5px auto;
     font-size: 70%;
 }
 
 #buttons-div {
-    margin: 20 auto;
+    margin: 20px auto;
     position: absolute;
     right: 32px;
     top: 0;
@@ -179,11 +179,11 @@
 
 #units-div {
     // leave space for loading/saving... somehow...
-    margin: 2.25em auto 10 auto;
+    margin: 2.25em auto 10px auto;
 }
 
 #activity-button, #more-filters-button {
-    margin: 10 auto;
+    margin: 10px auto;
     font-size: 70%;
     color: #0275d8;
     cursor: pointer;
@@ -204,7 +204,7 @@
 
 .time {
     width: 80px;
-    margin: 0 auto 10;
+    margin: 0 auto 10px;
 }
 
 .btn .btn:focus {
@@ -261,7 +261,7 @@
     font-family: 'PT Serif', serif;
     width: 100%;
     max-width: 1200px;
-    margin: 5 auto 15 auto;
+    margin: 5px auto 15px auto;
     cursor: pointer;
     scrollbar-width: 10px;
 }
@@ -315,7 +315,7 @@
 }
 
 #class-buttons-div {
-    margin: 7 auto 7 auto;
+    margin: 7px auto;
 }
 
 #manual-button {
@@ -330,7 +330,7 @@
 
 #manual-div {
     display: flex;
-    margin: 5 auto 10 auto;
+    margin: 5px auto 10px;
 }
 
 #manual-div > div {
