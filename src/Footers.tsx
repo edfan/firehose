@@ -8,12 +8,12 @@ export function LeftFooter() {
   return (
     <>
       <div id="export-div">
-        {/* <span id="prereg-link">Preregister these classes!</span> */}
+        {/* <span id="prereg-link">Preregister these classes!</span>
         <span id="clipboard-link">Text form</span> |{" "}
         <span id="toggle-css">Toggle high-contrast</span> |{" "}
         <span id="toggle-dark-mode">Toggle dark-mode</span> |{" "}
         <span id="clear-all">Clear all</span>
-        <br />
+        <br /> */}
         <span
           id="calendar-link"
           data-toggle="tooltip"
@@ -27,7 +27,7 @@ export function LeftFooter() {
       <div id="footer-div">
         &copy; 2021 <a href="mailto:edwardf@alum.mit.edu">Edward Fan</a>.
         High-contrast theme by Shannon Peng. Dark-mode by Mindren Lu. <br />
-        Subject descriptions and evaluations are &copy; 2014-2021 Massachusetts
+        Subject descriptions and evaluations are &copy; 2014-2022 Massachusetts
         Institute of Technology.
       </div>
     </>

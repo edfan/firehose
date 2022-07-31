@@ -9,7 +9,7 @@ import "@ag-grid-community/core/dist/styles/ag-grid.css";
 import "./ClassTable.scss";
 
 import { Class, Flags } from "./class";
-import { classSort, simplifyString, Tooltip } from "./utils";
+import { classNumberMatch, classSort, simplifyString, Tooltip } from "./utils";
 import { Firehose } from "./firehose";
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
@@ -84,7 +84,7 @@ function ClassInput(props: {
 
   const onEnter = () => {
     let cls = searchResults.current?.[0]?.class;
-    if (!cls) return;
+    if (!cls || !classNumberMatch(classInput, cls.number)) return;
     firehose.toggleActivity(cls);
     onClassInputChange("");
   };

@@ -149,7 +149,7 @@
 }
 
 #warning-div, #warning2-div {
-    margin: 5px auto;
+    margin: 10px auto 5px;
     font-size: 70%;
 }
 
@@ -457,6 +457,10 @@
 
 select {
     border-color: #767676;
+}
+
+hr {
+    opacity: 1;
 }
 
 /* text boxes */
