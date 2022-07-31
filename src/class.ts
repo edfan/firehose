@@ -100,6 +100,10 @@ export type RawClass = {
   u: string;
   /** True if has final */
   f: boolean;
+  /** 1 or 2 if first / second half */
+  hf: number | boolean;
+  /** True if limited enrollment */
+  lm: boolean;
 
   /** Rating (out of 7.0) from evals */
   ra: number;
@@ -133,6 +137,8 @@ export type Flags = {
   final: boolean;
   nofinal: boolean;
   le9units: boolean;
+  half: number | boolean;
+  limited: boolean;
 };
 
 /**
@@ -338,6 +344,8 @@ export class Class {
       final: this.rawClass.f,
       nofinal: !this.rawClass.f,
       le9units: this.totalUnits <= 9,
+      half: this.rawClass.hf,
+      limited: this.rawClass.lm,
     };
   }
 

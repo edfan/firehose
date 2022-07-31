@@ -132,6 +132,8 @@ const CLASS_FLAGS_2: Array<[keyof Flags | "fits", string, string?]> = [
   ["under", "Undergrad", "img/under.gif"],
   ["grad", "Graduate", "img/grad.gif"],
   ["le9units", "≤ 9 units"],
+  ["half", "Half-term"],
+  ["limited", "Limited enrollment"],
 ];
 
 const CLASS_FLAGS = CLASS_FLAGS_1.concat(CLASS_FLAGS_2);
