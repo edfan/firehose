@@ -120,13 +120,17 @@ const CLASS_FLAGS_1: Array<[keyof Flags | "fits", string, string?]> = [
   ["nofinal", "No final"],
 ];
 
-/** List of hidden filter IDs and their displayed names. */
+/** List of hidden filter IDs, their displayed names, and image path, if any. */
 const CLASS_FLAGS_2: Array<[keyof Flags | "fits", string, string?]> = [
   ["hassA", "HASS-A", "img/hassA.gif"],
   ["hassH", "HASS-H", "img/hassH.gif"],
   ["hassS", "HASS-S", "img/hassS.gif"],
   ["cihw", "CI-HW"],
   ["notcih", "Not CI-H"],
+];
+
+/** Second row of hidden filter IDs. */
+const CLASS_FLAGS_3: Array<[keyof Flags | "fits", string, string?]> = [
   ["rest", "REST", "img/rest.gif"],
   ["Lab", "Institute Lab", "img/Lab.gif"],
   ["under", "Undergrad", "img/under.gif"],
@@ -136,7 +140,7 @@ const CLASS_FLAGS_2: Array<[keyof Flags | "fits", string, string?]> = [
   ["limited", "Limited enrollment"],
 ];
 
-const CLASS_FLAGS = CLASS_FLAGS_1.concat(CLASS_FLAGS_2);
+const CLASS_FLAGS = CLASS_FLAGS_1.concat(CLASS_FLAGS_2).concat(CLASS_FLAGS_3);
 
 /** Div containing all the flags like "HASS". Maintains the flag filter. */
 function ClassFlags(props: {
@@ -206,28 +210,30 @@ function ClassFlags(props: {
       <p id="activity-button" onClick={() => setAllFlags(!allFlags)}>
         {allFlags ? "- Fewer filters" : "+ More filters"}
       </p>
-      <div className="btn-group">
-        {allFlags &&
-          CLASS_FLAGS_2.map(([flag, label, image]) => {
-            const className =
-              "btn btn-primary" + (flags.get(flag) ? " active" : "");
-            const content = (
-              <label className={className} key={flag}>
-                <input
-                  type="checkbox"
-                  checked={flags.get(flag)}
-                  onChange={(e) => onChange(flag, e.target.checked)}
-                />
-                {image ? <img src={image} alt={label} /> : label}
-              </label>
-            );
-            return image ? (
-              <Tooltip content={label}>{content}</Tooltip>
-            ) : (
-              content
-            );
-          })}
-      </div>
+      {allFlags &&
+        [CLASS_FLAGS_2, CLASS_FLAGS_3].map((classFlags, i) => (
+          <div className="btn-group" key={i}>
+            {classFlags.map(([flag, label, image]) => {
+              const className =
+                "btn btn-primary" + (flags.get(flag) ? " active" : "");
+              const content = (
+                <label className={className} key={flag}>
+                  <input
+                    type="checkbox"
+                    checked={flags.get(flag)}
+                    onChange={(e) => onChange(flag, e.target.checked)}
+                  />
+                  {image ? <img src={image} alt={label} /> : label}
+                </label>
+              );
+              return image ? (
+                <Tooltip content={label}>{content}</Tooltip>
+              ) : (
+                content
+              );
+            })}
+          </div>
+        ))}
     </>
   );
 }
