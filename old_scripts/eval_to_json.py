@@ -26,6 +26,7 @@ def main():
                 classes[k] = []
             for prof in v['professors']:
                 professors.add(prof['name'])
+            classes[k].append(v)
             
     with open('evaluations.json', 'w') as f:
         f.write('var evals = ')

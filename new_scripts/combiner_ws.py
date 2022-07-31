@@ -11,10 +11,6 @@ with open('sublist') as f:
 with open('evaluations') as f:
     evals = json.load(f)
 
-with open("course_six_renumbering.json") as f:
-    course_six_renumbering = json.loads(f.read())
-    course_six_renumbering_inv = {v: k for k, v in course_six_renumbering.items()}
-
     # Special case 6.871 evals.
     # evals['6.871'] = evals['HST.956']
 
@@ -86,7 +82,7 @@ for c in ws:
         classes[c]['u'] = ''
         classes[c]['f'] = False
 
-    old_c = classes[c].get('old_num', None)
+    old_c = classes[c].get('on', None)
     if c in evals or (old_c and old_c in evals):
         total_rating = 0
         total_hours = 0
@@ -146,12 +142,16 @@ except Exception as e:
 classes['22.05']['l'] = [[[[33,3],[93,3]],"24-121"]]
 classes['22.05']['r'] = [[[[124,2]],"24-121"]]
 
-with open('full.json', 'w') as f:
-    f.write('var last_update = "' + datetime.datetime.now().strftime('%Y-%m-%d %l:%M %p') + '";\n')
+last_update = datetime.datetime.now().strftime('%Y-%m-%d %l:%M %p')
+
+with open('full.js', 'w') as f:
+    f.write('var last_update = "' + last_update + '";\n')
     f.write('var classes = ')
     json.dump(classes, f, separators=(',', ':'))
     f.write(';')
 
-        
-        
-        
+with open('full.json', 'w') as f:
+    obj = {}
+    obj["lastUpdated"] = last_update
+    obj["classes"] = classes
+    json.dump(obj, f, separators=(',', ':'))
