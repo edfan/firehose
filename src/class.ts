@@ -458,13 +458,14 @@ export class Class {
   removeTimeslot(slot: Timeslot): void {}
 
   /** Deflate a class to something JSONable. */
-  deflate(): Array<string | number> {
+  deflate(): any {
     const sections = this.sections.map((secs) =>
       !secs.locked
-        ? ""
+        ? null
         : secs.sections.findIndex((sec) => sec === secs.selected)
     );
-    return [this.number, ...sections];
+    while (sections.at(-1) === null) sections.pop();
+    return sections.length > 0 ? [this.number, ...sections] : this.number;
   }
 
   /**
@@ -473,11 +474,15 @@ export class Class {
    * TODO: it's possible that sections change between when this class was
    * serialized and when it becomes parsed; we currently don't guard that.
    */
-  inflate(parsed: Array<string | number>): void {
+  inflate(parsed: any): void {
+    if (typeof parsed === "string") {
+      // just the class number, ignore
+      return;
+    }
     this.sections.forEach((secs, i) => {
       // we ignore parsed[0] as that has the class number
       const parse = parsed[i + 1];
-      if (typeof parse === "string") {
+      if (!parse && parse !== 0) {
         secs.locked = false;
       } else {
         secs.locked = true;

@@ -267,7 +267,9 @@ export class Firehose {
   deflate(): any {
     return [
       this.selectedClasses.map((cls) => cls.deflate()),
-      this.selectedNonClasses.map((nonClass) => nonClass.deflate()),
+      this.selectedNonClasses.length > 0
+        ? this.selectedNonClasses.map((nonClass) => nonClass.deflate())
+        : null,
       this.selectedOption,
     ];
   }
@@ -282,12 +284,14 @@ export class Firehose {
       cls.inflate(deflated);
       this.selectedClasses.push(cls);
     }
-    for (const deflated of nonClasses) {
-      const nonClass = new NonClass();
-      nonClass.inflate(deflated);
-      this.selectedNonClasses.push(nonClass);
+    if (nonClasses) {
+      for (const deflated of nonClasses) {
+        const nonClass = new NonClass();
+        nonClass.inflate(deflated);
+        this.selectedNonClasses.push(nonClass);
+      }
     }
-    this.selectedOption = selectedOption;
+    this.selectedOption = selectedOption ?? 0;
     this.updateActivities(false);
   }
 
@@ -356,7 +360,7 @@ export class Firehose {
     if (saves) {
       this.saves = JSON.parse(saves) as Array<Save>;
     }
-    if (!this.saves || !this.saves.length){
+    if (!this.saves || !this.saves.length) {
       this.saves = [];
       this.addSave(true);
     }

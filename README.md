@@ -28,6 +28,7 @@ node is version-locked to 16 for now, but should be able to upgrade to 18 when i
   - much of the type shenanigans (e.g. RawClass) is bad, but fixing it will involve fixing the python scrapers themselves.
 - scrapers are still largely the same.
   - they're written in python 3, which is likely to live for a few years.
+- serialization is done with base2048 and msgpack-lite
 
 ## notes on script.js
 

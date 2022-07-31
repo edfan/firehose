@@ -184,7 +184,9 @@ export class NonClass {
       (slot) => new Timeslot(...slot)
     );
     this.name = name as string;
-    this.backgroundColor = backgroundColor as string;
+    if (backgroundColor) {
+      this.backgroundColor = backgroundColor as string;
+    }
   }
 }
 
