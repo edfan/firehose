@@ -20,7 +20,7 @@ export type FirehoseState = {
   units: number;
   hours: number;
   warnings: Array<string>;
-  saveId?: string;
+  saveId: string;
   saves: Array<Save>;
 };
 
@@ -53,8 +53,8 @@ export class Firehose {
   private selectedNonClasses: Array<NonClass> = [];
   /** Selected schedule option; zero-indexed. */
   private selectedOption: number = 0;
-  /** Currently loaded save slot, undefined for none of them. */
-  private saveId?: string;
+  /** Currently loaded save slot, empty if none of them. */
+  private saveId: string = "";
   /** Names of each save slot. */
   private saves: Array<Save> = [];
 

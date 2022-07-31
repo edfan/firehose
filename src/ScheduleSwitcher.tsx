@@ -3,6 +3,63 @@ import { Button, Form, Modal } from "react-bootstrap";
 
 import { Firehose, Save } from "./firehose";
 
+function SelectWithWarn(props: {
+  firehose: Firehose;
+  saveId: string;
+  saves: Array<Save>;
+}) {
+  const { firehose, saveId, saves } = props;
+  const [confirmSave, setConfirmSave] = useState("");
+  const confirmName = saves.find((save) => save.id === confirmSave)?.name;
+  return (
+    <>
+      <Form.Select
+        value={saveId}
+        size="sm"
+        onChange={(e) => {
+          if (!saveId) {
+            setConfirmSave(e.target.value);
+          } else {
+            firehose.loadSave(e.target.value);
+          }
+        }}
+      >
+        {!saveId && <option value="">Not saved</option>}
+        {saves.map(({ id, name }) => (
+          <option key={id} value={id}>
+            {name}
+          </option>
+        ))}
+      </Form.Select>
+      <Modal
+        show={Boolean(confirmSave)}
+        onHide={() => setConfirmSave("")}
+        animation={false}
+      >
+        <Modal.Body>
+          The current schedule is loaded from a URL and is not saved. Are you
+          sure you want to load schedule {confirmName} without saving your
+          current schedule?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setConfirmSave("")}>
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              firehose.loadSave(confirmSave);
+              setConfirmSave("");
+            }}
+          >
+            Load schedule
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
+
 function RenameBar(props: { firehose: Firehose; saveId: string }) {
   const { firehose, saveId } = props;
   const [show, setShow] = useState(false);
@@ -100,24 +157,13 @@ function ExportModal(props: { firehose: Firehose }) {
 
 export function ScheduleSwitcher(props: {
   firehose: Firehose;
-  saveId?: string;
+  saveId: string;
   saves: Array<Save>;
 }) {
   const { firehose, saveId, saves } = props;
   return (
     <div id="schedule-switcher-div">
-      <Form.Select
-        value={saveId}
-        size="sm"
-        onChange={(e) => firehose.loadSave(e.target.value)}
-      >
-        {!saveId && <option value={undefined}>Not saved</option>}
-        {saves.map(({ id, name }) => (
-          <option key={id} value={id}>
-            {name}
-          </option>
-        ))}
-      </Form.Select>
+      <SelectWithWarn firehose={firehose} saveId={saveId} saves={saves} />
       {saveId && <RenameBar firehose={firehose} saveId={saveId} />}
       {saveId && (
         <DeleteModal

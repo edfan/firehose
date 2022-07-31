@@ -27,6 +27,7 @@ export function App() {
     units: 0,
     hours: 0,
     warnings: [],
+    saveId: "",
     saves: [],
   });
 
@@ -73,7 +74,7 @@ export function App() {
       </div>
       <div id="right-div">
         <p id="beta-warning">
-          This version is in <b>beta</b>. Save your info frequently!
+          This version is in <b>beta</b>. Saved info may disappear without warning!
         </p>
         <ScheduleSwitcher
           firehose={firehose}
