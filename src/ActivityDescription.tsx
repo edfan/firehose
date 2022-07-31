@@ -75,7 +75,10 @@ function ClassTypes(props: { cls: Class }) {
 
   return (
     <p id="class-type">
-      {types1} ({seasons}) {types2} {totalUnits} units: {units.join("-")}
+      {types1} ({seasons}) {types2}
+      &nbsp;&nbsp;&nbsp;
+      {totalUnits} units: {units.join("-")}
+      &nbsp;&nbsp;&nbsp;
       {flags.final ? (
         <span className="type-span" id="final-span">
           {" "}
@@ -190,11 +193,7 @@ function ClassDescription(props: { cls: Class; firehose: Firehose }) {
   );
 }
 
-/**
- * Full non-class activity description, from title to timeslots.
- * TODO: should the labels here be moved slash should nonclassbuttons be named
- * something else?
- */
+/** Full non-class activity description, from title to timeslots. */
 function NonClassDescription(props: {
   activity: NonClass;
   firehose: Firehose;
@@ -206,8 +205,10 @@ function NonClassDescription(props: {
       <p id="class-name">{activity.name}</p>
       <NonClassButtons activity={activity} firehose={firehose} />
       {activity.timeslots.map((t) => (
-        <p key={t.toString()}>
-          <button onClick={() => firehose.removeTimeslot(activity, t)}>remove</button>{" "}
+        <p className="timeslot" key={t.toString()}>
+          <button className="btn btn-secondary btn-sm" onClick={() => firehose.removeTimeslot(activity, t)}>
+            Remove
+          </button>{" "}
           {t.toString()}
         </p>
       ))}
@@ -215,10 +216,7 @@ function NonClassDescription(props: {
   );
 }
 
-/**
- * Activity description, whether class or non-class.
- * TODO: styling
- */
+/** Activity description, whether class or non-class. */
 export function ActivityDescription(props: {
   activity: Activity;
   firehose: Firehose;

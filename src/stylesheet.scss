@@ -458,9 +458,35 @@ select {
 /* text boxes */
 
 input {
-    padding: 0.2em;
+    padding: 0.2em !important;
 } 
   
 input:focus {
     outline: none;
+}
+
+.man-button {
+    margin-right: 0.2em;
+}
+
+.non-class-form {
+    margin: 10px 0;
+
+    button {
+        margin-left: 10px;
+    }
+}
+
+.add-time-form {
+    label {
+        margin-right: 8px;
+    }
+
+    input[type="checkbox"] {
+        margin: 0 3px;
+    }
+}
+
+.timeslot {
+    margin: 0.5rem 0;
 }

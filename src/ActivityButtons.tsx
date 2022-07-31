@@ -29,7 +29,11 @@ function ClassManualOption(props: {
           firehose.lockSection(secs, sec);
         }}
       />
-      {sec instanceof Section ? sec.rawTime : sec}
+      {sec instanceof Section
+        ? sec.rawTime
+        : sec === "auto"
+        ? "Auto (default)"
+        : "None"}
       <br />
     </>
   );
@@ -125,6 +129,7 @@ function NonClassAddTime(props: { activity: NonClass; firehose: Firehose }) {
 
   return (
     <form
+      className="add-time-form"
       onSubmit={(e) => {
         e.preventDefault();
         for (const day in days) {
@@ -139,7 +144,7 @@ function NonClassAddTime(props: { activity: NonClass; firehose: Firehose }) {
         }
       }}
     >
-      <button type="submit">add time</button>{" "}
+      <button className="btn btn-secondary" type="submit">Add time</button>{" "}
       {WEEKDAY_STRINGS.map((day) => (
         <label key={day}>
           <input
@@ -176,6 +181,7 @@ export function NonClassButtons(props: {
           : "Add activity"}
       </button>
       <form
+        className="non-class-form"
         onSubmit={(e) => {
           e.preventDefault();
           firehose.renameNonClass(activity, name);
@@ -188,11 +194,11 @@ export function NonClassButtons(props: {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        <button type="submit">Rename</button>
+        <button className="btn btn-secondary" type="submit">Rename</button>
       </form>
       <div id="class-buttons-div">
         Click and drag on an empty time in the calendar to add the times for
-        your activity. Or add one manually:
+        your activity.<br/>Or add one manually:
       </div>
       <NonClassAddTime activity={activity} firehose={firehose} />
     </>

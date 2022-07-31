@@ -102,7 +102,7 @@ function generateTimeslotStrings(): Array<string> {
   }
   res.push("12:00 PM");
   res.push("12:30 PM");
-  for (let i = 1; i <= 9; i++) {
+  for (let i = 1; i <= 10; i++) {
     res.push(`${i}:00 PM`);
     res.push(`${i}:30 PM`);
   }
