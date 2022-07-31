@@ -1,3 +1,10 @@
+#beta-banner {
+		width: 100%;
+		text-align: center;
+		padding: 1em 0;
+		border-bottom: 1px solid #999;
+}
+
 #left-div {
     float: left;
     text-align: center;
