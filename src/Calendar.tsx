@@ -1,10 +1,12 @@
-import FullCalendar from "@fullcalendar/react";
+import FullCalendar, { EventApi } from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 
 import { Activity, NonClass, Timeslot } from "./activity";
 import { Firehose } from "./firehose";
 import { toSlot } from "./utils";
+
+import "./Calendar.scss";
 
 /**
  * Calendar showing all the activities, including the buttons on top that
@@ -24,6 +26,22 @@ export function Calendar(props: {
     viewedActivity,
     firehose,
   } = props;
+
+  const renderEvent = ({
+    event,
+    timeText,
+  }: {
+    event: EventApi;
+    timeText: string;
+  }) => {
+    return (
+      <div className="calendar-event">
+        <div className="calendar-time">{timeText}</div>
+        <div className="calendar-title">{event.title}</div>
+        <div className="calendar-room">{event.extendedProps.room}</div>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -50,8 +68,8 @@ export function Calendar(props: {
           id="warning3-div"
           style={{ display: totalOptions > 15 ? "block" : "none" }}
         >
-          Too many options? Use the "Edit sections" button above the
-          class description.
+          Too many options? Use the "Edit sections" button above the class
+          description.
         </div>
       </div>
       <div id="left-int-div">
@@ -65,6 +83,7 @@ export function Calendar(props: {
             events={selectedActivities
               .flatMap((act) => act.events)
               .flatMap((event) => event.eventInputs)}
+            eventContent={renderEvent}
             eventClick={(e) => {
               // extendedProps: non-standard props of {@link Event.eventInputs}
               firehose.setViewedActivity(e.event.extendedProps.activity);

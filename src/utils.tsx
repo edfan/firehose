@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { OverlayTrigger, Tooltip as BootstrapTooltip } from "react-bootstrap";
 
 import { Activity } from "./activity";
