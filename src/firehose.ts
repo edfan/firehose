@@ -19,7 +19,6 @@ export type FirehoseState = {
  * schedule options selected, activities, etc.).
  *
  * TODO: serialize into urls too?
- * TODO: rename class to activity when needed.
  */
 export class Firehose {
   /** Map from class number to Class object. */
@@ -182,7 +181,9 @@ export class Firehose {
       totalOptions: this.options.length,
       units: sum(this.selectedClasses.map((cls) => cls.totalUnits)),
       hours: sum(this.selectedActivities.map((activity) => activity.hours)),
-      warnings: [], // TODO
+      warnings: Array.from(
+        new Set(this.selectedClasses.flatMap((cls) => cls.warnings.messages))
+      ),
     });
     localStorage.setItem(`firehose-${this.term}`, this.stringify());
   }

@@ -299,7 +299,7 @@ export class Class {
 
   /** Hours per week, taking from evals if exists, or units if not. */
   get hours(): number {
-    return this.rawClass.h ?? this.totalUnits;
+    return this.rawClass.h || this.totalUnits;
   }
 
   /** Get all calendar events corresponding to this class. */
@@ -376,6 +376,27 @@ export class Class {
       same: this.rawClass.sa,
       meets: this.rawClass.mw,
     };
+  }
+
+  get warnings(): {
+    suffix: string;
+    messages: Array<string>;
+  } {
+    const suffixes: Array<string> = [];
+    const messages: Array<string> = [];
+    if (this.rawClass.h === 0) {
+      suffixes.push("*");
+      messages.push(
+        "* Class does not have evaluations, so its hours were set to units."
+      );
+    }
+    if (this.rawClass.tb) {
+      suffixes.push("+");
+      messages.push(
+        "+ Class has at least one section yet to be scheduled—check course catalog."
+      );
+    }
+    return { suffix: suffixes.join(""), messages };
   }
 
   /**

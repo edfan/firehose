@@ -3,13 +3,19 @@ import { Activity } from "./activity";
 import { Firehose } from "./firehose";
 import { formatNumber } from "./utils";
 
-/**
- * A button representing a single, selected activity.
- *
- * TODO: warning symbols like * and +
- */
+/** A button representing a single, selected activity. */
 function ActivityButton(props: { activity: Activity; firehose: Firehose }) {
   const { activity, firehose } = props;
+  const getName = () => {
+    if (activity instanceof Class) {
+      const {
+        number,
+        warnings: { suffix },
+      } = activity;
+      return `${number}${suffix}`;
+    }
+    return activity.name;
+  };
   return (
     <button
       type="button"
@@ -22,7 +28,7 @@ function ActivityButton(props: { activity: Activity; firehose: Firehose }) {
         color: "white",
       }}
     >
-      {activity instanceof Class ? activity.number : activity.name}
+      {getName()}
     </button>
   );
 }
@@ -56,11 +62,6 @@ export function SelectedActivities(props: {
       <p id="units-div">
         Units: {units}&nbsp;&nbsp;&nbsp;Hours: {formatNumber(hours, 1)}
       </p>
-      {warnings.map((warning) => (
-        <p key={warning} id="warning-div">
-          {warning}
-        </p>
-      ))}
       <div id="selected-div">
         {selectedActivities.map((activity) => (
           <ActivityButton
@@ -84,6 +85,11 @@ export function SelectedActivities(props: {
           + Non-class
         </button>
       </div>
+      {warnings.map((warning) => (
+        <p key={warning} id="warning-div">
+          {warning}
+        </p>
+      ))}
     </div>
   );
 }
