@@ -187,15 +187,19 @@
     margin: 2.25em auto 10px auto;
 }
 
-#activity-button, #more-filters-button {
+#activity-button, #more-filters-button, #share-button {
     margin: 10px auto;
     font-size: 70%;
     color: #0275d8;
     cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
-#activity-button:hover, #more-filters-button:hover {
-    text-decoration: underline;
+#share-button {
+    font-size: 1em;
 }
 
 .link-span {

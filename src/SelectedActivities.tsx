@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { Modal } from "react-bootstrap";
+
 import { Class } from "./class";
 import { Activity } from "./activity";
 import { Firehose } from "./firehose";
@@ -33,6 +36,28 @@ function ActivityButton(props: { activity: Activity; firehose: Firehose }) {
   );
 }
 
+function ExportModal(props: { firehose: Firehose }) {
+  const { firehose } = props;
+  const [show, setShow] = useState(false);
+  const link = firehose.urlify();
+
+  return (
+    <>
+      <span id="share-button" onClick={() => setShow(true)}>
+        Share schedule
+      </span>
+      <Modal show={show} onHide={() => setShow(false)} animation={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>Share schedule</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Copy the following link: <a href={link}>{link}</a>
+        </Modal.Body>
+      </Modal>
+    </>
+  );
+}
+
 /**
  * List of selected activities; one button for each activity.
  *
@@ -61,6 +86,8 @@ export function SelectedActivities(props: {
     <div id="selector-div">
       <p id="units-div">
         Units: {units}&nbsp;&nbsp;&nbsp;Hours: {formatNumber(hours, 1)}
+        &nbsp;&nbsp;&nbsp;
+        <ExportModal firehose={firehose} />
       </p>
       <div id="selected-div">
         {selectedActivities.map((activity) => (

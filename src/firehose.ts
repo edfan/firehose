@@ -1,7 +1,7 @@
 import { Timeslot, NonClass, Activity } from "./activity";
 import { scheduleSlots } from "./calendarSlots";
 import { RawClass, Class, Section, Sections } from "./class";
-import { sum, chooseColors } from "./utils";
+import { sum, chooseColors, urlencode, urldecode } from "./utils";
 
 /** React / localStorage state. */
 export type FirehoseState = {
@@ -12,6 +12,7 @@ export type FirehoseState = {
   units: number;
   hours: number;
   warnings: Array<string>;
+  saveSlot: number;
 };
 
 /**
@@ -47,6 +48,8 @@ export class Firehose {
   private selectedNonClasses: Array<NonClass> = [];
   /** Selected schedule option; zero-indexed. */
   private selectedOption: number = 0;
+  /** Slot in localStorage to save in; -1 for don't save. */
+  private saveSlot: number = 0;
 
   /** React callback to update state. */
   callback: ((state: FirehoseState) => void) | undefined;
@@ -59,7 +62,7 @@ export class Firehose {
       this.classes.set(number, new Class(cls));
     });
     this.term = term;
-    this.parse(localStorage.getItem(`firehose-${term}`));
+    this.load();
   }
 
   /** All activities. */
@@ -184,8 +187,14 @@ export class Firehose {
       warnings: Array.from(
         new Set(this.selectedClasses.flatMap((cls) => cls.warnings.messages))
       ),
+      saveSlot: this.saveSlot,
     });
-    localStorage.setItem(`firehose-${this.term}`, this.stringify());
+    if (this.saveSlot >= 0) {
+      localStorage.setItem(
+        `firehose-${this.term}-${this.saveSlot}`,
+        JSON.stringify(this.deflate())
+      );
+    }
   }
 
   /**
@@ -235,19 +244,19 @@ export class Firehose {
     );
   }
 
-  /** Stringify all program state. */
-  stringify(): string {
-    return JSON.stringify([
+  /** Deflate program state to something JSONable. */
+  deflate(): any {
+    return [
       this.selectedClasses.map((cls) => cls.deflate()),
       this.selectedNonClasses.map((nonClass) => nonClass.deflate()),
       this.selectedOption,
-    ]);
+    ];
   }
 
   /** Parse all program state. */
-  parse(str: string | null): void {
-    if (!str) return;
-    const [classes, nonClasses, selectedOption] = JSON.parse(str);
+  inflate(obj: any[] | null): void {
+    if (!obj) return;
+    const [classes, nonClasses, selectedOption] = obj;
     for (const deflated of classes) {
       const cls = this.classes.get(deflated[0])!;
       cls.inflate(deflated);
@@ -260,5 +269,26 @@ export class Firehose {
     }
     this.selectedOption = selectedOption;
     this.updateActivities();
+  }
+
+  /** Return a URL that can be opened to recover the state. */
+  urlify(): string {
+    const encoded = urlencode(this.deflate());
+    return `${document.location.origin}?s=${encoded}`;
+  }
+
+  /** Load the state from the URL (if given) or localStorage. */
+  load(): void {
+    const params = new URLSearchParams(document.location.search);
+    const param = params.get("s");
+    const storage = localStorage.getItem(
+      `firehose-${this.term}-${this.saveSlot}`
+    );
+    if (param) {
+      this.saveSlot = -1;
+      this.inflate(urldecode(param));
+    } else if (storage) {
+      this.inflate(JSON.parse(storage));
+    }
   }
 }

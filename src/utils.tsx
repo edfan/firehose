@@ -1,3 +1,6 @@
+import { encode as base2048encode, decode as base2048decode } from "base2048";
+// @ts-ignore
+import Msgpack from "msgpack-lite";
 import { OverlayTrigger, Tooltip as BootstrapTooltip } from "react-bootstrap";
 
 import { Activity } from "./activity";
@@ -177,6 +180,16 @@ export function chooseColors(activities: Array<Activity>): void {
     indices.push(index);
     activity.backgroundColor = BACKGROUND_COLORS[index];
   }
+}
+
+// Other utilities:
+
+export function urlencode(obj: any): string {
+  return base2048encode(Msgpack.encode(obj));
+}
+
+export function urldecode(obj: string): any {
+  return Msgpack.decode(base2048decode(obj));
 }
 
 export const Tooltip = (props: {

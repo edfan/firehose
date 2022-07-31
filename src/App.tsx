@@ -22,6 +22,7 @@ export function App(props: { firehose: Firehose }) {
     units: 0,
     hours: 0,
     warnings: [],
+    saveSlot: 0,
   });
 
   const [showClassTable, setShowClassTable] = useState(true);
