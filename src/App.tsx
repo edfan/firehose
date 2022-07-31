@@ -74,7 +74,9 @@ export function App() {
       </div>
       <div id="right-div">
         <p id="beta-warning">
-          This version is in <b>beta</b>. Saved info may disappear without warning!
+          This version is in <b>beta</b>. Saved info may disappear without
+          warning.{" "}
+          <a href="https://forms.gle/6BQ8wMXCiHQBajGx7">Share your feedback!</a>
         </p>
         <ScheduleSwitcher
           firehose={firehose}

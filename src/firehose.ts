@@ -349,7 +349,7 @@ export class Firehose {
   /** Return a URL that can be opened to recover the state. */
   urlify(): string {
     const encoded = urlencode(this.deflate());
-    return `${document.location.origin}?s=${encoded}`;
+    return `${document.location.origin}${document.location.pathname}?s=${encoded}`;
   }
 
   /** Initialize the state from either the URL or localStorage. */
