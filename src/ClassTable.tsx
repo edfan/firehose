@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Tooltip } from "@chakra-ui/react";
 import { AgGridReact } from "@ag-grid-community/react";
 import AgGrid, { ModuleRegistry } from "@ag-grid-community/core";
 import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
@@ -9,7 +10,7 @@ import "@ag-grid-community/core/dist/styles/ag-grid.css";
 import "./ClassTable.scss";
 
 import { Class, Flags } from "./class";
-import { classNumberMatch, classSort, simplifyString, Tooltip } from "./utils";
+import { classNumberMatch, classSort, simplifyString } from "./utils";
 import { Firehose } from "./firehose";
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
@@ -227,7 +228,7 @@ function ClassFlags(props: {
                 </label>
               );
               return image ? (
-                <Tooltip content={label}>{content}</Tooltip>
+                <Tooltip label={label}>{content}</Tooltip>
               ) : (
                 content
               );

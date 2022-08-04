@@ -1,15 +1,16 @@
+import { Tooltip } from "@chakra-ui/react";
+
 import { Activity, NonClass } from "./activity";
 import { Class, Flags } from "./class";
 import { Firehose } from "./firehose";
 
 import { ClassButtons, NonClassButtons } from "./ActivityButtons";
-import { Tooltip } from "./utils";
 
 /** A small image indicating a flag, like Spring or CI-H. */
 function TypeSpan(props: { flag?: string; title: string }) {
   const { flag, title } = props;
   return (
-    <Tooltip content={title}>
+    <Tooltip label={title}>
       <span className="type-span" id={`${flag}-span`}>
         {flag ? (
           <img
@@ -77,13 +78,18 @@ function ClassTypes(props: { cls: Class }) {
   ]);
 
   const halfType =
-    flags.half === 1 ? <TypeSpan title="; first half of term" /> :
-    flags.half === 2 ? <TypeSpan title="; second half of term" /> :
-    "";
+    flags.half === 1 ? (
+      <TypeSpan title="; first half of term" />
+    ) : flags.half === 2 ? (
+      <TypeSpan title="; second half of term" />
+    ) : (
+      ""
+    );
 
   return (
     <p id="class-type">
-      {types1} ({seasons}) {types2}{halfType}
+      {types1} ({seasons}) {types2}
+      {halfType}
       &nbsp;&nbsp;&nbsp;
       {totalUnits} units: {units.join("-")}
       &nbsp;&nbsp;&nbsp;

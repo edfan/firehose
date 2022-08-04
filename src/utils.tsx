@@ -1,6 +1,5 @@
 // @ts-ignore
 import Msgpack from "msgpack-lite";
-import { OverlayTrigger, Tooltip as BootstrapTooltip } from "react-bootstrap";
 
 import { Activity } from "./activity";
 
@@ -196,18 +195,3 @@ export function urldecode(obj: string): any {
     )
   );
 }
-
-export const Tooltip = (props: {
-  children: React.ReactNode;
-  content: string;
-}) => {
-  const { children, content } = props;
-  return (
-    <OverlayTrigger
-      placement="top"
-      overlay={<BootstrapTooltip>{content}</BootstrapTooltip>}
-    >
-      {children as React.ReactElement}
-    </OverlayTrigger>
-  );
-};

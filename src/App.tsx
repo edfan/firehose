@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Spinner } from "react-bootstrap";
+import { ChakraProvider, Spinner } from "@chakra-ui/react";
 
 import { Firehose, FirehoseState } from "./firehose";
 import { RawClass } from "./class";
@@ -53,61 +53,65 @@ export function App() {
       });
   }, []);
 
-  return !firehose ? (
-    <div id="spinner">
-      <Spinner animation="border" role="status">
-        <span className="visually-hidden">Loading...</span>
-      </Spinner>
-    </div>
-  ) : (
-    <>
-      <div id="left-div">
-        <Header />
-        <Calendar
-          selectedActivities={state.selectedActivities}
-          selectedOption={state.selectedOption}
-          totalOptions={state.totalOptions}
-          viewedActivity={state.viewedActivity}
-          firehose={firehose}
-        />
-        <LeftFooter />
-      </div>
-      <div id="right-div">
-        <p id="beta-warning">
-          This version is in <b>beta</b>. Saved info may disappear without
-          warning.{" "}
-          <a href="https://forms.gle/6BQ8wMXCiHQBajGx7">Share your feedback!</a>
-        </p>
-        <ScheduleSwitcher
-          firehose={firehose}
-          saveId={state.saveId}
-          saves={state.saves}
-        />
-        <hr />
-        <SelectedActivities
-          selectedActivities={state.selectedActivities}
-          units={state.units}
-          hours={state.hours}
-          warnings={state.warnings}
-          firehose={firehose}
-          showClassTable={showClassTable}
-          setShowClassTable={() => setShowClassTable(!showClassTable)}
-        />
-        <hr />
-        <ClassTable
-          classes={firehose.classes} // this is a constant; no need to add to state
-          firehose={firehose}
-          hidden={!showClassTable}
-        />
-        {state.viewedActivity ? (
-          <ActivityDescription
-            activity={state.viewedActivity}
-            firehose={firehose}
-          />
-        ) : null}
-        <hr />
-        <RightFooter firehose={firehose} />
-      </div>
-    </>
+  return (
+    <ChakraProvider>
+      {!firehose ? (
+        <div id="spinner">
+          <Spinner />
+        </div>
+      ) : (
+        <>
+          <div id="left-div">
+            <Header />
+            <Calendar
+              selectedActivities={state.selectedActivities}
+              selectedOption={state.selectedOption}
+              totalOptions={state.totalOptions}
+              viewedActivity={state.viewedActivity}
+              firehose={firehose}
+            />
+            <LeftFooter />
+          </div>
+          <div id="right-div">
+            <p id="beta-warning">
+              This version is in <b>beta</b>. Saved info may disappear without
+              warning.{" "}
+              <a href="https://forms.gle/6BQ8wMXCiHQBajGx7">
+                Share your feedback!
+              </a>
+            </p>
+            <ScheduleSwitcher
+              firehose={firehose}
+              saveId={state.saveId}
+              saves={state.saves}
+            />
+            <hr />
+            <SelectedActivities
+              selectedActivities={state.selectedActivities}
+              units={state.units}
+              hours={state.hours}
+              warnings={state.warnings}
+              firehose={firehose}
+              showClassTable={showClassTable}
+              setShowClassTable={() => setShowClassTable(!showClassTable)}
+            />
+            <hr />
+            <ClassTable
+              classes={firehose.classes} // this is a constant; no need to add to state
+              firehose={firehose}
+              hidden={!showClassTable}
+            />
+            {state.viewedActivity ? (
+              <ActivityDescription
+                activity={state.viewedActivity}
+                firehose={firehose}
+              />
+            ) : null}
+            <hr />
+            <RightFooter firehose={firehose} />
+          </div>
+        </>
+      )}
+    </ChakraProvider>
   );
 }

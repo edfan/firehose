@@ -1,5 +1,13 @@
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalFooter,
+  ModalHeader,
+  Select,
+} from "@chakra-ui/react";
 import { useState } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
 
 import { Firehose, Save } from "./firehose";
 
@@ -13,7 +21,7 @@ function SelectWithWarn(props: {
   const confirmName = saves.find((save) => save.id === confirmSave)?.name;
   return (
     <>
-      <Form.Select
+      <Select
         value={saveId}
         size="sm"
         onChange={(e) => {
@@ -30,23 +38,18 @@ function SelectWithWarn(props: {
             {name}
           </option>
         ))}
-      </Form.Select>
-      <Modal
-        show={Boolean(confirmSave)}
-        onHide={() => setConfirmSave("")}
-        animation={false}
-      >
-        <Modal.Body>
+      </Select>
+      <Modal isOpen={Boolean(confirmSave)} onClose={() => setConfirmSave("")}>
+        <ModalBody>
           The current schedule is loaded from a URL and is not saved. Are you
           sure you want to load schedule {confirmName} without saving your
           current schedule?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setConfirmSave("")}>
+        </ModalBody>
+        <ModalFooter>
+          <Button variant="outline" onClick={() => setConfirmSave("")}>
             Cancel
           </Button>
           <Button
-            variant="primary"
             onClick={() => {
               firehose.loadSave(confirmSave);
               setConfirmSave("");
@@ -54,7 +57,7 @@ function SelectWithWarn(props: {
           >
             Load schedule
           </Button>
-        </Modal.Footer>
+        </ModalFooter>
       </Modal>
     </>
   );
@@ -107,16 +110,13 @@ function DeleteModal(props: {
       >
         Delete
       </button>
-      <Modal show={show} onHide={() => setShow(false)} animation={false}>
-        <Modal.Body>
-          Are you sure you want to delete schedule {name}?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShow(false)}>
+      <Modal isOpen={show} onClose={() => setShow(false)}>
+        <ModalBody>Are you sure you want to delete schedule {name}?</ModalBody>
+        <ModalFooter>
+          <Button variant="outline" onClick={() => setShow(false)}>
             Cancel
           </Button>
           <Button
-            variant="primary"
             onClick={() => {
               firehose.removeSave(saveId);
               setShow(false);
@@ -124,7 +124,7 @@ function DeleteModal(props: {
           >
             Delete
           </Button>
-        </Modal.Footer>
+        </ModalFooter>
       </Modal>
     </>
   );
@@ -143,13 +143,14 @@ function ExportModal(props: { firehose: Firehose }) {
       >
         Share
       </button>
-      <Modal show={show} onHide={() => setShow(false)} animation={false}>
-        <Modal.Header closeButton>
-          <Modal.Title>Share schedule</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+      <Modal isOpen={show} onClose={() => setShow(false)}>
+        <ModalHeader>
+          Share schedule
+          <ModalCloseButton />
+        </ModalHeader>
+        <ModalBody>
           Copy the following link: <a href={link}>{link}</a>
-        </Modal.Body>
+        </ModalBody>
       </Modal>
     </>
   );
