@@ -53,7 +53,6 @@
     width: 450px;
     margin: auto;
     text-align: center;
-    line-height: 7px;
 }
 
 #info3-p {
@@ -466,6 +465,7 @@ select {
 
 hr {
     opacity: 1;
+    margin: 1em 0 !important;
 }
 
 #spinner {
@@ -483,6 +483,10 @@ hr {
         margin-right: 1em;
         width: fit-content;
     }
+}
+
+.type-span img {
+    display: inline;
 }
 
 /* text boxes */

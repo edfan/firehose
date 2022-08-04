@@ -31,6 +31,8 @@ function SelectWithWarn(props: {
             firehose.loadSave(e.target.value);
           }
         }}
+        width="fit-content"
+        display="inline-block"
       >
         {!saveId && <option value="">Not saved</option>}
         {saves.map(({ id, name }) => (

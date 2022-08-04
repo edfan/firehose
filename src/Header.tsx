@@ -8,7 +8,11 @@ export function Header() {
     <>
       <div id="spacer3-div"></div>
       <div id="info-div">
-        <img src="img/logo.png" height="40px" alt="" />
+        <img
+          src="img/logo.png"
+          style={{ height: "40px" }}
+          alt="Firehose logo"
+        />
         <form>
           <select
             defaultValue="index.html"
