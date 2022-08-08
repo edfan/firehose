@@ -1,62 +1,62 @@
-// class selection styles
+// // class selection styles
 
-#selector-div {
-  label {
-    input[type="checkbox"] {
-      display: none;
-    }
-  }
-}
+// #selector-div {
+//   label {
+//     input[type="checkbox"] {
+//       display: none;
+//     }
+//   }
+// }
 
-// table styles
+// // table styles
 
-.ag-icon-asc::before {
-  content: url(https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/images/sort_asc.png);
-}
+// .ag-icon-asc::before {
+//   content: url(https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/images/sort_asc.png);
+// }
 
-.ag-icon-desc::before {
-  content: url(https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/images/sort_desc.png);
-}
+// .ag-icon-desc::before {
+//   content: url(https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/images/sort_desc.png);
+// }
 
-.ag-icon-none::before {
-  content: url(https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/images/sort_both.png);
-}
+// .ag-icon-none::before {
+//   content: url(https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/images/sort_both.png);
+// }
 
-.class-table-wrapper {
-  font-family: "PT Serif", serif;
-  font-size: 17px;
-  height: 320px;
-  margin-top: 8px;
-  width: 100%;
-}
+// .class-table-wrapper {
+//   font-family: "PT Serif", serif;
+//   font-size: 17px;
+//   height: 320px;
+//   margin-top: 8px;
+//   width: 100%;
+// }
 
-.ag-cell-wrapper {
-  border-top: 1px solid #ddd;
-  cursor: pointer;
-  padding: 7px 5px;
-}
+// .ag-cell-wrapper {
+//   border-top: 1px solid #ddd;
+//   cursor: pointer;
+//   padding: 7px 5px;
+// }
 
-.ag-row {
-  background-color: #ffffff;
-}
+// .ag-row {
+//   background-color: #ffffff;
+// }
 
-.ag-row-even {
-  background-color: #f9f9f9;
-}
+// .ag-row-even {
+//   background-color: #f9f9f9;
+// }
 
-.ag-row:hover {
-  background-color: #f0f0f0;
-}
+// .ag-row:hover {
+//   background-color: #f0f0f0;
+// }
 
-.ag-cell:first-child {
-  background-color: rgba(0, 0, 0, 0.03);
-}
+// .ag-cell:first-child {
+//   background-color: rgba(0, 0, 0, 0.03);
+// }
 
-.ag-header-cell-text {
-  font-weight: bold;
-}
+// .ag-header-cell-text {
+//   font-weight: bold;
+// }
 
-.ag-header-cell-label {
-  border-bottom: 1px solid #111;
-  padding: 8px 5px;
-}
+// .ag-header-cell-label {
+//   border-bottom: 1px solid #111;
+//   padding: 8px 5px;
+// }

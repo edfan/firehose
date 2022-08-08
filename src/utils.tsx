@@ -145,6 +145,17 @@ const BACKGROUND_COLORS = [
   "#795548",
 ];
 
+// export const FALLBACK_COLOR = "#eee";
+
+// const BACKGROUND_COLORS = [
+//   "#f8d7d4",
+//   "#f6e8cd",
+//   "#fdf5ce",
+//   "#dff6e0",
+//   "#cfe2fd",
+//   "#f2dae9",
+// ];
+
 /** MurmurHash3, seeded with a string. */
 function murmur3(str: string): () => number {
   let hash = 1779033703 ^ str.length;

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ChakraProvider, Spinner } from "@chakra-ui/react";
+import { ChakraProvider, Flex, Spinner, extendTheme } from "@chakra-ui/react";
 
 import { Firehose, FirehoseState } from "./firehose";
 import { RawClass } from "./class";
@@ -53,15 +53,26 @@ export function App() {
       });
   }, []);
 
+  const theme = extendTheme({
+    config: {
+      initialColorMode: "system",
+      useSystemColorMode: true,
+    },
+    fonts: {
+      body: `'Roboto', sans-serif`,
+      heading: `'Roboto', sans-serif`,
+    },
+  });
+
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       {!firehose ? (
-        <div id="spinner">
+        <Flex w="100vw" h="100vh" align="center" justify="center">
           <Spinner />
-        </div>
+        </Flex>
       ) : (
-        <>
-          <div id="left-div">
+        <Flex w="100vw" direction={{ base: "column", lg: "row" }} p={4} gap={4}>
+          <Flex direction="column" flex={1}>
             <Header />
             <Calendar
               selectedActivities={state.selectedActivities}
@@ -71,8 +82,8 @@ export function App() {
               firehose={firehose}
             />
             <LeftFooter />
-          </div>
-          <div id="right-div">
+          </Flex>
+          <Flex direction="column" flex={1}>
             <p id="beta-warning">
               This version is in <b>beta</b>. Saved info may disappear without
               warning.{" "}
@@ -109,8 +120,8 @@ export function App() {
             ) : null}
             <hr />
             <RightFooter firehose={firehose} />
-          </div>
-        </>
+          </Flex>
+        </Flex>
       )}
     </ChakraProvider>
   );

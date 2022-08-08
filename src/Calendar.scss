@@ -1,22 +1,46 @@
-.calendar-event {
-  padding: 1px;
-  line-height: 1;
+.fc .fc-scrollgrid,
+.fc .fc-scrollgrid-section > td,
+.fc .fc-timegrid-axis {
+  border-color: transparent;
 }
 
-.calendar-time {
-  font-size: 0.7em;
-  white-space: nowrap;
+.fc .fc-timegrid-slot {
+  border-left-color: transparent;
 }
 
-.calendar-title {
-  font-size: 1.1em;
-  margin: 0.2em 0;
+.fc .fc-scrollgrid-section > th:nth-child(1),
+.fc .fc-col-header-cell:last-child {
+  border-right-color: transparent;
 }
 
-.calendar-room {
-  font-size: 0.8em;
+.fc .fc-scrollgrid-section-sticky > * {
+  background: transparent;
+}
+
+.fc .fc-col-header-cell .fc-scrollgrid-sync-inner {
+  background: var(--chakra-colors-chakra-body-bg);
+}
+
+.fc .fc-scroller-harness {
+  overflow: visible;
+}
+
+.fc .fc-timegrid-slot-label {
+  border: none;
 }
 
 .fc .fc-timegrid-slot-label-cushion {
-  font-size: 0.8em;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  opacity: 0.7;
+  position: absolute;
+  top: -0.5rem;
+  right: 0.25rem;
+  z-index: 2;
+}
+
+.fc .fc-timegrid-event {
+  border-radius: 0;
+  border-width: 0;
+  border-left-width: 0.25rem;
 }
