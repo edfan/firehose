@@ -1,3 +1,6 @@
+import { AddIcon } from "@chakra-ui/icons";
+import { Button, Flex, Text } from "@chakra-ui/react";
+
 import { Class } from "./class";
 import { Activity } from "./activity";
 import { Firehose } from "./firehose";
@@ -17,9 +20,7 @@ function ActivityButton(props: { activity: Activity; firehose: Firehose }) {
     return activity.name;
   };
   return (
-    <button
-      type="button"
-      className="btn btn-primary"
+    <Button
       onClick={() => firehose.setViewedActivity(activity)}
       onDoubleClick={() => firehose.removeActivity(activity)}
       style={{
@@ -29,7 +30,7 @@ function ActivityButton(props: { activity: Activity; firehose: Firehose }) {
       }}
     >
       {getName()}
-    </button>
+    </Button>
   );
 }
 
@@ -44,25 +45,16 @@ export function SelectedActivities(props: {
   hours: number;
   warnings: Array<string>;
   firehose: Firehose;
-  showClassTable: boolean;
-  setShowClassTable: () => void;
 }) {
-  const {
-    selectedActivities,
-    units,
-    hours,
-    warnings,
-    firehose,
-    showClassTable,
-    setShowClassTable,
-  } = props;
+  const { selectedActivities, units, hours, warnings, firehose } = props;
 
   return (
-    <div id="selector-div">
-      <p id="units-div">
-        Units: {units}&nbsp;&nbsp;&nbsp;Hours: {formatNumber(hours, 1)}
-      </p>
-      <div id="selected-div">
+    <Flex direction="column" gap={2}>
+      <Flex gap={8} justify="center">
+        <Text>{units} units</Text>
+        <Text>{formatNumber(hours, 1)} hours</Text>
+      </Flex>
+      <Flex align="center">
         {selectedActivities.map((activity) => (
           <ActivityButton
             key={activity instanceof Class ? activity.number : activity.id}
@@ -70,26 +62,19 @@ export function SelectedActivities(props: {
             firehose={firehose}
           />
         ))}
-        <button
-          type="button"
-          className={"btn btn-secondary" + (showClassTable ? " active" : "")}
-          onClick={() => setShowClassTable()}
-        >
-          + Class
-        </button>
-        <button
-          type="button"
-          className="btn btn-secondary"
+        <Button
+          leftIcon={<AddIcon />}
           onClick={() => firehose.addActivity()}
+          size="sm"
         >
-          + Non-class
-        </button>
-      </div>
+          Activity
+        </Button>
+      </Flex>
       {warnings.map((warning) => (
-        <p key={warning} id="warning-div">
-          {warning}
-        </p>
+        <Flex key={warning} justify="center">
+          <Text fontSize="sm">{warning}</Text>
+        </Flex>
       ))}
-    </div>
+    </Flex>
   );
 }

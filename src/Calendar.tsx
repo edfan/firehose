@@ -20,13 +20,7 @@ export function Calendar(props: {
 }) {
   const { selectedActivities, viewedActivity, firehose } = props;
 
-  const renderEvent = ({
-    event,
-  }: // timeText,
-  {
-    event: EventApi;
-    timeText: string;
-  }) => {
+  const renderEvent = ({ event }: { event: EventApi; timeText: string }) => {
     return (
       <Box p={0.5} lineHeight={1.3}>
         <Text fontSize="sm" fontWeight={500}>
@@ -51,12 +45,6 @@ export function Calendar(props: {
       eventClick={(e) => {
         // extendedProps: non-standard props of {@link Event.eventInputs}
         firehose.setViewedActivity(e.event.extendedProps.activity);
-      }}
-      eventDidMount={({ el }) => {
-        // change the inset to be further in
-        if (!el?.parentElement?.style.inset) return;
-        const { inset } = el.parentElement.style;
-        el.parentElement.style.inset = inset.replace("50%", "20%");
       }}
       headerToolbar={false}
       height="auto"

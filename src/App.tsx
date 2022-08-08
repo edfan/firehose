@@ -9,16 +9,17 @@ import {
 import { Firehose, FirehoseState } from "./firehose";
 import { RawClass } from "./class";
 
-import { Calendar } from "./Calendar";
 import { ActivityDescription } from "./ActivityDescription";
+import { Calendar } from "./Calendar";
 import { ClassTable } from "./ClassTable";
+import { LeftFooter, RightFooter } from "./Footers";
+import { Header } from "./Header";
+import { ScheduleOption } from "./ScheduleOption";
 import { ScheduleSwitcher } from "./ScheduleSwitcher";
 import { SelectedActivities } from "./SelectedActivities";
-import { Header } from "./Header";
-import { LeftFooter, RightFooter } from "./Footers";
 
+import "@fontsource/inter/variable.css";
 import "./stylesheet.scss";
-import { ScheduleOption } from "./ScheduleOption";
 
 /** The main application. */
 export function App() {
@@ -36,8 +37,6 @@ export function App() {
     saveId: "",
     saves: [],
   });
-
-  const [showClassTable, setShowClassTable] = useState(true);
 
   useEffect(() => {
     fetch("full.json")
@@ -68,8 +67,8 @@ export function App() {
       secondary: "#4A5568"
     },
     fonts: {
-      body: `'Roboto', sans-serif`,
-      heading: `'Roboto', sans-serif`,
+      body: `'InterVariable', sans-serif`,
+      heading: `'InterVariable', sans-serif`,
     },
   });
 
@@ -81,7 +80,7 @@ export function App() {
         </Flex>
       ) : (
         <Flex w="100vw" direction={{ base: "column", lg: "row" }} p={4} gap={4}>
-          <Flex direction="column" flex={1} gap={4}>
+          <Flex direction="column" w={{ base: "100%", lg: "50%" }} gap={4}>
             <Header />
             <ScheduleOption
               selectedOption={state.selectedOption}
@@ -95,7 +94,7 @@ export function App() {
             />
             <LeftFooter />
           </Flex>
-          <Flex direction="column" flex={1} gap={4}>
+          <Flex direction="column" w={{ base: "100%", lg: "50%" }} gap={4}>
             <p id="beta-warning">
               This version is in <b>beta</b>. Saved info may disappear without
               warning.{" "}
@@ -114,13 +113,10 @@ export function App() {
               hours={state.hours}
               warnings={state.warnings}
               firehose={firehose}
-              showClassTable={showClassTable}
-              setShowClassTable={() => setShowClassTable(!showClassTable)}
             />
             <ClassTable
               classes={firehose.classes} // this is a constant; no need to add to state
               firehose={firehose}
-              hidden={!showClassTable}
             />
             {state.viewedActivity ? (
               <ActivityDescription

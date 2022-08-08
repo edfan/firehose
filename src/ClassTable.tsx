@@ -247,9 +247,8 @@ function ClassFlags(props: {
 export function ClassTable(props: {
   classes: Map<string, Class>;
   firehose: Firehose;
-  hidden: boolean;
 }) {
-  const { classes, firehose, hidden } = props;
+  const { classes, firehose } = props;
   const gridRef = useRef<AgGridReact>(null);
 
   // Setup table columns
@@ -323,11 +322,6 @@ export function ClassTable(props: {
 
   return (
     <div
-      style={{
-        display: hidden ? "none" : "block",
-        // it's still mounted, just hidden. we don't want to remount, because
-        // that would mean recomputing all the expensive startup operations.
-      }}
     >
       <div id="selector-div">
         <ClassInput
