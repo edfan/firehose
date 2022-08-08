@@ -1,62 +1,37 @@
-// class selection styles
-
-#selector-div {
-  label {
-    input[type="checkbox"] {
-      display: none;
-    }
-  }
-}
-
-// table styles
-
-.ag-icon-asc::before {
-  content: url(https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/images/sort_asc.png);
-}
-
-.ag-icon-desc::before {
-  content: url(https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/images/sort_desc.png);
-}
-
-.ag-icon-none::before {
-  content: url(https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/images/sort_both.png);
-}
-
-.class-table-wrapper {
-  font-family: "PT Serif", serif;
-  font-size: 17px;
+.ag-theme-firehose {
   height: 320px;
-  margin-top: 8px;
   width: 100%;
+  --ag-icon-font-family: agGridAlpine;
 }
 
 .ag-cell-wrapper {
-  border-top: 1px solid #ddd;
   cursor: pointer;
-  padding: 7px 5px;
-}
-
-.ag-row {
-  background-color: #ffffff;
+  padding: 8px 5px;
 }
 
 .ag-row-even {
-  background-color: #f9f9f9;
+  background-color: var(--chakra-colors-gray-50);
 }
 
 .ag-row:hover {
-  background-color: #f0f0f0;
+  background-color: var(--chakra-colors-blue-50);
+
+  .ag-cell:first-child {
+    text-decoration: underline;
+  }
 }
 
 .ag-cell:first-child {
-  background-color: rgba(0, 0, 0, 0.03);
+  font-weight: 500;
 }
 
 .ag-header-cell-text {
+  font-size: 0.8rem;
+  letter-spacing: 0.05rem;
   font-weight: bold;
+  text-transform: uppercase;
 }
 
 .ag-header-cell-label {
-  border-bottom: 1px solid #111;
   padding: 8px 5px;
 }

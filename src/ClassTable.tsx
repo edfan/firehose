@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Tooltip } from "@chakra-ui/react";
+import { Box, Tooltip } from "@chakra-ui/react";
 import { AgGridReact } from "@ag-grid-community/react";
 import AgGrid, { ModuleRegistry } from "@ag-grid-community/core";
 import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
@@ -7,6 +7,7 @@ import { DebounceInput } from "react-debounce-input";
 import Fuse from "fuse.js";
 
 import "@ag-grid-community/core/dist/styles/ag-grid.css";
+import "@ag-grid-community/core/dist/styles/agGridAlpineFont.css";
 import "./ClassTable.scss";
 
 import { Class, Flags } from "./class";
@@ -335,7 +336,7 @@ export function ClassTable(props: {
           updateFilter={() => gridRef.current?.api?.onFilterChanged()}
         />
       </div>
-      <div className="class-table-wrapper">
+      <Box className="ag-theme-firehose">
         <AgGridReact
           ref={gridRef}
           columnDefs={columnDefs}
@@ -351,7 +352,7 @@ export function ClassTable(props: {
           headerHeight={40}
           rowHeight={40}
         />
-      </div>
+      </Box>
     </div>
   );
 }
