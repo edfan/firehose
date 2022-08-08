@@ -182,7 +182,7 @@ function ClassBody(props: { cls: Class }) {
             {label}
           </a>
         ))
-        .reduce((acc, cur) => [acc, " | ", cur])}
+        .join(" | ")}
     </p>
   );
 }

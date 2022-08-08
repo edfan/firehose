@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { ChakraProvider, Flex, Spinner, extendTheme } from "@chakra-ui/react";
+import {
+  ChakraProvider,
+  Flex,
+  Spinner,
+  extendTheme,
+} from "@chakra-ui/react";
 
 import { Firehose, FirehoseState } from "./firehose";
 import { RawClass } from "./class";
@@ -13,6 +18,7 @@ import { Header } from "./Header";
 import { LeftFooter, RightFooter } from "./Footers";
 
 import "./stylesheet.scss";
+import { ScheduleOption } from "./ScheduleOption";
 
 /** The main application. */
 export function App() {
@@ -58,6 +64,9 @@ export function App() {
       initialColorMode: "system",
       useSystemColorMode: true,
     },
+    colors: {
+      secondary: "#4A5568"
+    },
     fonts: {
       body: `'Roboto', sans-serif`,
       heading: `'Roboto', sans-serif`,
@@ -72,18 +81,21 @@ export function App() {
         </Flex>
       ) : (
         <Flex w="100vw" direction={{ base: "column", lg: "row" }} p={4} gap={4}>
-          <Flex direction="column" flex={1}>
+          <Flex direction="column" flex={1} gap={4}>
             <Header />
-            <Calendar
-              selectedActivities={state.selectedActivities}
+            <ScheduleOption
               selectedOption={state.selectedOption}
               totalOptions={state.totalOptions}
+              firehose={firehose}
+            />
+            <Calendar
+              selectedActivities={state.selectedActivities}
               viewedActivity={state.viewedActivity}
               firehose={firehose}
             />
             <LeftFooter />
           </Flex>
-          <Flex direction="column" flex={1}>
+          <Flex direction="column" flex={1} gap={4}>
             <p id="beta-warning">
               This version is in <b>beta</b>. Saved info may disappear without
               warning.{" "}
@@ -96,7 +108,6 @@ export function App() {
               saveId={state.saveId}
               saves={state.saves}
             />
-            <hr />
             <SelectedActivities
               selectedActivities={state.selectedActivities}
               units={state.units}
@@ -106,7 +117,6 @@ export function App() {
               showClassTable={showClassTable}
               setShowClassTable={() => setShowClassTable(!showClassTable)}
             />
-            <hr />
             <ClassTable
               classes={firehose.classes} // this is a constant; no need to add to state
               firehose={firehose}
@@ -118,7 +128,6 @@ export function App() {
                 firehose={firehose}
               />
             ) : null}
-            <hr />
             <RightFooter firehose={firehose} />
           </Flex>
         </Flex>

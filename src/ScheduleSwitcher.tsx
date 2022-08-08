@@ -1,5 +1,6 @@
 import {
   Button,
+  Flex,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -70,9 +71,9 @@ function RenameBar(props: { firehose: Firehose; saveId: string }) {
   const [show, setShow] = useState(false);
   const [name, setName] = useState("");
   return !show ? (
-    <button className="btn btn-secondary btn-sm" onClick={() => setShow(true)}>
+    <Button className="btn btn-secondary btn-sm" onClick={() => setShow(true)}>
       Rename
-    </button>
+    </Button>
   ) : (
     <form
       className="non-class-form"
@@ -89,9 +90,9 @@ function RenameBar(props: { firehose: Firehose; saveId: string }) {
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
-      <button className="btn btn-secondary btn-sm" type="submit">
+      <Button className="btn btn-secondary btn-sm" type="submit">
         Rename
-      </button>
+      </Button>
     </form>
   );
 }
@@ -106,12 +107,12 @@ function DeleteModal(props: {
 
   return (
     <>
-      <button
+      <Button
         className="btn btn-secondary btn-sm"
         onClick={() => setShow(true)}
       >
         Delete
-      </button>
+      </Button>
       <Modal isOpen={show} onClose={() => setShow(false)}>
         <ModalBody>Are you sure you want to delete schedule {name}?</ModalBody>
         <ModalFooter>
@@ -139,12 +140,12 @@ function ExportModal(props: { firehose: Firehose }) {
 
   return (
     <>
-      <button
+      <Button
         className="btn btn-secondary btn-sm"
         onClick={() => setShow(true)}
       >
         Share
-      </button>
+      </Button>
       <Modal isOpen={show} onClose={() => setShow(false)}>
         <ModalHeader>
           Share schedule
@@ -165,7 +166,7 @@ export function ScheduleSwitcher(props: {
 }) {
   const { firehose, saveId, saves } = props;
   return (
-    <div id="schedule-switcher-div">
+    <Flex>
       <SelectWithWarn firehose={firehose} saveId={saveId} saves={saves} />
       {saveId && <RenameBar firehose={firehose} saveId={saveId} />}
       {saveId && (
@@ -175,13 +176,13 @@ export function ScheduleSwitcher(props: {
           name={saves.find((save) => save.id === saveId)!.name}
         />
       )}
-      <button
+      <Button
         className="btn btn-secondary btn-sm"
         onClick={() => firehose.addSave(Boolean(saveId))}
       >
         {saveId ? "New" : "Save"}
-      </button>
+      </Button>
       <ExportModal firehose={firehose} />
-    </div>
+    </Flex>
   );
 }

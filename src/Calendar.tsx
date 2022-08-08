@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import FullCalendar, { EventApi } from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -15,18 +15,10 @@ import "./Calendar.scss";
  */
 export function Calendar(props: {
   selectedActivities: Array<Activity>;
-  selectedOption: number;
-  totalOptions: number;
   viewedActivity: Activity | undefined;
   firehose: Firehose;
 }) {
-  const {
-    selectedActivities,
-    selectedOption,
-    totalOptions,
-    viewedActivity,
-    firehose,
-  } = props;
+  const { selectedActivities, viewedActivity, firehose } = props;
 
   const renderEvent = ({
     event,
@@ -46,77 +38,50 @@ export function Calendar(props: {
   };
 
   return (
-    <>
-      <Flex direction="column" align="center" py={4}>
-        <Flex>
-          <Button
-            onClick={() => firehose.selectOption(selectedOption - 1)}
-            size="xs"
-            mr={2}
-          >
-            &larr;
-          </Button>{" "}
-          {selectedOption + 1} of {totalOptions}
-          <Button
-            onClick={() => firehose.selectOption(selectedOption + 1)}
-            size="xs"
-            ml={2}
-          >
-            &rarr;
-          </Button>
-        </Flex>
-        {totalOptions < 15 && (
-          <Text fontSize="sm">
-            Too many options? Use the "Edit sections" button above the class
-            description.
-          </Text>
-        )}
-      </Flex>
-      <FullCalendar
-        plugins={[timeGridPlugin, interactionPlugin]}
-        initialView="timeGridWeek"
-        allDaySlot={false}
-        dayHeaderFormat={{ weekday: "short" }}
-        editable={false}
-        events={selectedActivities
-          .flatMap((act) => act.events)
-          .flatMap((event) => event.eventInputs)}
-        eventContent={renderEvent}
-        eventClick={(e) => {
-          // extendedProps: non-standard props of {@link Event.eventInputs}
-          firehose.setViewedActivity(e.event.extendedProps.activity);
-        }}
-        eventDidMount={({ el }) => {
-          // change the inset to be further in
-          if (!el?.parentElement?.style.inset) return;
-          const { inset } = el.parentElement.style;
-          el.parentElement.style.inset = inset.replace("50%", "20%");
-        }}
-        headerToolbar={false}
-        height="auto"
-        // a date that is, conveniently enough, a monday
-        initialDate="2001-01-01"
-        slotDuration="00:30:00"
-        slotLabelFormat={({ date }) => {
-          const { hour } = date;
-          return hour === 12
-            ? "noon"
-            : hour < 12
-            ? `${hour} AM`
-            : `${hour - 12} PM`;
-        }}
-        slotMinTime="08:00:00"
-        slotMaxTime="22:00:00"
-        weekends={false}
-        selectable={viewedActivity instanceof NonClass}
-        select={(e) => {
-          viewedActivity instanceof NonClass &&
-            firehose.addTimeslot(
-              viewedActivity,
-              Timeslot.fromStartEnd(toSlot(e.start), toSlot(e.end))
-            );
-        }}
-      />
-    </>
+    <FullCalendar
+      plugins={[timeGridPlugin, interactionPlugin]}
+      initialView="timeGridWeek"
+      allDaySlot={false}
+      dayHeaderFormat={{ weekday: "short" }}
+      editable={false}
+      events={selectedActivities
+        .flatMap((act) => act.events)
+        .flatMap((event) => event.eventInputs)}
+      eventContent={renderEvent}
+      eventClick={(e) => {
+        // extendedProps: non-standard props of {@link Event.eventInputs}
+        firehose.setViewedActivity(e.event.extendedProps.activity);
+      }}
+      eventDidMount={({ el }) => {
+        // change the inset to be further in
+        if (!el?.parentElement?.style.inset) return;
+        const { inset } = el.parentElement.style;
+        el.parentElement.style.inset = inset.replace("50%", "20%");
+      }}
+      headerToolbar={false}
+      height="auto"
+      // a date that is, conveniently enough, a monday
+      initialDate="2001-01-01"
+      slotDuration="00:30:00"
+      slotLabelFormat={({ date }) => {
+        const { hour } = date;
+        return hour === 12
+          ? "noon"
+          : hour < 12
+          ? `${hour} AM`
+          : `${hour - 12} PM`;
+      }}
+      slotMinTime="08:00:00"
+      slotMaxTime="22:00:00"
+      weekends={false}
+      selectable={viewedActivity instanceof NonClass}
+      select={(e) => {
+        viewedActivity instanceof NonClass &&
+          firehose.addTimeslot(
+            viewedActivity,
+            Timeslot.fromStartEnd(toSlot(e.start), toSlot(e.end))
+          );
+      }}
+    />
   );
 }

@@ -3,6 +3,8 @@ import Msgpack from "msgpack-lite";
 
 import { Activity } from "./activity";
 
+//========================================================================
+
 /**
  * Rounds {@param x} to {@param n} decimal places?
  * TODO: figure out what this does and then remove it
@@ -70,6 +72,7 @@ export function classNumberMatch(
   }
 }
 
+//========================================================================
 // Date utilities:
 // TODO: rename these
 
@@ -130,6 +133,7 @@ export function dayStringToSlot(day: string, time: string): number {
   return 30 * WEEKDAY_STRINGS.indexOf(day) + TIMESLOT_STRINGS.indexOf(time);
 }
 
+//========================================================================
 // Color utilities:
 
 export const FALLBACK_COLOR = "#4A4A4A";
@@ -191,6 +195,7 @@ export function chooseColors(activities: Array<Activity>): void {
   }
 }
 
+//========================================================================
 // Other utilities:
 
 export function urlencode(obj: any): string {
