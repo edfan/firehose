@@ -296,6 +296,7 @@ export class Firehose {
       }
     }
     this.selectedOption = selectedOption ?? 0;
+    this.saveId = "";
     this.updateActivities(false);
   }
 

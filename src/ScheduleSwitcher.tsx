@@ -48,24 +48,28 @@ function SelectWithWarn(props: {
         ))}
       </Select>
       <Modal isOpen={Boolean(confirmSave)} onClose={() => setConfirmSave("")}>
-        <ModalBody>
-          The current schedule is loaded from a URL and is not saved. Are you
-          sure you want to load schedule {confirmName} without saving your
-          current schedule?
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="outline" onClick={() => setConfirmSave("")}>
-            Cancel
-          </Button>
-          <Button
-            onClick={() => {
-              firehose.loadSave(confirmSave);
-              setConfirmSave("");
-            }}
-          >
-            Load schedule
-          </Button>
-        </ModalFooter>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Are you sure?</ModalHeader>
+          <ModalBody>
+            The current schedule is loaded from a URL and is not saved. Are you
+            sure you want to load schedule {confirmName} without saving your
+            current schedule?
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={() => setConfirmSave("")} mr={2}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                firehose.loadSave(confirmSave);
+                setConfirmSave("");
+              }}
+            >
+              Load schedule
+            </Button>
+          </ModalFooter>
+        </ModalContent>
       </Modal>
     </>
   );
@@ -81,10 +85,7 @@ function DeleteModal(props: {
 
   return (
     <>
-      <Button
-        className="btn btn-secondary btn-sm"
-        onClick={() => setShow(true)}
-      >
+      <Button onClick={() => setShow(true)} variant="outline" size="sm">
         Delete
       </Button>
       <Modal isOpen={show} onClose={() => setShow(false)}>
@@ -119,10 +120,7 @@ function ExportModal(props: { firehose: Firehose }) {
 
   return (
     <>
-      <Button
-        className="btn btn-secondary btn-sm"
-        onClick={() => setShow(true)}
-      >
+      <Button onClick={() => setShow(true)} variant="outline" size="sm">
         Share
       </Button>
       <Modal isOpen={show} onClose={() => setShow(false)}>
@@ -173,48 +171,53 @@ export function ScheduleSwitcher(props: {
       ) : (
         <SelectWithWarn firehose={firehose} saveId={saveId} saves={saves} />
       )}
-      <ButtonGroup variant="outline" size="sm">
-        {isRenaming ? (
-          <>
+      {isRenaming ? (
+        <ButtonGroup variant="outline" size="sm">
+          <Button
+            onClick={() => {
+              firehose.renameSave(saveId, name);
+              setIsRenaming(false);
+            }}
+          >
+            Confirm
+          </Button>
+          <Button
+            onClick={() => {
+              setName(currentName);
+              setIsRenaming(false);
+            }}
+          >
+            Cancel
+          </Button>
+        </ButtonGroup>
+      ) : (
+        <>
+          {saveId && (
             <Button
-              onClick={() => {
-                firehose.renameSave(saveId, name);
-                setIsRenaming(false);
-              }}
+              onClick={() => setIsRenaming(true)}
+              variant="outline"
+              size="sm"
             >
-              Confirm
+              Rename
             </Button>
-            <Button
-              onClick={() => {
-                setName(currentName);
-                setIsRenaming(false);
-              }}
-            >
-              Cancel
-            </Button>
-          </>
-        ) : (
-          <>
-            {saveId && (
-              <Button onClick={() => setIsRenaming(true)}>Rename</Button>
-            )}
-            {saveId && (
-              <DeleteModal
-                firehose={firehose}
-                saveId={saveId}
-                name={saves.find((save) => save.id === saveId)!.name}
-              />
-            )}
-            <Button
-              className="btn btn-secondary btn-sm"
-              onClick={() => firehose.addSave(Boolean(saveId))}
-            >
-              {saveId ? "New" : "Save"}
-            </Button>
-            <ExportModal firehose={firehose} />
-          </>
-        )}
-      </ButtonGroup>
+          )}
+          {saveId && (
+            <DeleteModal
+              firehose={firehose}
+              saveId={saveId}
+              name={saves.find((save) => save.id === saveId)!.name}
+            />
+          )}
+          <Button
+            onClick={() => firehose.addSave(Boolean(saveId))}
+            variant="outline"
+            size="sm"
+          >
+            {saveId ? "New" : "Save"}
+          </Button>
+          <ExportModal firehose={firehose} />
+        </>
+      )}
     </Flex>
   );
 }
