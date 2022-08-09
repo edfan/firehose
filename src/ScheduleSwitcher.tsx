@@ -1,12 +1,16 @@
 import {
   Button,
+  ButtonGroup,
   Flex,
+  Input,
   Modal,
   ModalBody,
-  ModalCloseButton,
+  ModalContent,
   ModalFooter,
   ModalHeader,
+  ModalOverlay,
   Select,
+  useClipboard,
 } from "@chakra-ui/react";
 import { useState } from "react";
 
@@ -33,6 +37,7 @@ function SelectWithWarn(props: {
           }
         }}
         width="fit-content"
+        minWidth="10em"
         display="inline-block"
       >
         {!saveId && <option value="">Not saved</option>}
@@ -114,20 +119,24 @@ function DeleteModal(props: {
         Delete
       </Button>
       <Modal isOpen={show} onClose={() => setShow(false)}>
-        <ModalBody>Are you sure you want to delete schedule {name}?</ModalBody>
-        <ModalFooter>
-          <Button variant="outline" onClick={() => setShow(false)}>
-            Cancel
-          </Button>
-          <Button
-            onClick={() => {
-              firehose.removeSave(saveId);
-              setShow(false);
-            }}
-          >
-            Delete
-          </Button>
-        </ModalFooter>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Are you sure?</ModalHeader>
+          <ModalBody>Are you sure you want to delete {name}?</ModalBody>
+          <ModalFooter>
+            <Button onClick={() => setShow(false)} mr={2}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                firehose.removeSave(saveId);
+                setShow(false);
+              }}
+            >
+              Delete
+            </Button>
+          </ModalFooter>
+        </ModalContent>
       </Modal>
     </>
   );
@@ -137,6 +146,7 @@ function ExportModal(props: { firehose: Firehose }) {
   const { firehose } = props;
   const [show, setShow] = useState(false);
   const link = firehose.urlify();
+  const { hasCopied, onCopy } = useClipboard(link);
 
   return (
     <>
@@ -147,13 +157,23 @@ function ExportModal(props: { firehose: Firehose }) {
         Share
       </Button>
       <Modal isOpen={show} onClose={() => setShow(false)}>
-        <ModalHeader>
-          Share schedule
-          <ModalCloseButton />
-        </ModalHeader>
-        <ModalBody>
-          Copy the following link: <a href={link}>{link}</a>
-        </ModalBody>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Share schedule</ModalHeader>
+          <ModalBody>
+            Share the following link:
+            <br />
+            <a href={link}>{link}</a>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={() => setShow(false)} mr={2}>
+              Close
+            </Button>
+            <Button onClick={() => onCopy()}>
+              {hasCopied ? "Copied!" : "Copy"}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
       </Modal>
     </>
   );
@@ -165,24 +185,67 @@ export function ScheduleSwitcher(props: {
   saves: Array<Save>;
 }) {
   const { firehose, saveId, saves } = props;
+
+  const currentName = saves.find((save) => save.id === saveId)?.name!;
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [name, setName] = useState(currentName);
+
+  // TODO: factor out renaming logic from here and non-class activities
   return (
-    <Flex>
-      <SelectWithWarn firehose={firehose} saveId={saveId} saves={saves} />
-      {saveId && <RenameBar firehose={firehose} saveId={saveId} />}
-      {saveId && (
-        <DeleteModal
-          firehose={firehose}
-          saveId={saveId}
-          name={saves.find((save) => save.id === saveId)!.name}
+    <Flex align="center" justify="center" gap={2}>
+      {isRenaming ? (
+        <Input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="New Schedule"
+          size="sm"
+          width="fit-content"
         />
+      ) : (
+        <SelectWithWarn firehose={firehose} saveId={saveId} saves={saves} />
       )}
-      <Button
-        className="btn btn-secondary btn-sm"
-        onClick={() => firehose.addSave(Boolean(saveId))}
-      >
-        {saveId ? "New" : "Save"}
-      </Button>
-      <ExportModal firehose={firehose} />
+      <ButtonGroup variant="outline" size="sm">
+        {isRenaming ? (
+          <>
+            <Button
+              onClick={() => {
+                firehose.renameSave(saveId, name);
+                setIsRenaming(false);
+              }}
+            >
+              Confirm
+            </Button>
+            <Button
+              onClick={() => {
+                setName(currentName);
+                setIsRenaming(false);
+              }}
+            >
+              Cancel
+            </Button>
+          </>
+        ) : (
+          <>
+            {saveId && (
+              <Button onClick={() => setIsRenaming(true)}>Rename</Button>
+            )}
+            {saveId && (
+              <DeleteModal
+                firehose={firehose}
+                saveId={saveId}
+                name={saves.find((save) => save.id === saveId)!.name}
+              />
+            )}
+            <Button
+              className="btn btn-secondary btn-sm"
+              onClick={() => firehose.addSave(Boolean(saveId))}
+            >
+              {saveId ? "New" : "Save"}
+            </Button>
+            <ExportModal firehose={firehose} />
+          </>
+        )}
+      </ButtonGroup>
     </Flex>
   );
 }

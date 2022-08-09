@@ -174,12 +174,12 @@ export function NonClassButtons(props: {
 }) {
   const { activity, firehose } = props;
 
-  const [isEditing, setIsEditing] = useState(false);
+  const [isRenaming, setIsRenaming] = useState(false);
   const [name, setName] = useState(activity.name);
 
   return (
     <Flex direction="column" gap={4}>
-      {isEditing ? (
+      {isRenaming ? (
         <Input
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -190,12 +190,12 @@ export function NonClassButtons(props: {
         <Heading size="sm">{activity.name}</Heading>
       )}
       <ButtonGroup>
-        {isEditing ? (
+        {isRenaming ? (
           <>
             <Button
               onClick={() => {
                 firehose.renameNonClass(activity, name);
-                setIsEditing(false);
+                setIsRenaming(false);
               }}
             >
               Confirm
@@ -203,7 +203,7 @@ export function NonClassButtons(props: {
             <Button
               onClick={() => {
                 setName(activity.name);
-                setIsEditing(false);
+                setIsRenaming(false);
               }}
             >
               Cancel
@@ -216,7 +216,7 @@ export function NonClassButtons(props: {
                 ? "Remove activity"
                 : "Add activity"}
             </Button>
-            <Button onClick={() => setIsEditing(true)}>Rename activity</Button>
+            <Button onClick={() => setIsRenaming(true)}>Rename activity</Button>
           </>
         )}
       </ButtonGroup>
