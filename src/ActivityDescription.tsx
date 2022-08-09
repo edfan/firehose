@@ -1,4 +1,12 @@
-import { Flex, Heading, Image, Link, Text, Tooltip } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  Heading,
+  Image,
+  Link,
+  Text,
+  Tooltip,
+} from "@chakra-ui/react";
 import { decode } from "html-entities";
 
 import { Activity, NonClass } from "./activity";
@@ -180,21 +188,22 @@ function NonClassDescription(props: {
   const { activity, firehose } = props;
 
   return (
-    <>
-      <p id="class-name">{activity.name}</p>
+    <Flex direction="column" gap={4}>
       <NonClassButtons activity={activity} firehose={firehose} />
-      {activity.timeslots.map((t) => (
-        <p className="timeslot" key={t.toString()}>
-          <button
-            className="btn btn-secondary btn-sm"
-            onClick={() => firehose.removeTimeslot(activity, t)}
-          >
-            Remove
-          </button>{" "}
-          {t.toString()}
-        </p>
-      ))}
-    </>
+      <Flex direction="column" gap={2}>
+        {activity.timeslots.map((t) => (
+          <Flex key={t.toString()} align="center" gap={2}>
+            <Button
+              size="sm"
+              onClick={() => firehose.removeTimeslot(activity, t)}
+            >
+              Remove
+            </Button>
+            <Text>{t.toString()}</Text>
+          </Flex>
+        ))}
+      </Flex>
+    </Flex>
   );
 }
 

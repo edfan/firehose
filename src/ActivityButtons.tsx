@@ -1,10 +1,15 @@
 import {
   Button,
   ButtonGroup,
+  Checkbox,
   Flex,
   FormControl,
   FormLabel,
+  Heading,
+  Input,
   Radio,
+  Select,
+  Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
 
@@ -90,9 +95,8 @@ export function ClassButtons(props: { cls: Class; firehose: Firehose }) {
         </Button>
         {isSelected && (
           <Button
-            type="button"
-            className={"btn btn-primary" + (showManual ? " active" : "")}
             onClick={() => setShowManual(!showManual)}
+            variant={showManual ? "outline" : "solid"}
           >
             Edit sections
           </Button>
@@ -114,21 +118,21 @@ function NonClassAddTime(props: { activity: NonClass; firehose: Firehose }) {
   const [times, setTimes] = useState({ start: "10:00 AM", end: "1:00 PM" });
 
   const timeDrop = (key: "start" | "end") => (
-    <select
+    <Select
       value={times[key]}
       onChange={(e) => setTimes({ ...times, [key]: e.target.value })}
+      size="sm"
     >
       {TIMESLOT_STRINGS.map((time) => (
         <option key={time} value={time}>
           {time}
         </option>
       ))}
-    </select>
+    </Select>
   );
 
   return (
     <form
-      className="add-time-form"
       onSubmit={(e) => {
         e.preventDefault();
         for (const day in days) {
@@ -143,20 +147,22 @@ function NonClassAddTime(props: { activity: NonClass; firehose: Firehose }) {
         }
       }}
     >
-      <button className="btn btn-secondary" type="submit">
-        Add time
-      </button>{" "}
-      {WEEKDAY_STRINGS.map((day) => (
-        <label key={day}>
-          <input
-            type="checkbox"
+      <Flex align="center" gap={2}>
+        <Button type="submit" size="sm">
+          Add time
+        </Button>
+        {WEEKDAY_STRINGS.map((day) => (
+          <Checkbox
             checked={days[day]}
             onChange={(e) => setDays({ ...days, [day]: e.target.checked })}
-          />
-          {day}
-        </label>
-      ))}
-      {timeDrop("start")} – {timeDrop("end")}
+          >
+            {day}
+          </Checkbox>
+        ))}
+        <Flex align="center" gap={1}>
+          {timeDrop("start")} to {timeDrop("end")}
+        </Flex>
+      </Flex>
     </form>
   );
 }
@@ -168,44 +174,57 @@ export function NonClassButtons(props: {
 }) {
   const { activity, firehose } = props;
 
-  const [name, setName] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [name, setName] = useState(activity.name);
 
   return (
-    <>
-      <button
-        type="button"
-        className="btn btn-primary"
-        onClick={() => firehose.toggleActivity(activity)}
-      >
-        {firehose.isSelectedActivity(activity)
-          ? "Remove activity"
-          : "Add activity"}
-      </button>
-      <form
-        className="non-class-form"
-        onSubmit={(e) => {
-          e.preventDefault();
-          firehose.renameNonClass(activity, name);
-          setName("");
-        }}
-      >
-        <label>New name: </label>{" "}
-        <input
-          type="text"
+    <Flex direction="column" gap={4}>
+      {isEditing ? (
+        <Input
           value={name}
           onChange={(e) => setName(e.target.value)}
+          fontWeight="bold"
+          placeholder="New Activity"
         />
-        <button className="btn btn-secondary" type="submit">
-          Rename
-        </button>
-      </form>
-      <div id="class-buttons-div">
+      ) : (
+        <Heading size="sm">{activity.name}</Heading>
+      )}
+      <ButtonGroup>
+        {isEditing ? (
+          <>
+            <Button
+              onClick={() => {
+                firehose.renameNonClass(activity, name);
+                setIsEditing(false);
+              }}
+            >
+              Confirm
+            </Button>
+            <Button
+              onClick={() => {
+                setName(activity.name);
+                setIsEditing(false);
+              }}
+            >
+              Cancel
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button onClick={() => firehose.toggleActivity(activity)}>
+              {firehose.isSelectedActivity(activity)
+                ? "Remove activity"
+                : "Add activity"}
+            </Button>
+            <Button onClick={() => setIsEditing(true)}>Rename activity</Button>
+          </>
+        )}
+      </ButtonGroup>
+      <Text>
         Click and drag on an empty time in the calendar to add the times for
-        your activity.
-        <br />
-        Or add one manually:
-      </div>
+        your activity. Or add one manually:
+      </Text>
       <NonClassAddTime activity={activity} firehose={firehose} />
-    </>
+    </Flex>
   );
 }

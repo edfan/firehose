@@ -96,10 +96,11 @@ function generateTimeslotStrings(): Array<string> {
   }
   res.push("12:00 PM");
   res.push("12:30 PM");
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= 9; i++) {
     res.push(`${i}:00 PM`);
     res.push(`${i}:30 PM`);
   }
+  res.push(`10:00 PM`);
   return res;
 }
 
@@ -223,10 +224,7 @@ export function linkClasses(
     const cls = firehose.classes.get(text);
     if (!cls) return <>{text}</>;
     return (
-      <Link
-        key={text}
-        onClick={() => firehose.setViewedActivity(cls)}
-      >
+      <Link key={text} onClick={() => firehose.setViewedActivity(cls)}>
         {text}
       </Link>
     );
