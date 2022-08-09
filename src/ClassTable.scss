@@ -11,10 +11,18 @@
 
 .ag-row-even {
   background-color: var(--chakra-colors-gray-50);
+
+  .chakra-ui-dark & {
+    background-color: var(--chakra-colors-gray-700);
+  }
 }
 
 .ag-row:hover {
   background-color: var(--chakra-colors-blue-50);
+
+  .chakra-ui-dark & {
+    background-color: var(--chakra-colors-blue-700);
+  }
 
   .ag-cell:first-child {
     text-decoration: underline;
