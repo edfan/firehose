@@ -1,9 +1,18 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Box, Tooltip } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Flex,
+  Image,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Tooltip,
+} from "@chakra-ui/react";
 import { AgGridReact } from "@ag-grid-community/react";
 import AgGrid, { ModuleRegistry } from "@ag-grid-community/core";
 import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
-import { DebounceInput } from "react-debounce-input";
 import Fuse from "fuse.js";
 
 import "@ag-grid-community/core/dist/styles/ag-grid.css";
@@ -13,6 +22,7 @@ import "./ClassTable.scss";
 import { Class, Flags } from "./class";
 import { classNumberMatch, classSort, simplifyString } from "./utils";
 import { Firehose } from "./firehose";
+import { AddIcon, MinusIcon, SearchIcon } from "@chakra-ui/icons";
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -98,24 +108,24 @@ function ClassInput(props: {
         onEnter();
       }}
     >
-      <label id="class-input-label" htmlFor="class-input">
-        Class number or name:&nbsp;
-      </label>
-      {/* TODO: is debounce here necessary? */}
-      <DebounceInput
-        type="text"
-        placeholder="8.01"
-        id="class-input"
-        value={classInput}
-        onChange={(e) => onClassInputChange(e.target.value)}
-        debounceTimeout={300}
-      />
+      <InputGroup>
+        <InputLeftElement pointerEvents="none" children={<SearchIcon />} />
+        <Input
+          type="text"
+          placeholder="Class number or name"
+          _placeholder={{ opacity: 1 }}
+          value={classInput}
+          onChange={(e) => onClassInputChange(e.target.value)}
+        />
+      </InputGroup>
     </form>
   );
 }
 
+type FilterGroup = Array<[keyof Flags | "fits", string, string?]>;
+
 /** List of top filter IDs and their displayed names. */
-const CLASS_FLAGS_1: Array<[keyof Flags | "fits", string, string?]> = [
+const CLASS_FLAGS_1: FilterGroup = [
   ["hass", "HASS"],
   ["cih", "CI-H"],
   ["fits", "Fits schedule"],
@@ -123,7 +133,7 @@ const CLASS_FLAGS_1: Array<[keyof Flags | "fits", string, string?]> = [
 ];
 
 /** List of hidden filter IDs, their displayed names, and image path, if any. */
-const CLASS_FLAGS_2: Array<[keyof Flags | "fits", string, string?]> = [
+const CLASS_FLAGS_2: FilterGroup = [
   ["hassA", "HASS-A", "img/hassA.gif"],
   ["hassH", "HASS-H", "img/hassH.gif"],
   ["hassS", "HASS-S", "img/hassS.gif"],
@@ -132,7 +142,7 @@ const CLASS_FLAGS_2: Array<[keyof Flags | "fits", string, string?]> = [
 ];
 
 /** Second row of hidden filter IDs. */
-const CLASS_FLAGS_3: Array<[keyof Flags | "fits", string, string?]> = [
+const CLASS_FLAGS_3: FilterGroup = [
   ["rest", "REST", "img/rest.gif"],
   ["Lab", "Institute Lab", "img/Lab.gif"],
   ["under", "Undergrad", "img/under.gif"],
@@ -192,51 +202,46 @@ function ClassFlags(props: {
     });
   };
 
+  const renderGroup = (group: FilterGroup) => {
+    return (
+      <ButtonGroup isAttached={true} colorScheme="orange">
+        {group.map(([flag, label, image]) => {
+          const checked = flags.get(flag);
+          const content = (
+            <Button
+              key={flag}
+              onClick={() => onChange(flag, !checked)}
+              variant={checked ? "solid" : "outline"}
+            >
+              {image ? <Image src={image} alt={label} /> : label}
+            </Button>
+          );
+          return image ? <Tooltip label={label}>{content}</Tooltip> : content;
+        })}
+      </ButtonGroup>
+    );
+  };
+
   return (
-    <>
-      <div className="btn-group">
-        {CLASS_FLAGS_1.map(([flag, label]) => (
-          <label
-            className={"btn btn-primary" + (flags.get(flag) ? " active" : "")}
-            key={flag}
-          >
-            <input
-              type="checkbox"
-              checked={flags.get(flag)}
-              onChange={(e) => onChange(flag, e.target.checked)}
-            />
-            {label}
-          </label>
-        ))}
-      </div>
-      <p id="activity-button" onClick={() => setAllFlags(!allFlags)}>
-        {allFlags ? "- Fewer filters" : "+ More filters"}
-      </p>
-      {allFlags &&
-        [CLASS_FLAGS_2, CLASS_FLAGS_3].map((classFlags, i) => (
-          <div className="btn-group" key={i}>
-            {classFlags.map(([flag, label, image]) => {
-              const className =
-                "btn btn-primary" + (flags.get(flag) ? " active" : "");
-              const content = (
-                <label className={className} key={flag}>
-                  <input
-                    type="checkbox"
-                    checked={flags.get(flag)}
-                    onChange={(e) => onChange(flag, e.target.checked)}
-                  />
-                  {image ? <img src={image} alt={label} /> : label}
-                </label>
-              );
-              return image ? (
-                <Tooltip label={label}>{content}</Tooltip>
-              ) : (
-                content
-              );
-            })}
-          </div>
-        ))}
-    </>
+    <Flex direction="column" align="center" gap={2}>
+      <Flex align="center">
+        {renderGroup(CLASS_FLAGS_1)}
+        <Button
+          leftIcon={allFlags ? <MinusIcon /> : <AddIcon />}
+          onClick={() => setAllFlags(!allFlags)}
+          size="sm"
+          ml={2}
+        >
+          {allFlags ? "Fewer filters" : "More filters"}
+        </Button>
+      </Flex>
+      {allFlags && (
+        <>
+          {renderGroup(CLASS_FLAGS_2)}
+          {renderGroup(CLASS_FLAGS_3)}
+        </>
+      )}
+    </Flex>
   );
 }
 
@@ -322,20 +327,17 @@ export function ClassTable(props: {
   }, [doesExternalFilterPass]);
 
   return (
-    <div
-    >
-      <div id="selector-div">
-        <ClassInput
-          rowData={rowData}
-          setInputFilter={setInputFilter}
-          firehose={firehose}
-        />
-        <ClassFlags
-          setFlagsFilter={setFlagsFilter}
-          firehose={firehose}
-          updateFilter={() => gridRef.current?.api?.onFilterChanged()}
-        />
-      </div>
+    <Flex direction="column" gap={4}>
+      <ClassInput
+        rowData={rowData}
+        setInputFilter={setInputFilter}
+        firehose={firehose}
+      />
+      <ClassFlags
+        setFlagsFilter={setFlagsFilter}
+        firehose={firehose}
+        updateFilter={() => gridRef.current?.api?.onFilterChanged()}
+      />
       <Box className="ag-theme-firehose">
         <AgGridReact
           ref={gridRef}
@@ -353,6 +355,6 @@ export function ClassTable(props: {
           rowHeight={40}
         />
       </Box>
-    </div>
+    </Flex>
   );
 }
