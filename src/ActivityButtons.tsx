@@ -1,3 +1,11 @@
+import {
+  Button,
+  ButtonGroup,
+  Flex,
+  FormControl,
+  FormLabel,
+  Radio,
+} from "@chakra-ui/react";
 import { useState } from "react";
 
 import { NonClass, Timeslot } from "./activity";
@@ -20,22 +28,18 @@ function ClassManualOption(props: {
       : secs.selected === null;
 
   return (
-    <>
-      <input
-        type="radio"
-        className="man-button"
-        checked={checked}
-        onChange={() => {
-          firehose.lockSection(secs, sec);
-        }}
-      />
+    <Radio
+      isChecked={checked}
+      onChange={() => {
+        firehose.lockSection(secs, sec);
+      }}
+    >
       {sec instanceof Section
         ? sec.rawTime
         : sec === "auto"
         ? "Auto (default)"
         : "None"}
-      <br />
-    </>
+    </Radio>
   );
 }
 
@@ -43,35 +47,32 @@ function ClassManualOption(props: {
 function ClassManualSections(props: { cls: Class; firehose: Firehose }) {
   const { cls, firehose } = props;
 
-  const renderOptions = (secs: Sections) => {
-    const options: Array<Section | "auto" | "none"> = [
-      "auto",
-      "none",
-      ...secs.sections,
-    ];
-    return (
-      <div>
-        {secs.name}:
-        <br />
-        {options.map((sec, i) => (
-          <ClassManualOption
-            key={i}
-            secs={secs}
-            sec={sec}
-            firehose={firehose}
-          />
-        ))}
-      </div>
-    );
+  const renderOptions = () => {
+    return cls.sections.map((secs) => {
+      const options: Array<Section | "auto" | "none"> = [
+        "auto",
+        "none",
+        ...secs.sections,
+      ];
+      return (
+        <FormControl key={secs.kind}>
+          <FormLabel>{secs.name}</FormLabel>
+          <Flex direction="column">
+            {options.map((sec, i) => (
+              <ClassManualOption
+                key={i}
+                secs={secs}
+                sec={sec}
+                firehose={firehose}
+              />
+            ))}
+          </Flex>
+        </FormControl>
+      );
+    });
   };
 
-  return (
-    <div id="manual-div">
-      {cls.sections.map((secs) => (
-        <div key={secs.kind}>{renderOptions(secs)}</div>
-      ))}
-    </div>
-  );
+  return <Flex>{renderOptions()}</Flex>;
 }
 
 /** Buttons in class description to add/remove class, and lock sections. */
@@ -82,27 +83,25 @@ export function ClassButtons(props: { cls: Class; firehose: Firehose }) {
   const isSelected = firehose.isSelectedActivity(cls);
 
   return (
-    <div id="class-buttons-div">
-      <button
-        type="button"
-        className="btn btn-primary"
-        onClick={() => firehose.toggleActivity(cls)}
-      >
-        {isSelected ? "Remove class" : "Add class"}
-      </button>
-      {isSelected && (
-        <button
-          type="button"
-          className={"btn btn-primary" + (showManual ? " active" : "")}
-          onClick={() => setShowManual(!showManual)}
-        >
-          Edit sections
-        </button>
-      )}
+    <Flex direction="column" gap={2}>
+      <ButtonGroup>
+        <Button onClick={() => firehose.toggleActivity(cls)}>
+          {isSelected ? "Remove class" : "Add class"}
+        </Button>
+        {isSelected && (
+          <Button
+            type="button"
+            className={"btn btn-primary" + (showManual ? " active" : "")}
+            onClick={() => setShowManual(!showManual)}
+          >
+            Edit sections
+          </Button>
+        )}
+      </ButtonGroup>
       {isSelected && showManual && (
         <ClassManualSections cls={cls} firehose={firehose} />
       )}
-    </div>
+    </Flex>
   );
 }
 
@@ -144,7 +143,9 @@ function NonClassAddTime(props: { activity: NonClass; firehose: Firehose }) {
         }
       }}
     >
-      <button className="btn btn-secondary" type="submit">Add time</button>{" "}
+      <button className="btn btn-secondary" type="submit">
+        Add time
+      </button>{" "}
       {WEEKDAY_STRINGS.map((day) => (
         <label key={day}>
           <input
@@ -194,11 +195,15 @@ export function NonClassButtons(props: {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        <button className="btn btn-secondary" type="submit">Rename</button>
+        <button className="btn btn-secondary" type="submit">
+          Rename
+        </button>
       </form>
       <div id="class-buttons-div">
         Click and drag on an empty time in the calendar to add the times for
-        your activity.<br/>Or add one manually:
+        your activity.
+        <br />
+        Or add one manually:
       </div>
       <NonClassAddTime activity={activity} firehose={firehose} />
     </>

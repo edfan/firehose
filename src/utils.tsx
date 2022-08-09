@@ -1,23 +1,12 @@
+import { Link } from "@chakra-ui/react";
 // @ts-ignore
 import Msgpack from "msgpack-lite";
 
 import { Activity } from "./activity";
+import { Firehose } from "./firehose";
 
 //========================================================================
-
-/**
- * Rounds {@param x} to {@param n} decimal places?
- * TODO: figure out what this does and then remove it
- */
-export function formatNumber(x: number, n: number): string {
-  const re = "\\d(?=(\\d{" + (x || 3) + "})+" + (n > 0 ? "\\." : "$") + ")";
-  return x.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, "g"), "$&,");
-}
-
-/** Takes the sum of an array. */
-export function sum(arr: Array<number>): number {
-  return arr.reduce((acc, cur) => acc + cur, 0);
-}
+// Class utilities:
 
 /**
  * This regex matches a class number like 6.042J or 21W.THU. The groups are
@@ -197,6 +186,20 @@ export function chooseColors(activities: Array<Activity>): void {
 //========================================================================
 // Other utilities:
 
+/**
+ * Rounds {@param x} to {@param n} decimal places?
+ * TODO: figure out what this does and then remove it
+ */
+export function formatNumber(x: number, n: number): string {
+  const re = "\\d(?=(\\d{" + (x || 3) + "})+" + (n > 0 ? "\\." : "$") + ")";
+  return x.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, "g"), "$&,");
+}
+
+/** Takes the sum of an array. */
+export function sum(arr: Array<number>): number {
+  return arr.reduce((acc, cur) => acc + cur, 0);
+}
+
 export function urlencode(obj: any): string {
   return btoa(String.fromCharCode.apply(null, Msgpack.encode(obj)));
 }
@@ -209,4 +212,23 @@ export function urldecode(obj: string): any {
         .map((c) => c.charCodeAt(0))
     )
   );
+}
+
+/** Wrapper to link all classes in a given string. */
+export function linkClasses(
+  firehose: Firehose,
+  str: string
+): Array<JSX.Element> {
+  return str.split(/([ ,;[\]()/])/).map((text) => {
+    const cls = firehose.classes.get(text);
+    if (!cls) return <>{text}</>;
+    return (
+      <Link
+        key={text}
+        onClick={() => firehose.setViewedActivity(cls)}
+      >
+        {text}
+      </Link>
+    );
+  });
 }

@@ -23,7 +23,13 @@ export function Calendar(props: {
   const renderEvent = ({ event }: { event: EventApi; timeText: string }) => {
     return (
       <Box p={0.5} lineHeight={1.3}>
-        <Text fontSize="sm" fontWeight={500}>
+        <Text
+          fontSize="sm"
+          fontWeight={500}
+          overflow="hidden"
+          textOverflow="clip"
+          whiteSpace="nowrap"
+        >
           {event.title}
         </Text>
         <Text fontSize="xs">{event.extendedProps.room}</Text>

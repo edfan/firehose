@@ -1,10 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  ChakraProvider,
-  Flex,
-  Spinner,
-  extendTheme,
-} from "@chakra-ui/react";
+import { ChakraProvider, Flex, Spinner, extendTheme } from "@chakra-ui/react";
 
 import { Firehose, FirehoseState } from "./firehose";
 import { RawClass } from "./class";
@@ -59,12 +54,15 @@ export function App() {
   }, []);
 
   const theme = extendTheme({
+    colors: {
+      secondary: "#4A5568",
+    },
+    components: {
+      Link: { baseStyle: { color: "blue.500" } },
+    },
     config: {
       initialColorMode: "system",
       useSystemColorMode: true,
-    },
-    colors: {
-      secondary: "#4A5568"
     },
     fonts: {
       body: `'InterVariable', sans-serif`,

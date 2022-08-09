@@ -1,33 +1,28 @@
-import { Tooltip } from "@chakra-ui/react";
+import { Flex, Heading, Image, Link, Text, Tooltip } from "@chakra-ui/react";
+import { decode } from "html-entities";
 
 import { Activity, NonClass } from "./activity";
 import { Class, Flags } from "./class";
 import { Firehose } from "./firehose";
 
 import { ClassButtons, NonClassButtons } from "./ActivityButtons";
+import { linkClasses } from "./utils";
+import { ReactNode } from "react";
 
 /** A small image indicating a flag, like Spring or CI-H. */
 function TypeSpan(props: { flag?: string; title: string }) {
   const { flag, title } = props;
-  return (
+  return flag ? (
     <Tooltip label={title}>
-      <span className="type-span" id={`${flag}-span`}>
-        {flag ? (
-          <img
-            alt={title}
-            height="16"
-            width="16"
-            src={`img/${flag}.gif`}
-            data-toggle="tooltip"
-            data-placement="top"
-            title={title}
-            data-trigger="hover"
-          />
-        ) : (
-          <span>{title}</span>
-        )}
-      </span>
+      <Image
+        alt={title}
+        boxSize="1em"
+        src={`img/${flag}.gif`}
+        display="inline-block"
+      />
     </Tooltip>
+  ) : (
+    <>{title}</>
   );
 }
 
@@ -87,20 +82,19 @@ function ClassTypes(props: { cls: Class }) {
     );
 
   return (
-    <p id="class-type">
-      {types1} ({seasons}) {types2}
-      {halfType}
-      &nbsp;&nbsp;&nbsp;
-      {totalUnits} units: {units.join("-")}
-      &nbsp;&nbsp;&nbsp;
-      {flags.final ? (
-        <span className="type-span" id="final-span">
-          {" "}
-          Has final
-        </span>
-      ) : null}
-      <br />
-    </p>
+    <Flex gap={4} align="center">
+      <Flex align="center">
+        {types1}
+        <Flex ml={1} align="center">
+          ({seasons}){types2}
+          {halfType}
+        </Flex>
+      </Flex>
+      <Text>
+        {totalUnits} units: {units.join("-")}
+      </Text>
+      {flags.final ? <Text>Has final</Text> : null}
+    </Flex>
   );
 }
 
@@ -109,38 +103,14 @@ function ClassRelated(props: { cls: Class; firehose: Firehose }) {
   const { cls, firehose } = props;
   const { prereq, same, meets } = cls.related;
 
-  /** Wrapper to link all classes in a given string. */
-  const linkClasses = (str: string) =>
-    str.split(/([ ,;[\]()])/).map((text) => {
-      const cls = firehose.classes.get(text);
-      if (!cls) return text;
-      return (
-        <span
-          className="link-span"
-          key={text}
-          onClick={() => firehose.setViewedActivity(cls)}
-        >
-          {text}
-        </span>
-      );
-    });
-
   return (
-    <p id="class-type">
-      <span id="class-prereq">Prereq: {linkClasses(prereq)}</span>
-      {same ? (
-        <span id="class-same">
-          <br />
-          Same class as: {linkClasses(same)}
-        </span>
-      ) : null}
-      {meets ? (
-        <span id="class-meets">
-          <br />
-          Meets with: {linkClasses(meets)}
-        </span>
-      ) : null}
-    </p>
+    <>
+      <Text>Prereq: {linkClasses(firehose, prereq)}</Text>
+      {same !== "" && <Text>Same class as: {linkClasses(firehose, same)}</Text>}
+      {meets !== "" && (
+        <Text> Meets with: {linkClasses(firehose, meets)} </Text>
+      )}
+    </>
   );
 }
 
@@ -150,40 +120,35 @@ function ClassEval(props: { cls: Class }) {
   const { rating, hours, people } = cls.evals;
 
   return (
-    <p id="class-eval">
-      Rating: {rating}&nbsp;&nbsp;&nbsp; Hours: {hours}&nbsp;&nbsp;&nbsp; Avg #
-      of students: {people}
-    </p>
+    <Flex gap={4}>
+      <Text>Rating: {rating}</Text>
+      <Text>Hours: {hours}</Text>
+      <Text>Avg # of students: {people}</Text>
+    </Flex>
   );
 }
 
 /** Class description, person in-charge, and any URLs afterward. */
-function ClassBody(props: { cls: Class }) {
-  const { cls } = props;
+function ClassBody(props: { cls: Class; firehose: Firehose }) {
+  const { cls, firehose } = props;
   const { description, inCharge, extraUrls } = cls.description;
 
   return (
-    <p id="class-desc">
-      {/* this is necessary as descriptions contain ampersand escapes like
-          &nbsp. there's probably a better solution to this */}
-      <span dangerouslySetInnerHTML={{ __html: description }} />
-      <br />
-      <br />
-      {inCharge ? (
-        <>
-          <em>In-charge: {inCharge}</em>
-          <br />
-          <br />
-        </>
-      ) : null}
-      {extraUrls
-        .map<React.ReactNode>(({ label, url }) => (
-          <a key={label} href={url}>
-            {label}
-          </a>
-        ))
-        .join(" | ")}
-    </p>
+    <Flex direction="column" gap={2}>
+      <Text lang="en" style={{ hyphens: "auto" }}>
+        {linkClasses(firehose, decode(description))}
+      </Text>
+      {inCharge !== "" && <Text>In-charge: {inCharge}.</Text>}
+      {extraUrls.length > 0 && (
+        <Flex gap={4}>
+          {extraUrls.map<ReactNode>(({ label, url }) => (
+            <Link key={label} href={url}>
+              {label}
+            </Link>
+          ))}
+        </Flex>
+      )}
+    </Flex>
   );
 }
 
@@ -192,18 +157,18 @@ function ClassDescription(props: { cls: Class; firehose: Firehose }) {
   const { cls, firehose } = props;
 
   return (
-    <>
-      <p id="class-name">
+    <Flex direction="column" gap={4}>
+      <Heading size="sm">
         {cls.number}: {cls.name}
-      </p>
-      <div id="flags-div">
+      </Heading>
+      <Flex direction="column" gap={0.5}>
         <ClassTypes cls={cls} />
         <ClassRelated cls={cls} firehose={firehose} />
         <ClassEval cls={cls} />
-      </div>
+      </Flex>
       <ClassButtons cls={cls} firehose={firehose} />
-      <ClassBody cls={cls} />
-    </>
+      <ClassBody cls={cls} firehose={firehose} />
+    </Flex>
   );
 }
 

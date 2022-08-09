@@ -54,7 +54,7 @@ export function SelectedActivities(props: {
         <Text>{units} units</Text>
         <Text>{formatNumber(hours, 1)} hours</Text>
       </Flex>
-      <Flex align="center">
+      <Flex align="center" wrap="wrap">
         {selectedActivities.map((activity) => (
           <ActivityButton
             key={activity instanceof Class ? activity.number : activity.id}
