@@ -107,23 +107,26 @@ function ClassInput(props: {
   };
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        onEnter();
-      }}
-    >
-      <InputGroup>
-        <InputLeftElement pointerEvents="none" children={<SearchIcon />} />
-        <Input
-          type="text"
-          placeholder="Class number or name"
-          _placeholder={{ opacity: 1 }}
-          value={classInput}
-          onChange={(e) => onClassInputChange(e.target.value)}
-        />
-      </InputGroup>
-    </form>
+    <Flex justify="center">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onEnter();
+        }}
+      >
+        <InputGroup>
+          <InputLeftElement pointerEvents="none" children={<SearchIcon />} />
+          <Input
+            type="text"
+            placeholder="Class number or name"
+            _placeholder={{ opacity: 1 }}
+            value={classInput}
+            onChange={(e) => onClassInputChange(e.target.value)}
+            width="30em"
+          />
+        </InputGroup>
+      </form>
+    </Flex>
   );
 }
 
@@ -139,22 +142,22 @@ const CLASS_FLAGS_1: FilterGroup = [
 
 /** List of hidden filter IDs, their displayed names, and image path, if any. */
 const CLASS_FLAGS_2: FilterGroup = [
-  ["hassA", "HASS-A", "img/hassA.gif"],
-  ["hassH", "HASS-H", "img/hassH.gif"],
-  ["hassS", "HASS-S", "img/hassS.gif"],
-  ["cihw", "CI-HW"],
-  ["notcih", "Not CI-H"],
+  ["under", "Undergrad", "img/under.gif"],
+  ["grad", "Graduate", "img/grad.gif"],
+  ["le9units", "≤ 9 units"],
+  ["half", "Half-term"],
+  ["limited", "Limited enrollment"],
 ];
 
 /** Second row of hidden filter IDs. */
 const CLASS_FLAGS_3: FilterGroup = [
   ["rest", "REST", "img/rest.gif"],
   ["Lab", "Institute Lab", "img/Lab.gif"],
-  ["under", "Undergrad", "img/under.gif"],
-  ["grad", "Graduate", "img/grad.gif"],
-  ["le9units", "≤ 9 units"],
-  ["half", "Half-term"],
-  ["limited", "Limited enrollment"],
+  ["hassA", "HASS-A", "img/hassA.gif"],
+  ["hassH", "HASS-H", "img/hassH.gif"],
+  ["hassS", "HASS-S", "img/hassS.gif"],
+  ["cihw", "CI-HW"],
+  ["notcih", "Not CI-H"],
 ];
 
 const CLASS_FLAGS = CLASS_FLAGS_1.concat(CLASS_FLAGS_2).concat(CLASS_FLAGS_3);
@@ -237,7 +240,7 @@ function ClassFlags(props: {
           size="sm"
           ml={2}
         >
-          {allFlags ? "Fewer filters" : "More filters"}
+          {allFlags ? "Less filters" : "More filters"}
         </Button>
       </Flex>
       {allFlags && (
