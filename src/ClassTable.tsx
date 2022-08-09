@@ -13,7 +13,6 @@ import {
 import { AgGridReact } from "@ag-grid-community/react";
 import AgGrid, { ModuleRegistry } from "@ag-grid-community/core";
 import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
-import Fuse from "fuse.js";
 
 import "@ag-grid-community/core/dist/styles/ag-grid.css";
 import "@ag-grid-community/core/dist/styles/agGridAlpineFont.css";
@@ -56,49 +55,55 @@ function ClassInput(props: {
   const [classInput, setClassInput] = useState("");
 
   // Search results for classes.
-  const searchResults = useRef<Array<ClassTableRow>>();
+  const searchResults = useRef<
+    Array<{
+      numbers: Array<string>;
+      name: string;
+      class: Class;
+    }>
+  >();
 
-  // Fuse is a fuzzy search library; this is set-up that gets called once.
-  const fuse = useMemo(() => {
-    return new Fuse(
-      rowData.map((data) => ({
-        ...data,
-        number_: simplifyString(data.number),
-        name_: simplifyString(data.name),
-      })),
-      {
-        ignoreLocation: true,
-        keys: ["number_", "name_"],
-        shouldSort: true,
-        threshold: 0.2,
-      }
-    );
-  }, [rowData]);
+  const processedRows = useMemo(
+    () =>
+      rowData.map((data) => {
+        const numbers = [data.number];
+        const [, otherNumber, realName] =
+          data.name.match(/^\[(.*)\] (.*)$/) ?? [];
+        if (otherNumber) numbers.push(otherNumber);
+        return {
+          numbers,
+          name: simplifyString(realName ?? data.name),
+          class: data.class,
+        };
+      }),
+    [rowData]
+  );
 
   const onClassInputChange = (input: string) => {
     if (input) {
-      searchResults.current = fuse
-        .search(simplifyString(input))
-        .map(({ item }) => item);
-
-      // careful! we have to wrap it with a () => because otherwise react will
-      // think it's an updater function instead of the actual function.
-      setInputFilter(() => (cls: Class) =>
-        searchResults.current?.some((item) => item.number === cls.number) ||
-        false
+      const simplifyInput = simplifyString(input);
+      searchResults.current = processedRows.filter(
+        (row) =>
+          row.numbers.some((number) => classNumberMatch(input, number)) ||
+          row.name.includes(simplifyInput)
       );
+      const index = new Set(searchResults.current.map((cls) => cls.numbers[0]));
+      setInputFilter(() => (cls: Class) => index.has(cls.number));
     } else {
-      searchResults.current = undefined;
       setInputFilter(null);
     }
     setClassInput(input);
   };
 
   const onEnter = () => {
-    let cls = searchResults.current?.[0]?.class;
-    if (!cls || !classNumberMatch(classInput, cls.number)) return;
-    firehose.toggleActivity(cls);
-    onClassInputChange("");
+    const { numbers, class: cls } = searchResults.current?.[0] ?? {};
+    if (
+      searchResults.current?.length === 1 ||
+      numbers?.some((number) => classNumberMatch(number, classInput, true))
+    ) {
+      firehose.toggleActivity(cls);
+      onClassInputChange("");
+    }
   };
 
   return (

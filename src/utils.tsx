@@ -62,14 +62,13 @@ export function simplifyString(s: string): string {
  */
 export function classNumberMatch(
   searchString: string,
-  classNumber: string
+  classNumber: string,
+  exact: boolean = false
 ): boolean {
-  if (searchString.includes(".")) {
-    const lower = (s: string) => s.toLowerCase();
-    return lower(classNumber).startsWith(lower(searchString));
-  } else {
-    return simplifyString(classNumber).startsWith(simplifyString(searchString));
-  }
+  const process = (s: string) =>
+    searchString.includes(".") ? s.toLowerCase() : simplifyString(s);
+  const compare = (a: string, b: string) => (exact ? a === b : a.includes(b));
+  return compare(process(classNumber), process(searchString));
 }
 
 //========================================================================
