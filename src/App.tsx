@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { ChakraProvider, Flex, Spinner, extendTheme } from "@chakra-ui/react";
+import {
+  Box,
+  ChakraProvider,
+  Flex,
+  Link,
+  Spinner,
+  extendTheme,
+} from "@chakra-ui/react";
 
 import { Firehose, FirehoseState } from "./firehose";
 import { RawClass } from "./class";
@@ -72,13 +79,26 @@ export function App() {
 
   return (
     <ChakraProvider theme={theme}>
+      <Box
+        w="100vw"
+        p={4}
+        fontSize="sm"
+        textAlign="center"
+        borderBottom="1px"
+        borderBottomColor="gray.400"
+      >
+        This version is in beta. Saved info may disappear without warning.{" "}
+        <Link href="https://forms.gle/6BQ8wMXCiHQBajGx7">
+          Share your feedback!
+        </Link>
+      </Box>
       {!firehose ? (
         <Flex w="100vw" h="100vh" align="center" justify="center">
           <Spinner />
         </Flex>
       ) : (
-        <Flex w="100vw" direction={{ base: "column", lg: "row" }} p={4} gap={4}>
-          <Flex direction="column" w={{ base: "100%", lg: "50%" }} gap={4}>
+        <Flex w="100vw" direction={{ base: "column", lg: "row" }} p={4} gap={8}>
+          <Flex direction="column" w={{ base: "100%", lg: "50%" }} gap={6}>
             <Header />
             <ScheduleOption
               selectedOption={state.selectedOption}
@@ -92,14 +112,7 @@ export function App() {
             />
             <LeftFooter />
           </Flex>
-          <Flex direction="column" w={{ base: "100%", lg: "50%" }} gap={4}>
-            <p id="beta-warning">
-              This version is in <b>beta</b>. Saved info may disappear without
-              warning.{" "}
-              <a href="https://forms.gle/6BQ8wMXCiHQBajGx7">
-                Share your feedback!
-              </a>
-            </p>
+          <Flex direction="column" w={{ base: "100%", lg: "50%" }} gap={6}>
             <ScheduleSwitcher
               firehose={firehose}
               saveId={state.saveId}

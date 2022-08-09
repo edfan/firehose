@@ -71,37 +71,6 @@ function SelectWithWarn(props: {
   );
 }
 
-function RenameBar(props: { firehose: Firehose; saveId: string }) {
-  const { firehose, saveId } = props;
-  const [show, setShow] = useState(false);
-  const [name, setName] = useState("");
-  return !show ? (
-    <Button className="btn btn-secondary btn-sm" onClick={() => setShow(true)}>
-      Rename
-    </Button>
-  ) : (
-    <form
-      className="non-class-form"
-      onSubmit={(e) => {
-        e.preventDefault();
-        firehose.renameSave(saveId, name);
-        setName("");
-        setShow(false);
-      }}
-    >
-      <label>New name: </label>{" "}
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <Button className="btn btn-secondary btn-sm" type="submit">
-        Rename
-      </Button>
-    </form>
-  );
-}
-
 function DeleteModal(props: {
   firehose: Firehose;
   saveId: string;

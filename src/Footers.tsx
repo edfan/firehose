@@ -1,3 +1,4 @@
+import { Flex, Link, Text } from "@chakra-ui/react";
 import { Firehose } from "./firehose";
 
 /**
@@ -8,9 +9,15 @@ import { Firehose } from "./firehose";
  */
 export function LeftFooter() {
   return (
-    <>
-      <div id="export-div">
-        {/* <span id="prereg-link">Preregister these classes!</span>
+    <Flex
+      direction="column"
+      align="center"
+      gap={0.5}
+      opacity={0.3}
+      _hover={{ opacity: 1 }}
+      transition="0.5s opacity"
+    >
+      {/* <span id="prereg-link">Preregister these classes!</span>
         <span id="clipboard-link">Text form</span> |{" "}
         <span id="toggle-css">Toggle high-contrast</span> |{" "}
         <span id="toggle-dark-mode">Toggle dark-mode</span> |{" "}
@@ -25,14 +32,15 @@ export function LeftFooter() {
         >
           <img src="img/calendar-button.svg" alt="" />
         </span> */}
-      </div>
-      <div id="footer-div">
-        &copy; 2021 <a href="mailto:edwardf@alum.mit.edu">Edward Fan</a>.
-        High-contrast theme by Shannon Peng. Dark-mode by Mindren Lu. <br />
-        Subject descriptions and evaluations are &copy; 2014-2022 Massachusetts
-        Institute of Technology.
-      </div>
-    </>
+      <Text>
+        Beta by <Link href="mailto:cjq@mit.edu">CJ Quines</Link>. Firehose
+        &copy;2022 <Link href="mailto:edwardf@alum.mit.edu">Edward Fan</Link>.
+      </Text>
+      <Text>
+        Subject descriptions and evaluations &copy;2022 Massachusetts Institute
+        of Technology.
+      </Text>
+    </Flex>
   );
 }
 
@@ -40,20 +48,28 @@ export function LeftFooter() {
 export function RightFooter(props: { firehose: Firehose }) {
   const { firehose } = props;
   return (
-    <div id="info2-div">
-      <p>Last updated: {firehose.lastUpdated}</p>
-      <p>
+    <Flex
+      direction="column"
+      align="center"
+      gap={0.5}
+      opacity={0.3}
+      _hover={{ opacity: 1 }}
+      transition="0.5s opacity"
+    >
+      <Text>Last updated: {firehose.lastUpdated}.</Text>
+      <Text>
         Questions? Issues? Feedback?{" "}
-        <a href="mailto:cjq@mit.edu">Send me an email!</a>
-      </p>
-      <p>
+        <Link href="mailto:cjq@mit.edu">Send me an email!</Link>
+      </Text>
+      <Text>
         Looking for the old Firehose? It's been moved{" "}
-        <a href="https://firehose.guide/old_www/evaluations.html">here</a>.
-      </p>
-      <p>
-        <a href="https://github.com/edfan/firehose">GitHub</a> |{" "}
-        <a href="privacy.html">Privacy Policy</a>
-      </p>
-    </div>
+        <Link href="https://firehose.guide/old_www/evaluations.html">here</Link>
+        .
+      </Text>
+      <Flex gap={4}>
+        <Link href="https://github.com/edfan/firehose">GitHub</Link>
+        <Link href="privacy.html">Privacy Policy</Link>
+      </Flex>
+    </Flex>
   );
 }
