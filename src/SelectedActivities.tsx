@@ -5,7 +5,7 @@ import { ComponentProps } from "react";
 import { Class } from "./class";
 import { Activity } from "./activity";
 import { Firehose } from "./firehose";
-import { FALLBACK_COLOR, formatNumber, textColor } from "./utils";
+import { formatNumber, textColor } from "./utils";
 
 export function ColorButton(
   props: ComponentProps<"button"> & { color: string }
@@ -29,7 +29,7 @@ export function ColorButton(
 /** A button representing a single, selected activity. */
 function ActivityButton(props: { activity: Activity; firehose: Firehose }) {
   const { activity, firehose } = props;
-  const color = activity.backgroundColor ?? FALLBACK_COLOR;
+  const color = activity.backgroundColor;
   return (
     <ColorButton
       color={color}

@@ -1,5 +1,5 @@
 import { Timeslot, Event } from "./activity";
-import { formatNumber } from "./utils";
+import { ColorScheme, fallbackColor, formatNumber } from "./utils";
 
 /** Raw timeslot format: [start slot, length of timeslot]. */
 export type RawTimeslot = [number, number];
@@ -258,11 +258,11 @@ export class Class {
   /** The sections associated with this class. */
   readonly sections: Array<Sections>;
   /** The background color for the class, used for buttons and calendar. */
-  backgroundColor: string | undefined;
+  backgroundColor: string;
   /** Is the color set by the user (as opposed to chosen automatically?) */
   manualColor: boolean = false;
 
-  constructor(rawClass: RawClass) {
+  constructor(rawClass: RawClass, colorScheme: ColorScheme) {
     this.rawClass = rawClass;
     this.sections = rawClass.s
       .map((kind) =>
@@ -273,6 +273,7 @@ export class Class {
           : new Sections(this, SectionKind.LAB, rawClass.br, rawClass.b)
       )
       .sort((a, b) => a.kind - b.kind);
+    this.backgroundColor = fallbackColor(colorScheme);
   }
 
   /** ID unique over all Activities. */

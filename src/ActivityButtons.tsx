@@ -21,7 +21,6 @@ import {
   WEEKDAY_STRINGS,
   TIMESLOT_STRINGS,
   dayStringToSlot,
-  FALLBACK_COLOR,
 } from "./utils";
 
 import { ColorButton } from "./SelectedActivities";
@@ -95,7 +94,7 @@ function ActivityColor(props: {
   onHide: () => void;
 }) {
   const { activity, firehose, onHide } = props;
-  const initColor = activity.backgroundColor ?? FALLBACK_COLOR;
+  const initColor = activity.backgroundColor;
   const [color, setColor] = useState(initColor);
 
   const onReset = () => {

@@ -3,7 +3,14 @@ import { nanoid } from "nanoid";
 import { Timeslot, NonClass, Activity } from "./activity";
 import { scheduleSlots } from "./calendarSlots";
 import { RawClass, Class, Section, Sections } from "./class";
-import { sum, chooseColors, urlencode, urldecode } from "./utils";
+import {
+  sum,
+  chooseColors,
+  urlencode,
+  urldecode,
+  ColorScheme,
+  fallbackColor,
+} from "./utils";
 
 /** A save has an ID and a name. */
 export type Save = {
@@ -22,6 +29,7 @@ export type FirehoseState = {
   warnings: Array<string>;
   saveId: string;
   saves: Array<Save>;
+  colorScheme: ColorScheme;
 };
 
 /**
@@ -57,6 +65,8 @@ export class Firehose {
   private saveId: string = "";
   /** Names of each save slot. */
   private saves: Array<Save> = [];
+  /** Current color scheme. */
+  private colorScheme: ColorScheme = ColorScheme.Light;
 
   /** React callback to update state. */
   callback: ((state: FirehoseState) => void) | undefined;
@@ -72,7 +82,7 @@ export class Firehose {
   ) {
     this.classes = new Map();
     rawClasses.forEach((cls, number) => {
-      this.classes.set(number, new Class(cls));
+      this.classes.set(number, new Class(cls, this.colorScheme));
     });
     this.initState();
   }
@@ -105,7 +115,7 @@ export class Firehose {
    *   and adds it.
    */
   addActivity(activity?: Activity): void {
-    const toAdd = activity ?? new NonClass();
+    const toAdd = activity ?? new NonClass(this.colorScheme);
     this.setViewedActivity(toAdd);
     if (this.isSelectedActivity(toAdd)) return;
     if (toAdd instanceof Class) {
@@ -141,7 +151,7 @@ export class Firehose {
 
   /** Set the background color of an activity, then update. */
   setBackgroundColor(activity: Activity, color?: string): void {
-    activity.backgroundColor = color;
+    activity.backgroundColor = color ?? fallbackColor(this.colorScheme);
     activity.manualColor = Boolean(color);
     this.updateActivities();
   }
@@ -208,8 +218,11 @@ export class Firehose {
       ),
       saveId: this.saveId,
       saves: this.saves,
+      colorScheme: this.colorScheme,
     });
-    if (save) this.storeSave(this.saveId);
+    if (save) {
+      this.storeSave(this.saveId, false);
+    }
   }
 
   /**
@@ -232,7 +245,7 @@ export class Firehose {
    *    reschedule slash recolor.
    */
   updateActivities(save: boolean = true): void {
-    chooseColors(this.selectedActivities);
+    chooseColors(this.selectedActivities, this.colorScheme);
     const result = scheduleSlots(this.selectedClasses, this.selectedNonClasses);
     this.options = result.options;
     this.conflicts = result.conflicts;
@@ -297,7 +310,7 @@ export class Firehose {
     }
     if (nonClasses) {
       for (const deflated of nonClasses) {
-        const nonClass = new NonClass();
+        const nonClass = new NonClass(this.colorScheme);
         nonClass.inflate(deflated);
         this.selectedNonClasses.push(nonClass);
       }
@@ -317,7 +330,7 @@ export class Firehose {
   }
 
   /** Store state as a save in localStorage, and store save metadata. */
-  storeSave(id?: string): void {
+  storeSave(id?: string, update: boolean = true): void {
     if (id) {
       localStorage.setItem(
         `firehose-${this.term}-${id}`,
@@ -325,7 +338,13 @@ export class Firehose {
       );
     }
     localStorage.setItem(`firehose-${this.term}`, JSON.stringify(this.saves));
-    this.updateState(false);
+    localStorage.setItem(
+      "firehose-color-scheme",
+      JSON.stringify(this.colorScheme)
+    );
+    if (update) {
+      this.updateState(false);
+    }
   }
 
   /** Add a new save. If reset, then make the new save blank. */
@@ -380,6 +399,10 @@ export class Firehose {
       this.inflate(urldecode(param));
     } else {
       this.loadSave(this.saves[0]!.id);
+    }
+    const colorScheme = localStorage.getItem("firehose-color-scheme");
+    if (colorScheme) {
+      this.colorScheme = JSON.parse(colorScheme) as ColorScheme;
     }
   }
 }

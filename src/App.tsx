@@ -10,6 +10,7 @@ import {
 
 import { Firehose, FirehoseState } from "./firehose";
 import { RawClass } from "./class";
+import { ColorScheme } from "./utils";
 
 import { ActivityDescription } from "./ActivityDescription";
 import { Calendar } from "./Calendar";
@@ -38,6 +39,7 @@ export function App() {
     warnings: [],
     saveId: "",
     saves: [],
+    colorScheme: ColorScheme.Light,
   });
 
   useEffect(() => {
@@ -68,8 +70,7 @@ export function App() {
       Link: { baseStyle: { color: "blue.500" } },
     },
     config: {
-      initialColorMode: "system",
-      useSystemColorMode: true,
+      initialColorMode: "light",
     },
     fonts: {
       body: `'InterVariable', sans-serif`,

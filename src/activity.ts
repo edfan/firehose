@@ -3,11 +3,12 @@ import { nanoid } from 'nanoid';
 
 import { Class, RawTimeslot } from "./class";
 import {
-  sum,
-  toDate,
+  ColorScheme,
+  fallbackColor,
   slotToDayString,
   slotToTimeString,
-  FALLBACK_COLOR,
+  sum,
+  toDate,
 } from "./utils";
 
 /**
@@ -107,7 +108,7 @@ export class Event {
 
   /** @returns List of events that can be directly given to FullCalendar. */
   get eventInputs(): Array<EventInput> {
-    const color = this.activity.backgroundColor ?? FALLBACK_COLOR;
+    const color = this.activity.backgroundColor;
     return this.slots.map((slot) => ({
       title: this.name,
       start: slot.startTime,
@@ -126,13 +127,14 @@ export class NonClass {
   readonly id: string;
   name: string = "New Activity";
   /** The background color for the activity, used for buttons and calendar. */
-  backgroundColor: string | undefined = undefined;
+  backgroundColor: string;
   /** Is the color set by the user (as opposed to chosen automatically?) */
   manualColor: boolean = false;
   timeslots: Array<Timeslot> = [];
 
-  constructor() {
+  constructor(colorScheme: ColorScheme) {
     this.id = nanoid(8);
+    this.backgroundColor = fallbackColor(colorScheme);
   }
 
   /** Name that appears when it's on a button. */
@@ -178,7 +180,7 @@ export class NonClass {
       ]),
       this.name,
     ];
-    if (this.manualColor && this.backgroundColor) {
+    if (this.manualColor) {
       res.push(this.backgroundColor);
     }
     return res;

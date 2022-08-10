@@ -125,29 +125,31 @@ export function dayStringToSlot(day: string, time: string): number {
 //========================================================================
 // Color utilities:
 
-export const FALLBACK_COLOR = "#4A4A4A";
+/** The possible color schemes. */
+export enum ColorScheme {
+  Light,
+  Dark,
+  Classic,
+}
 
-const BACKGROUND_COLORS = [
-  "#D32F2F",
-  "#2E7D32",
-  "#1565C0",
-  "#BF360C",
-  "#00838f",
-  "#AD1457",
-  "#827717",
-  "#795548",
-];
+/** The default background color for a color scheme. */
+export function fallbackColor(colorScheme: ColorScheme): string {
+  return "#4A4A4A";
+}
 
-// export const FALLBACK_COLOR = "#eee";
-
-// const BACKGROUND_COLORS = [
-//   "#f8d7d4",
-//   "#f6e8cd",
-//   "#fdf5ce",
-//   "#dff6e0",
-//   "#cfe2fd",
-//   "#f2dae9",
-// ];
+/** The set of activity background colors for a color scheme. */
+function backgroundColors(colorScheme: ColorScheme): Array<string> {
+  return [
+    "#D32F2F",
+    "#2E7D32",
+    "#1565C0",
+    "#BF360C",
+    "#00838f",
+    "#AD1457",
+    "#827717",
+    "#795548",
+  ];
+}
 
 /** MurmurHash3, seeded with a string. */
 function murmur3(str: string): () => number {
@@ -163,22 +165,16 @@ function murmur3(str: string): () => number {
   };
 }
 
-/** Choose a text color for a background given by hex code color. */
-export function textColor(color: string): string {
-  const r = parseInt(color.substring(1, 3), 16);
-  const g = parseInt(color.substring(3, 5), 16);
-  const b = parseInt(color.substring(5, 7), 16);
-  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-  return brightness > 128 ? "#000000" : "#ffffff";
-}
-
 /**
  * Assign background colors to a list of activities. Mutates each activity
  * in the list.
  */
-export function chooseColors(activities: Array<Activity>): void {
+export function chooseColors(
+  activities: Array<Activity>,
+  colorScheme: ColorScheme
+): void {
   // above this length, we give up trying to be nice:
-  const colorLen = BACKGROUND_COLORS.length;
+  const colorLen = backgroundColors(colorScheme).length;
   const indices: Array<number> = [];
   for (const activity of activities) {
     if (activity.manualColor) continue;
@@ -190,8 +186,17 @@ export function chooseColors(activities: Array<Activity>): void {
       index = hash() % colorLen;
     }
     indices.push(index);
-    activity.backgroundColor = BACKGROUND_COLORS[index];
+    activity.backgroundColor = backgroundColors(colorScheme)[index];
   }
+}
+
+/** Choose a text color for a background given by hex code color. */
+export function textColor(color: string): string {
+  const r = parseInt(color.substring(1, 3), 16);
+  const g = parseInt(color.substring(3, 5), 16);
+  const b = parseInt(color.substring(5, 7), 16);
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  return brightness > 128 ? "#000000" : "#ffffff";
 }
 
 //========================================================================
