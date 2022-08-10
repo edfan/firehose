@@ -2,14 +2,14 @@ import { nanoid } from "nanoid";
 
 import { Timeslot, NonClass, Activity } from "./activity";
 import { scheduleSlots } from "./calendarSlots";
-import { RawClass, Class, Section, Sections } from "./class";
+import { Class, RawClass, Section, SectionLockOption, Sections } from "./class";
 import {
-  sum,
-  chooseColors,
-  urlencode,
-  urldecode,
   ColorScheme,
+  chooseColors,
   fallbackColor,
+  sum,
+  urldecode,
+  urlencode,
 } from "./utils";
 
 /** A save has an ID and a name. */
@@ -180,21 +180,9 @@ export class Firehose {
     this.updateActivities();
   }
 
-  /**
-   * Lock a specific section of a class. This is here (as opposed to in the
-   * Sections class) because we need to update the React state after this,
-   * and only Firehose should update the React state.
-   */
-  lockSection(secs: Sections, sec: Section | "auto" | "none"): void {
-    if (sec === "auto") {
-      secs.locked = false;
-    } else if (sec === "none") {
-      secs.locked = true;
-      secs.selected = null;
-    } else {
-      secs.locked = true;
-      secs.selected = sec;
-    }
+  /** Lock a specific section of a class. */
+  lockSection(secs: Sections, sec: SectionLockOption): void {
+    secs.lockSection(sec);
     this.updateActivities();
   }
 

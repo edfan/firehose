@@ -180,6 +180,13 @@ export class Section {
   }
 }
 
+export enum LockOption {
+  Auto,
+  None
+}
+
+export type SectionLockOption = Section | LockOption;
+
 /**
  * A group of {@link Section}s, all the same kind (like lec, rec, or lab). At
  * most one of these can be selected at a time, and that selection is possibly
@@ -243,6 +250,19 @@ export class Sections {
           this.selected.room
         )
       : null;
+  }
+
+  /** Lock a specific section of this class. Does not validate. */
+  lockSection(sec: SectionLockOption): void {
+    if (sec === LockOption.Auto) {
+      this.locked = false;
+    } else if (sec === LockOption.None) {
+      this.locked = true;
+      this.selected = null;
+    } else {
+      this.locked = true;
+      this.selected = sec;
+    }
   }
 }
 

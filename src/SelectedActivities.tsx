@@ -10,10 +10,10 @@ import { formatNumber, textColor } from "./utils";
 export function ColorButton(
   props: ComponentProps<"button"> & { color: string }
 ) {
-  const { children, color, style } = props;
+  const { children, color, style, ...otherProps } = props;
   return (
     <Button
-      {...props}
+      {...otherProps}
       style={{
         ...style,
         backgroundColor: color,

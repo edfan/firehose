@@ -11,46 +11,61 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { ComponentProps, FormEvent, useState } from "react";
 import { HexColorPicker } from "react-colorful";
 
 import { Activity, NonClass, Timeslot } from "./activity";
-import { Class, Section, Sections } from "./class";
+import { Class, LockOption, SectionLockOption, Sections } from "./class";
 import { Firehose } from "./firehose";
-import {
-  WEEKDAY_STRINGS,
-  TIMESLOT_STRINGS,
-  dayStringToSlot,
-} from "./utils";
+import { WEEKDAY_STRINGS, TIMESLOT_STRINGS, dayStringToSlot } from "./utils";
 
 import { ColorButton } from "./SelectedActivities";
+
+/**
+ * A button that toggles the active value, and is outlined if active, solid
+ * if not.
+ */
+function ToggleButton(
+  props: ComponentProps<"button"> & {
+    active: boolean;
+    setActive: (value: boolean) => void;
+  }
+) {
+  const { children, active, setActive, ...otherProps } = props;
+  return (
+    <Button
+      {...otherProps}
+      onClick={() => setActive(!active)}
+      variant={active ? "outline" : "solid"}
+    >
+      {children}
+    </Button>
+  );
+}
 
 /** A single, manual section option, under {@link ClassManualSections}. */
 function ClassManualOption(props: {
   secs: Sections;
-  sec: Section | "auto" | "none";
+  sec: SectionLockOption;
   firehose: Firehose;
 }) {
   const { secs, sec, firehose } = props;
-  const checked =
-    sec instanceof Section
-      ? secs.locked && secs.selected === sec
-      : sec === "auto"
-      ? !secs.locked
-      : secs.selected === null;
+  const [isChecked, label] = (() => {
+    if (sec === LockOption.Auto) {
+      return [!secs.locked, "Auto (default)"];
+    } else if (sec === LockOption.None) {
+      return [secs.selected === null, "None"];
+    } else {
+      return [secs.locked && secs.selected === sec, sec.rawTime];
+    }
+  })();
 
   return (
     <Radio
-      isChecked={checked}
-      onChange={() => {
-        firehose.lockSection(secs, sec);
-      }}
+      isChecked={isChecked}
+      onChange={() => firehose.lockSection(secs, sec)}
     >
-      {sec instanceof Section
-        ? sec.rawTime
-        : sec === "auto"
-        ? "Auto (default)"
-        : "None"}
+      {label}
     </Radio>
   );
 }
@@ -61,11 +76,7 @@ function ClassManualSections(props: { cls: Class; firehose: Firehose }) {
 
   const renderOptions = () => {
     return cls.sections.map((secs) => {
-      const options: Array<Section | "auto" | "none"> = [
-        "auto",
-        "none",
-        ...secs.sections,
-      ];
+      const options = [LockOption.Auto, LockOption.None, ...secs.sections];
       return (
         <FormControl key={secs.kind}>
           <FormLabel>{secs.name}</FormLabel>
@@ -137,20 +148,14 @@ export function ClassButtons(props: { cls: Class; firehose: Firehose }) {
           {isSelected ? "Remove class" : "Add class"}
         </Button>
         {isSelected && (
-          <Button
-            onClick={() => setShowManual(!showManual)}
-            variant={showManual ? "outline" : "solid"}
-          >
+          <ToggleButton active={showManual} setActive={setShowManual}>
             Edit sections
-          </Button>
+          </ToggleButton>
         )}
         {isSelected && (
-          <Button
-            onClick={() => setShowColors(!showColors)}
-            variant={showColors ? "outline" : "solid"}
-          >
+          <ToggleButton active={showColors} setActive={setShowColors}>
             Edit color
-          </Button>
+          </ToggleButton>
         )}
       </ButtonGroup>
       {isSelected && showManual && (
@@ -175,7 +180,33 @@ function NonClassAddTime(props: { activity: NonClass; firehose: Firehose }) {
   );
   const [times, setTimes] = useState({ start: "10:00 AM", end: "1:00 PM" });
 
-  const timeDrop = (key: "start" | "end") => (
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    for (const day in days) {
+      if (!days[day]) continue;
+      firehose.addTimeslot(
+        activity,
+        Timeslot.fromStartEnd(
+          dayStringToSlot(day, times.start),
+          dayStringToSlot(day, times.end)
+        )
+      );
+    }
+  };
+
+  const renderCheckboxes = () => {
+    return WEEKDAY_STRINGS.map((day) => (
+      <Checkbox
+        key={day}
+        checked={days[day]}
+        onChange={(e) => setDays({ ...days, [day]: e.target.checked })}
+      >
+        {day}
+      </Checkbox>
+    ));
+  };
+
+  const renderTimeDropdown = (key: "start" | "end") => (
     <Select
       value={times[key]}
       onChange={(e) => setTimes({ ...times, [key]: e.target.value })}
@@ -190,43 +221,23 @@ function NonClassAddTime(props: { activity: NonClass; firehose: Firehose }) {
   );
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        for (const day in days) {
-          if (!days[day]) continue;
-          firehose.addTimeslot(
-            activity,
-            Timeslot.fromStartEnd(
-              dayStringToSlot(day, times.start),
-              dayStringToSlot(day, times.end)
-            )
-          );
-        }
-      }}
-    >
+    <form onSubmit={onSubmit}>
       <Flex align="center" gap={2}>
         <Button type="submit" size="sm">
           Add time
         </Button>
-        {WEEKDAY_STRINGS.map((day) => (
-          <Checkbox
-            key={day}
-            checked={days[day]}
-            onChange={(e) => setDays({ ...days, [day]: e.target.checked })}
-          >
-            {day}
-          </Checkbox>
-        ))}
+        {renderCheckboxes()}
         <Flex align="center" gap={1}>
-          {timeDrop("start")} to {timeDrop("end")}
+          {renderTimeDropdown("start")} to {renderTimeDropdown("end")}
         </Flex>
       </Flex>
     </form>
   );
 }
 
-/** Buttons in non-class description to rename it, or add/edit/remove timeslots. */
+/**
+ * Buttons in non-class description to rename it, or add/edit/remove timeslots.
+ */
 export function NonClassButtons(props: {
   activity: NonClass;
   firehose: Firehose;
@@ -238,55 +249,55 @@ export function NonClassButtons(props: {
   const [name, setName] = useState(activity.name);
   const [showColors, setShowColors] = useState(false);
 
-  return (
-    <Flex direction="column" gap={4}>
-      {isRenaming ? (
+  const [renderHeading, renderButtons] = (() => {
+    if (isRenaming) {
+      const renderHeading = () => (
         <Input
           value={name}
           onChange={(e) => setName(e.target.value)}
           fontWeight="bold"
           placeholder="New Activity"
         />
-      ) : (
-        <Heading size="sm">{activity.name}</Heading>
-      )}
-      <ButtonGroup>
-        {isRenaming ? (
-          <>
-            <Button
-              onClick={() => {
-                firehose.renameNonClass(activity, name);
-                setIsRenaming(false);
-              }}
-            >
-              Confirm
-            </Button>
-            <Button
-              onClick={() => {
-                setName(activity.name);
-                setIsRenaming(false);
-              }}
-            >
-              Cancel
-            </Button>
-          </>
-        ) : (
-          <>
-            <Button onClick={() => firehose.toggleActivity(activity)}>
-              {isSelected ? "Remove activity" : "Add activity"}
-            </Button>
-            <Button onClick={() => setIsRenaming(true)}>Rename activity</Button>
-            {isSelected && (
-              <Button
-                onClick={() => setShowColors(!showColors)}
-                variant={showColors ? "outline" : "solid"}
-              >
-                Edit color
-              </Button>
-            )}
-          </>
+      );
+      const onConfirm = () => {
+        firehose.renameNonClass(activity, name);
+        setIsRenaming(false);
+      };
+      const onCancel = () => {
+        setName(activity.name);
+        setIsRenaming(false);
+      };
+      const renderButtons = () => (
+        <>
+          <Button onClick={onConfirm}>Confirm</Button>
+          <Button onClick={onCancel}>Cancel</Button>
+        </>
+      );
+      return [renderHeading, renderButtons];
+    }
+
+    const renderHeading = () => <Heading size="sm">{activity.name}</Heading>;
+    const renderButtons = () => (
+      <>
+        <Button onClick={() => firehose.toggleActivity(activity)}>
+          {isSelected ? "Remove activity" : "Add activity"}
+        </Button>
+        <Button onClick={() => setIsRenaming(true)}>Rename activity</Button>
+        {isSelected && (
+          <ToggleButton active={showColors} setActive={setShowColors}>
+            Edit color
+          </ToggleButton>
         )}
-      </ButtonGroup>
+      </>
+    );
+
+    return [renderHeading, renderButtons];
+  })();
+
+  return (
+    <Flex direction="column" gap={4}>
+      {renderHeading()}
+      <ButtonGroup>{renderButtons()}</ButtonGroup>
       {isSelected && showColors && (
         <ActivityColor
           activity={activity}
