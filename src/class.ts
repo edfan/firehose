@@ -285,6 +285,11 @@ export class Class {
     return this.rawClass.n;
   }
 
+  /** Name that appears when it's on a button. */
+  get buttonName(): string {
+    return `${this.number}${this.warnings.suffix}`;
+  }
+
   /** Number, e.g. "6.036". */
   get number(): string {
     return this.rawClass.no;
@@ -490,6 +495,7 @@ export class Class {
     if (typeof parsed[1] === "string") {
       offset += 1;
       this.backgroundColor = parsed[1];
+      this.manualColor = true;
     }
     this.sections.forEach((secs, i) => {
       const parse = parsed[i + offset];

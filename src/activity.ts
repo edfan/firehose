@@ -135,6 +135,11 @@ export class NonClass {
     this.id = nanoid(8);
   }
 
+  /** Name that appears when it's on a button. */
+  get buttonName(): string {
+    return this.name;
+  }
+
   /** Hours per week. */
   get hours(): number {
     return sum(this.timeslots.map((slot) => slot.hours));
@@ -180,7 +185,7 @@ export class NonClass {
   }
 
   /** Inflate a non-class activity with info from the output of deflate. */
-  inflate(parsed: Array<Array<RawTimeslot> | string>) {
+  inflate(parsed: Array<Array<RawTimeslot> | string>): void {
     const [timeslots, name, backgroundColor] = parsed;
     this.timeslots = (timeslots as Array<RawTimeslot>).map(
       (slot) => new Timeslot(...slot)

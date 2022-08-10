@@ -1,36 +1,43 @@
 import { AddIcon } from "@chakra-ui/icons";
 import { Button, Flex, Text } from "@chakra-ui/react";
+import { ComponentProps } from "react";
 
 import { Class } from "./class";
 import { Activity } from "./activity";
 import { Firehose } from "./firehose";
-import { formatNumber } from "./utils";
+import { FALLBACK_COLOR, formatNumber, textColor } from "./utils";
+
+export function ColorButton(
+  props: ComponentProps<"button"> & { color: string }
+) {
+  const { children, color, style } = props;
+  return (
+    <Button
+      {...props}
+      style={{
+        ...style,
+        backgroundColor: color,
+        borderColor: color,
+        color: textColor(color),
+      }}
+    >
+      {children}
+    </Button>
+  );
+}
 
 /** A button representing a single, selected activity. */
 function ActivityButton(props: { activity: Activity; firehose: Firehose }) {
   const { activity, firehose } = props;
-  const getName = () => {
-    if (activity instanceof Class) {
-      const {
-        number,
-        warnings: { suffix },
-      } = activity;
-      return `${number}${suffix}`;
-    }
-    return activity.name;
-  };
+  const color = activity.backgroundColor ?? FALLBACK_COLOR;
   return (
-    <Button
+    <ColorButton
+      color={color}
       onClick={() => firehose.setViewedActivity(activity)}
       onDoubleClick={() => firehose.removeActivity(activity)}
-      style={{
-        backgroundColor: activity.backgroundColor,
-        borderColor: activity.backgroundColor,
-        color: "white",
-      }}
     >
-      {getName()}
-    </Button>
+      {activity.buttonName}
+    </ColorButton>
   );
 }
 

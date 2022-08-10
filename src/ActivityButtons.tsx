@@ -12,11 +12,19 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { HexColorPicker } from "react-colorful";
 
-import { NonClass, Timeslot } from "./activity";
+import { Activity, NonClass, Timeslot } from "./activity";
 import { Class, Section, Sections } from "./class";
 import { Firehose } from "./firehose";
-import { WEEKDAY_STRINGS, TIMESLOT_STRINGS, dayStringToSlot } from "./utils";
+import {
+  WEEKDAY_STRINGS,
+  TIMESLOT_STRINGS,
+  dayStringToSlot,
+  FALLBACK_COLOR,
+} from "./utils";
+
+import { ColorButton } from "./SelectedActivities";
 
 /** A single, manual section option, under {@link ClassManualSections}. */
 function ClassManualOption(props: {
@@ -80,6 +88,41 @@ function ClassManualSections(props: { cls: Class; firehose: Firehose }) {
   return <Flex>{renderOptions()}</Flex>;
 }
 
+/** Div containing color selection interface. */
+function ActivityColor(props: {
+  activity: Activity;
+  firehose: Firehose;
+  onHide: () => void;
+}) {
+  const { activity, firehose, onHide } = props;
+  const initColor = activity.backgroundColor ?? FALLBACK_COLOR;
+  const [color, setColor] = useState(initColor);
+
+  const onReset = () => {
+    firehose.setBackgroundColor(activity, undefined);
+    onHide();
+  };
+  const onCancel = onHide;
+  const onConfirm = () => {
+    firehose.setBackgroundColor(activity, color);
+    onHide();
+  };
+
+  return (
+    <Flex gap={2}>
+      <HexColorPicker color={color} onChange={setColor} />
+      <Flex direction="column" gap={2}>
+        <ColorButton color={color} style={{ cursor: "default" }}>
+          {activity.buttonName}
+        </ColorButton>
+        <Button onClick={onReset}>Reset</Button>
+        <Button onClick={onCancel}>Cancel</Button>
+        <Button onClick={onConfirm}>Confirm</Button>
+      </Flex>
+    </Flex>
+  );
+}
+
 /** Buttons in class description to add/remove class, and lock sections. */
 export function ClassButtons(props: { cls: Class; firehose: Firehose }) {
   const { cls, firehose } = props;
@@ -113,6 +156,13 @@ export function ClassButtons(props: { cls: Class; firehose: Firehose }) {
       </ButtonGroup>
       {isSelected && showManual && (
         <ClassManualSections cls={cls} firehose={firehose} />
+      )}
+      {isSelected && showColors && (
+        <ActivityColor
+          activity={cls}
+          firehose={firehose}
+          onHide={() => setShowColors(false)}
+        />
       )}
     </Flex>
   );
@@ -162,6 +212,7 @@ function NonClassAddTime(props: { activity: NonClass; firehose: Firehose }) {
         </Button>
         {WEEKDAY_STRINGS.map((day) => (
           <Checkbox
+            key={day}
             checked={days[day]}
             onChange={(e) => setDays({ ...days, [day]: e.target.checked })}
           >
@@ -183,8 +234,10 @@ export function NonClassButtons(props: {
 }) {
   const { activity, firehose } = props;
 
+  const isSelected = firehose.isSelectedActivity(activity);
   const [isRenaming, setIsRenaming] = useState(false);
   const [name, setName] = useState(activity.name);
+  const [showColors, setShowColors] = useState(false);
 
   return (
     <Flex direction="column" gap={4}>
@@ -221,14 +274,27 @@ export function NonClassButtons(props: {
         ) : (
           <>
             <Button onClick={() => firehose.toggleActivity(activity)}>
-              {firehose.isSelectedActivity(activity)
-                ? "Remove activity"
-                : "Add activity"}
+              {isSelected ? "Remove activity" : "Add activity"}
             </Button>
             <Button onClick={() => setIsRenaming(true)}>Rename activity</Button>
+            {isSelected && (
+              <Button
+                onClick={() => setShowColors(!showColors)}
+                variant={showColors ? "outline" : "solid"}
+              >
+                Edit color
+              </Button>
+            )}
           </>
         )}
       </ButtonGroup>
+      {isSelected && showColors && (
+        <ActivityColor
+          activity={activity}
+          firehose={firehose}
+          onHide={() => setShowColors(false)}
+        />
+      )}
       <Text>
         Click and drag on an empty time in the calendar to add the times for
         your activity. Or add one manually:

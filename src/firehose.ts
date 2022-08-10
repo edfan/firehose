@@ -139,6 +139,13 @@ export class Firehose {
       : this.addActivity(activity);
   }
 
+  /** Set the background color of an activity, then update. */
+  setBackgroundColor(activity: Activity, color?: string): void {
+    activity.backgroundColor = color;
+    activity.manualColor = Boolean(color);
+    this.updateActivities();
+  }
+
   //========================================================================
   // NonClass handlers
 

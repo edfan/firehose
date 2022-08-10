@@ -192,7 +192,7 @@ function NonClassDescription(props: {
     <Flex direction="column" gap={4}>
       <NonClassButtons activity={activity} firehose={firehose} />
       <Flex direction="column" gap={2}>
-        {activity.timeslots.map((t) => (
+        {activity.timeslots?.map((t) => (
           <Flex key={t.toString()} align="center" gap={2}>
             <Button
               size="sm"

@@ -5,7 +5,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 
 import { Activity, NonClass, Timeslot } from "./activity";
 import { Firehose } from "./firehose";
-import { toSlot } from "./utils";
+import { textColor, toSlot } from "./utils";
 
 import "./Calendar.scss";
 
@@ -22,7 +22,7 @@ export function Calendar(props: {
 
   const renderEvent = ({ event }: { event: EventApi; timeText: string }) => {
     return (
-      <Box p={0.5} lineHeight={1.3}>
+      <Box color={textColor(event.backgroundColor)} p={0.5} lineHeight={1.3}>
         <Text
           fontSize="sm"
           fontWeight={500}

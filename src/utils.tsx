@@ -163,6 +163,15 @@ function murmur3(str: string): () => number {
   };
 }
 
+/** Choose a text color for a background given by hex code color. */
+export function textColor(color: string): string {
+  const r = parseInt(color.substring(1, 3), 16);
+  const g = parseInt(color.substring(3, 5), 16);
+  const b = parseInt(color.substring(5, 7), 16);
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  return brightness > 128 ? "#000000" : "#ffffff";
+}
+
 /**
  * Assign background colors to a list of activities. Mutates each activity
  * in the list.
@@ -217,17 +226,18 @@ export function urldecode(obj: string): any {
 }
 
 /** Wrapper to link all classes in a given string. */
-export function linkClasses(
-  firehose: Firehose,
-  str: string
-): Array<JSX.Element> {
-  return str.split(/([ ,;[\]()/])/).map((text) => {
-    const cls = firehose.classes.get(text);
-    if (!cls) return <>{text}</>;
-    return (
-      <Link key={text} onClick={() => firehose.setViewedActivity(cls)}>
-        {text}
-      </Link>
-    );
-  });
+export function linkClasses(firehose: Firehose, str: string): JSX.Element {
+  return (
+    <>
+      {str.split(/([ ,;[\]()/])/).map((text) => {
+        const cls = firehose.classes.get(text);
+        if (!cls) return text;
+        return (
+          <Link key={text} onClick={() => firehose.setViewedActivity(cls)}>
+            {text}
+          </Link>
+        );
+      })}
+    </>
+  );
 }
