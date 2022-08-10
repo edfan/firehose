@@ -112,6 +112,13 @@ for c in ws:
 # classes['2.008']['s'] = ['l', 'b']
 # classes['2.008']['r'] = []
 
+# Special case 6.S977.
+classes['6.S977']['u1'] = 3
+classes['6.S977']['u2'] = 0
+classes['6.S977']['u3'] = 9
+classes['6.S977']['n'] = 'The Sum of Squares Methods'
+classes['6.S977']['d'] = 'Study of algorithms and computational complexity through the lens of the Sum of Squares method (SoS), a powerful approach to algorithm design generalizing linear programming and spectral methods. Specific sub-topics vary and are chosen with student input, potentially including algorithms for combinatorial and continuous optimization (graphs, constraint satisfaction problems, unique games conjecture), applications to high-dimensional algorithmic statistics (robustness, privacy, method of moments), applications to quantum information, and an SoS perspective on computational complexity (of NP-hard problems and/or of statistical inference).'
+
 """ try:
     # Special case 14.01/14.02 rec-only sections.
     classes['14.01R'] = copy.deepcopy(classes['14.01'])
