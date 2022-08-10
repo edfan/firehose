@@ -85,6 +85,7 @@ export function ClassButtons(props: { cls: Class; firehose: Firehose }) {
   const { cls, firehose } = props;
 
   const [showManual, setShowManual] = useState(false);
+  const [showColors, setShowColors] = useState(false);
   const isSelected = firehose.isSelectedActivity(cls);
 
   return (
@@ -99,6 +100,14 @@ export function ClassButtons(props: { cls: Class; firehose: Firehose }) {
             variant={showManual ? "outline" : "solid"}
           >
             Edit sections
+          </Button>
+        )}
+        {isSelected && (
+          <Button
+            onClick={() => setShowColors(!showColors)}
+            variant={showColors ? "outline" : "solid"}
+          >
+            Edit color
           </Button>
         )}
       </ButtonGroup>

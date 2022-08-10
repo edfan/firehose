@@ -172,6 +172,7 @@ export function chooseColors(activities: Array<Activity>): void {
   const colorLen = BACKGROUND_COLORS.length;
   const indices: Array<number> = [];
   for (const activity of activities) {
+    if (activity.manualColor) continue;
     const hash = murmur3(activity.id);
     let index = hash() % colorLen;
     // try to pick distinct colors if possible; hash to try to make each

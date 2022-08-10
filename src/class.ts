@@ -259,6 +259,8 @@ export class Class {
   readonly sections: Array<Sections>;
   /** The background color for the class, used for buttons and calendar. */
   backgroundColor: string | undefined;
+  /** Is the color set by the user (as opposed to chosen automatically?) */
+  manualColor: boolean = false;
 
   constructor(rawClass: RawClass) {
     this.rawClass = rawClass;
@@ -465,7 +467,11 @@ export class Class {
         : secs.sections.findIndex((sec) => sec === secs.selected)
     );
     while (sections.at(-1) === null) sections.pop();
-    return sections.length > 0 ? [this.number, ...sections] : this.number;
+    return [
+      this.number,
+      ...(this.manualColor ? [this.backgroundColor] : []), // string
+      ...(sections.length > 0 ? sections : []), // number
+    ];
   }
 
   /**
@@ -479,9 +485,14 @@ export class Class {
       // just the class number, ignore
       return;
     }
+    // we ignore parsed[0] as that has the class number
+    let offset = 1;
+    if (typeof parsed[1] === "string") {
+      offset += 1;
+      this.backgroundColor = parsed[1];
+    }
     this.sections.forEach((secs, i) => {
-      // we ignore parsed[0] as that has the class number
-      const parse = parsed[i + 1];
+      const parse = parsed[i + offset];
       if (!parse && parse !== 0) {
         secs.locked = false;
       } else {

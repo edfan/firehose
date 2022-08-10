@@ -127,6 +127,8 @@ export class NonClass {
   name: string = "New Activity";
   /** The background color for the activity, used for buttons and calendar. */
   backgroundColor: string | undefined = undefined;
+  /** Is the color set by the user (as opposed to chosen automatically?) */
+  manualColor: boolean = false;
   timeslots: Array<Timeslot> = [];
 
   constructor() {
@@ -171,7 +173,7 @@ export class NonClass {
       ]),
       this.name,
     ];
-    if (this.backgroundColor !== undefined) {
+    if (this.manualColor && this.backgroundColor) {
       res.push(this.backgroundColor);
     }
     return res;
