@@ -4,8 +4,9 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 
 import { Activity, NonClass, Timeslot } from "../lib/activity";
+import { textColor } from "../lib/colors";
 import { Firehose } from "../lib/firehose";
-import { textColor, toSlot } from "../lib/utils";
+import { toSlot } from "../lib/utils";
 
 import "./Calendar.scss";
 

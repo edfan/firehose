@@ -2,16 +2,15 @@ import { nanoid } from "nanoid";
 
 import { Timeslot, NonClass, Activity } from "./activity";
 import { scheduleSlots } from "./calendarSlots";
-import { Class, RawClass, Section, SectionLockOption, Sections } from "./class";
+import { Class, Section, SectionLockOption, Sections } from "./class";
 import {
   ColorScheme,
+  TColorScheme,
   chooseColors,
   fallbackColor,
-  sum,
-  urldecode,
-  urlencode,
-  TColorScheme,
-} from "./utils";
+} from "./colors";
+import { RawClass } from "./rawClass";
+import { sum, urldecode, urlencode } from "./utils";
 
 /** A save has an ID and a name. */
 export type Save = {

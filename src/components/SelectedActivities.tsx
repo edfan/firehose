@@ -3,9 +3,9 @@ import { Button, Flex, Text } from "@chakra-ui/react";
 import { ComponentProps } from "react";
 
 import { Activity } from "../lib/activity";
+import { textColor } from "../lib/colors";
 import { Class } from "../lib/class";
 import { Firehose } from "../lib/firehose";
-import { formatNumber, textColor } from "../lib/utils";
 
 export function ColorButton(
   props: ComponentProps<"button"> & { color: string }
@@ -59,7 +59,7 @@ export function SelectedActivities(props: {
     <Flex direction="column" gap={2}>
       <Flex gap={8} justify="center">
         <Text>{units} units</Text>
-        <Text>{formatNumber(hours, 1)} hours</Text>
+        <Text>{hours.toFixed(1)} hours</Text>
       </Flex>
       <Flex align="center" wrap="wrap">
         {selectedActivities.map((activity) => (

@@ -8,9 +8,9 @@ import {
   extendTheme,
 } from "@chakra-ui/react";
 
-import { RawClass } from "../lib/class";
+import { ColorScheme } from "../lib/colors";
 import { Firehose, FirehoseState } from "../lib/firehose";
-import { ColorScheme } from "../lib/utils";
+import { RawClass } from "../lib/rawClass";
 
 import { ActivityDescription } from "./ActivityDescription";
 import { Calendar } from "./Calendar";

@@ -1,15 +1,10 @@
 import { EventInput } from "@fullcalendar/core";
-import { nanoid } from 'nanoid';
+import { nanoid } from "nanoid";
 
-import { Class, RawTimeslot } from "./class";
-import {
-  TColorScheme,
-  fallbackColor,
-  slotToDayString,
-  slotToTimeString,
-  sum,
-  toDate,
-} from "./utils";
+import { Class } from "./class";
+import { TColorScheme, fallbackColor } from "./colors";
+import { RawTimeslot } from "./rawClass";
+import { slotToDayString, slotToTimeString, sum, toDate } from "./utils";
 
 /**
  * A timeslot is a period of time, spanning several thirty-minute slots. Each
