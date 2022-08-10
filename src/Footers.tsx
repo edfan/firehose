@@ -33,8 +33,15 @@ export function LeftFooter() {
           <img src="img/calendar-button.svg" alt="" />
         </span> */}
       <Text>
-        Beta by <Link href="mailto:cjq@mit.edu">CJ Quines</Link>. Firehose
-        &copy;2022 <Link href="mailto:edwardf@alum.mit.edu">Edward Fan</Link>.
+        Beta by{" "}
+        <Link href="mailto:cjq@mit.edu" color="inherit">
+          CJ Quines
+        </Link>
+        . Firehose &copy;2022{" "}
+        <Link href="mailto:edwardf@alum.mit.edu" color="inherit">
+          Edward Fan
+        </Link>
+        .
       </Text>
       <Text>
         Subject descriptions and evaluations &copy;2022 Massachusetts Institute

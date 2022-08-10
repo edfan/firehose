@@ -93,10 +93,11 @@ function ClassTypes(props: { cls: Class }) {
     <Flex gap={4} align="center">
       <Flex align="center">
         {types1}
-        <Flex ml={1} align="center">
-          ({seasons}){types2}
-          {halfType}
+        <Flex mx={1} align="center">
+          ({seasons})
         </Flex>
+        {types2}
+        {halfType}
       </Flex>
       <Text>
         {totalUnits} units: {units.join("-")}
