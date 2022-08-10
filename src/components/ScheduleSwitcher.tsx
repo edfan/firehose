@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 
-import { Firehose, Save } from "./firehose";
+import { Firehose, Save } from "../lib/firehose";
 
 function SelectWithWarn(props: {
   firehose: Firehose;

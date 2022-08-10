@@ -1,6 +1,7 @@
 import { Flex, Link, Radio, Text, useColorMode } from "@chakra-ui/react";
-import { Firehose } from "./firehose";
-import { ColorScheme, colorModeFor, TColorScheme } from "./utils";
+
+import { Firehose } from "../lib/firehose";
+import { ColorScheme, colorModeFor, TColorScheme } from "../lib/utils";
 
 /**
  * The footer on the bottom of the calendar.

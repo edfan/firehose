@@ -1,4 +1,7 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { AgGridReact } from "@ag-grid-community/react";
+import AgGrid, { ModuleRegistry } from "@ag-grid-community/core";
+import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
+import { AddIcon, MinusIcon, SearchIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -10,18 +13,15 @@ import {
   InputLeftElement,
   Tooltip,
 } from "@chakra-ui/react";
-import { AgGridReact } from "@ag-grid-community/react";
-import AgGrid, { ModuleRegistry } from "@ag-grid-community/core";
-import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+
+import { Class, Flags } from "../lib/class";
+import { classNumberMatch, classSort, simplifyString } from "../lib/utils";
+import { Firehose } from "../lib/firehose";
 
 import "@ag-grid-community/core/dist/styles/ag-grid.css";
 import "@ag-grid-community/core/dist/styles/agGridAlpineFont.css";
 import "./ClassTable.scss";
-
-import { Class, Flags } from "./class";
-import { classNumberMatch, classSort, simplifyString } from "./utils";
-import { Firehose } from "./firehose";
-import { AddIcon, MinusIcon, SearchIcon } from "@chakra-ui/icons";
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 

@@ -8,9 +8,9 @@ import {
   extendTheme,
 } from "@chakra-ui/react";
 
-import { Firehose, FirehoseState } from "./firehose";
-import { RawClass } from "./class";
-import { ColorScheme } from "./utils";
+import { RawClass } from "../lib/class";
+import { Firehose, FirehoseState } from "../lib/firehose";
+import { ColorScheme } from "../lib/utils";
 
 import { ActivityDescription } from "./ActivityDescription";
 import { Calendar } from "./Calendar";
@@ -22,7 +22,7 @@ import { ScheduleSwitcher } from "./ScheduleSwitcher";
 import { SelectedActivities } from "./SelectedActivities";
 
 import "@fontsource/inter/variable.css";
-import "./stylesheet.scss";
+import "./App.scss";
 
 /** The main application. */
 export function App() {

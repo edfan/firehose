@@ -14,10 +14,14 @@ import {
 import { ComponentProps, FormEvent, useState } from "react";
 import { HexColorPicker } from "react-colorful";
 
-import { Activity, NonClass, Timeslot } from "./activity";
-import { Class, LockOption, SectionLockOption, Sections } from "./class";
-import { Firehose } from "./firehose";
-import { WEEKDAY_STRINGS, TIMESLOT_STRINGS, dayStringToSlot } from "./utils";
+import { Activity, NonClass, Timeslot } from "../lib/activity";
+import { Class, LockOption, SectionLockOption, Sections } from "../lib/class";
+import { Firehose } from "../lib/firehose";
+import {
+  WEEKDAY_STRINGS,
+  TIMESLOT_STRINGS,
+  dayStringToSlot,
+} from "../lib/utils";
 
 import { ColorButton } from "./SelectedActivities";
 

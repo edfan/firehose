@@ -8,14 +8,14 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { decode } from "html-entities";
+import { ReactNode } from "react";
 
-import { Activity, NonClass } from "./activity";
-import { Class, Flags } from "./class";
-import { Firehose } from "./firehose";
+import { Activity, NonClass } from "../lib/activity";
+import { Class, Flags } from "../lib/class";
+import { Firehose } from "../lib/firehose";
+import { linkClasses } from "../lib/utils";
 
 import { ClassButtons, NonClassButtons } from "./ActivityButtons";
-import { linkClasses } from "./utils";
-import { ReactNode } from "react";
 
 /** A small image indicating a flag, like Spring or CI-H. */
 function TypeSpan(props: { flag?: string; title: string }) {

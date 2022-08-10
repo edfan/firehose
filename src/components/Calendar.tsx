@@ -3,9 +3,9 @@ import FullCalendar, { EventApi } from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 
-import { Activity, NonClass, Timeslot } from "./activity";
-import { Firehose } from "./firehose";
-import { textColor, toSlot } from "./utils";
+import { Activity, NonClass, Timeslot } from "../lib/activity";
+import { Firehose } from "../lib/firehose";
+import { textColor, toSlot } from "../lib/utils";
 
 import "./Calendar.scss";
 

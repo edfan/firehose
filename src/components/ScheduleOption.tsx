@@ -1,7 +1,7 @@
 import { Button, CloseButton, Flex, Text } from "@chakra-ui/react";
 import { useState } from "react";
 
-import { Firehose } from "./firehose";
+import { Firehose } from "../lib/firehose";
 
 export function ScheduleOption(props: {
   selectedOption: number;

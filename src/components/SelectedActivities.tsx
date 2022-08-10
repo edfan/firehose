@@ -2,10 +2,10 @@ import { AddIcon } from "@chakra-ui/icons";
 import { Button, Flex, Text } from "@chakra-ui/react";
 import { ComponentProps } from "react";
 
-import { Class } from "./class";
-import { Activity } from "./activity";
-import { Firehose } from "./firehose";
-import { formatNumber, textColor } from "./utils";
+import { Activity } from "../lib/activity";
+import { Class } from "../lib/class";
+import { Firehose } from "../lib/firehose";
+import { formatNumber, textColor } from "../lib/utils";
 
 export function ColorButton(
   props: ComponentProps<"button"> & { color: string }
