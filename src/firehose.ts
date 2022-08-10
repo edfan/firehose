@@ -265,6 +265,7 @@ export class Firehose {
   /** Set the color scheme. */
   setColorScheme(colorScheme: TColorScheme): void {
     this.colorScheme = colorScheme;
+    chooseColors(this.selectedActivities, this.colorScheme);
     this.updateState();
   }
 
@@ -380,6 +381,10 @@ export class Firehose {
 
   /** Initialize the state from either the URL or localStorage. */
   initState(): void {
+    const colorScheme = localStorage.getItem("firehose-color-scheme");
+    if (colorScheme) {
+      this.colorScheme = JSON.parse(colorScheme) as TColorScheme;
+    }
     const params = new URLSearchParams(document.location.search);
     const param = params.get("s");
     const saves = localStorage.getItem(`firehose-${this.term}`);
@@ -394,10 +399,6 @@ export class Firehose {
       this.inflate(urldecode(param));
     } else {
       this.loadSave(this.saves[0]!.id);
-    }
-    const colorScheme = localStorage.getItem("firehose-color-scheme");
-    if (colorScheme) {
-      this.colorScheme = JSON.parse(colorScheme) as TColorScheme;
     }
   }
 }

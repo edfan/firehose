@@ -130,19 +130,15 @@ export const ColorScheme = {
   Light: "Light",
   Dark: "Dark",
   Classic: "Classic",
+  ClassicDark: "Classic Dark"
 } as const;
 
 /** The type of {@link ColorScheme}. */
 export type TColorScheme = typeof ColorScheme[keyof typeof ColorScheme];
 
-/** The default background color for a color scheme. */
-export function fallbackColor(colorScheme: TColorScheme): string {
-  return "#4A4A4A";
-}
-
 /** The set of activity background colors for a color scheme. */
-function backgroundColors(colorScheme: TColorScheme): Array<string> {
-  return [
+const BACKGROUND_COLORS = {
+  [ColorScheme.Light]: [
     "#D32F2F",
     "#2E7D32",
     "#1565C0",
@@ -151,7 +147,56 @@ function backgroundColors(colorScheme: TColorScheme): Array<string> {
     "#AD1457",
     "#827717",
     "#795548",
-  ];
+  ],
+  [ColorScheme.Dark]: [
+    "#D47777",
+    "#7BC77F",
+    "#8AA3BF",
+    "#E68E73",
+    "#9BC6C9",
+    "#CC9DB1",
+    "#F5EA87",
+    "#DE9D85",
+  ],
+  [ColorScheme.Classic]: [
+    "#23AF83",
+    "#3E9ED1",
+    "#AE7CB4",
+    "#DE676F",
+    "#E4793C",
+    "#D7AD00",
+    "#33AE60",
+    "#F08E94",
+    "#8FBDD9",
+    "#A2ACB0",
+  ],
+  [ColorScheme.ClassicDark]: [
+    "#36C0A5",
+    "#5EBEF1",
+    "#CE9CD4",
+    "#EA636B",
+    "#FF995C",
+    "#F7CD20",
+    "#47CE80",
+    "#FFAEB4",
+    "#AFDDF9",
+    "#C2CCD0",
+  ],
+} as const;
+
+/** Whether a color scheme is UI light or UI dark. */
+export function colorModeFor(colorScheme: TColorScheme): "light" | "dark" {
+  switch (colorScheme) {
+    case ColorScheme.Light: return 'light';
+    case ColorScheme.Dark: return 'dark';
+    case ColorScheme.Classic: return 'light';
+    case ColorScheme.ClassicDark: return 'dark';
+  }
+}
+
+/** The default background color for a color scheme. */
+export function fallbackColor(colorScheme: TColorScheme): string {
+  return colorModeFor(colorScheme) === 'light' ? '#4A5568' : '#CBD5E0';
 }
 
 /** MurmurHash3, seeded with a string. */
@@ -177,7 +222,7 @@ export function chooseColors(
   colorScheme: TColorScheme
 ): void {
   // above this length, we give up trying to be nice:
-  const colorLen = backgroundColors(colorScheme).length;
+  const colorLen = BACKGROUND_COLORS[colorScheme].length;
   const indices: Array<number> = [];
   for (const activity of activities) {
     if (activity.manualColor) continue;
@@ -189,7 +234,7 @@ export function chooseColors(
       index = hash() % colorLen;
     }
     indices.push(index);
-    activity.backgroundColor = backgroundColors(colorScheme)[index];
+    activity.backgroundColor = BACKGROUND_COLORS[colorScheme][index];
   }
 }
 

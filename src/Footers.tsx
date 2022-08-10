@@ -1,6 +1,6 @@
 import { Flex, Link, Radio, Text, useColorMode } from "@chakra-ui/react";
 import { Firehose } from "./firehose";
-import { ColorScheme, TColorScheme } from "./utils";
+import { ColorScheme, colorModeFor, TColorScheme } from "./utils";
 
 /**
  * The footer on the bottom of the calendar.
@@ -20,10 +20,7 @@ export function LeftFooter(props: {
     const isColorScheme = (s: string): s is TColorScheme =>
       (Object.values(ColorScheme) as Array<string>).includes(s);
     if (!isColorScheme(scheme)) return;
-    if (
-      (colorMode === "light" && scheme === ColorScheme.Dark) ||
-      (colorMode === "dark" && scheme !== ColorScheme.Dark)
-    ) {
+    if (colorMode !== colorModeFor(scheme)) {
       toggleColorMode();
     }
     firehose.setColorScheme(scheme);
