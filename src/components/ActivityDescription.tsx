@@ -6,6 +6,7 @@ import {
   Link,
   Text,
   Tooltip,
+  useColorMode,
 } from "@chakra-ui/react";
 import { decode } from "html-entities";
 import { ReactNode } from "react";
@@ -22,6 +23,10 @@ const DARK_IMAGES = ["cih", "cih1", "iap", "repeat", "rest"];
 /** A small image indicating a flag, like Spring or CI-H. */
 function TypeSpan(props: { flag?: string; title: string }) {
   const { flag, title } = props;
+  const { colorMode } = useColorMode();
+  const filter =
+    colorMode === "dark" && DARK_IMAGES.includes(flag ?? "") ? "invert()" : "";
+
   return flag ? (
     <Tooltip label={title}>
       <Image
@@ -29,7 +34,7 @@ function TypeSpan(props: { flag?: string; title: string }) {
         boxSize="1em"
         src={`img/${flag}.gif`}
         display="inline-block"
-        filter={DARK_IMAGES.includes(flag) ? "invert()" : ""}
+        filter={filter}
       />
     </Tooltip>
   ) : (
