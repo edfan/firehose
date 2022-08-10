@@ -7,6 +7,7 @@ import {
   Spinner,
   extendTheme,
 } from "@chakra-ui/react";
+import { StyleFunctionProps } from "@chakra-ui/theme-tools";
 
 import { ColorScheme } from "../lib/colors";
 import { Firehose, FirehoseState } from "../lib/firehose";
@@ -63,11 +64,12 @@ export function App() {
   }, []);
 
   const theme = extendTheme({
-    colors: {
-      secondary: "#4A5568",
-    },
     components: {
-      Link: { baseStyle: { color: "blue.500" } },
+      Link: {
+        baseStyle: ({ colorMode }: StyleFunctionProps) => ({
+          color: colorMode === "light" ? "blue.500" : "blue.200",
+        }),
+      },
     },
     config: {
       initialColorMode: "light",
@@ -111,10 +113,7 @@ export function App() {
               viewedActivity={state.viewedActivity}
               firehose={firehose}
             />
-            <LeftFooter
-              colorScheme={state.colorScheme}
-              firehose={firehose}
-            />
+            <LeftFooter colorScheme={state.colorScheme} firehose={firehose} />
           </Flex>
           <Flex direction="column" w={{ base: "100%", lg: "50%" }} gap={6}>
             <ScheduleSwitcher

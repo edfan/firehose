@@ -17,6 +17,8 @@ import { linkClasses } from "../lib/utils";
 
 import { ClassButtons, NonClassButtons } from "./ActivityButtons";
 
+const DARK_IMAGES = ["cih", "cih1", "iap", "repeat", "rest"];
+
 /** A small image indicating a flag, like Spring or CI-H. */
 function TypeSpan(props: { flag?: string; title: string }) {
   const { flag, title } = props;
@@ -27,6 +29,7 @@ function TypeSpan(props: { flag?: string; title: string }) {
         boxSize="1em"
         src={`img/${flag}.gif`}
         display="inline-block"
+        filter={DARK_IMAGES.includes(flag) ? "invert()" : ""}
       />
     </Tooltip>
   ) : (
@@ -96,7 +99,7 @@ function ClassTypes(props: { cls: Class }) {
         <Flex mx={1} align="center">
           ({seasons})
         </Flex>
-        {types2}
+        <Flex gap={1}>{types2}</Flex>
         {halfType}
       </Flex>
       <Text>
