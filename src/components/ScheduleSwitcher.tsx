@@ -1,6 +1,5 @@
 import {
   Button,
-  ButtonGroup,
   Flex,
   Input,
   Modal,
@@ -12,9 +11,18 @@ import {
   Select,
   useClipboard,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { ComponentProps, useState } from "react";
 
 import { Firehose, Save } from "../lib/firehose";
+
+function SmallButton(props: ComponentProps<"button">) {
+  const { children, ...otherProps } = props;
+  return (
+    <Button {...otherProps} variant="outline" size="sm">
+      {children}
+    </Button>
+  );
+}
 
 function SelectWithWarn(props: {
   firehose: Firehose;
@@ -85,9 +93,7 @@ function DeleteModal(props: {
 
   return (
     <>
-      <Button onClick={() => setShow(true)} variant="outline" size="sm">
-        Delete
-      </Button>
+      <SmallButton onClick={() => setShow(true)}>Delete</SmallButton>
       <Modal isOpen={show} onClose={() => setShow(false)}>
         <ModalOverlay />
         <ModalContent>
@@ -120,9 +126,7 @@ function ExportModal(props: { firehose: Firehose }) {
 
   return (
     <>
-      <Button onClick={() => setShow(true)} variant="outline" size="sm">
-        Share
-      </Button>
+      <SmallButton onClick={() => setShow(true)}>Share</SmallButton>
       <Modal isOpen={show} onClose={() => setShow(false)}>
         <ModalOverlay />
         <ModalContent>
@@ -157,10 +161,9 @@ export function ScheduleSwitcher(props: {
   const [isRenaming, setIsRenaming] = useState(false);
   const [name, setName] = useState(currentName);
 
-  // TODO: factor out renaming logic from here and non-class activities
-  return (
-    <Flex align="center" justify="center" gap={2}>
-      {isRenaming ? (
+  const [renderHeading, renderButtons] = (() => {
+    if (isRenaming) {
+      const renderHeading = () => (
         <Input
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -168,56 +171,50 @@ export function ScheduleSwitcher(props: {
           size="sm"
           width="fit-content"
         />
-      ) : (
-        <SelectWithWarn firehose={firehose} saveId={saveId} saves={saves} />
-      )}
-      {isRenaming ? (
-        <ButtonGroup variant="outline" size="sm">
-          <Button
-            onClick={() => {
-              firehose.renameSave(saveId, name);
-              setIsRenaming(false);
-            }}
-          >
-            Confirm
-          </Button>
-          <Button
-            onClick={() => {
-              setName(currentName);
-              setIsRenaming(false);
-            }}
-          >
-            Cancel
-          </Button>
-        </ButtonGroup>
-      ) : (
+      );
+      const onConfirm = () => {
+        firehose.renameSave(saveId, name);
+        setIsRenaming(false);
+      };
+      const onCancel = () => {
+        setName(currentName);
+        setIsRenaming(false);
+      };
+      const renderButtons = () => (
         <>
-          {saveId && (
-            <Button
-              onClick={() => setIsRenaming(true)}
-              variant="outline"
-              size="sm"
-            >
-              Rename
-            </Button>
-          )}
-          {saveId && (
-            <DeleteModal
-              firehose={firehose}
-              saveId={saveId}
-              name={saves.find((save) => save.id === saveId)!.name}
-            />
-          )}
-          <Button
-            onClick={() => firehose.addSave(Boolean(saveId))}
-            variant="outline"
-            size="sm"
-          >
-            {saveId ? "New" : "Save"}
-          </Button>
-          <ExportModal firehose={firehose} />
+          <SmallButton onClick={onConfirm}>Confirm</SmallButton>
+          <SmallButton onClick={onCancel}>Cancel</SmallButton>
         </>
-      )}
+      );
+      return [renderHeading, renderButtons];
+    }
+
+    const renderHeading = () => (
+      <SelectWithWarn firehose={firehose} saveId={saveId} saves={saves} />
+    );
+    const onRename = () => setIsRenaming(true);
+    const onSave = () => firehose.addSave(Boolean(saveId));
+    const renderButtons = () => (
+      <>
+        {saveId && <SmallButton onClick={onRename}>Rename</SmallButton>}
+        {saveId && (
+          <DeleteModal
+            firehose={firehose}
+            saveId={saveId}
+            name={saves.find((save) => save.id === saveId)!.name}
+          />
+        )}
+        <SmallButton onClick={onSave}>{saveId ? "New" : "Save"}</SmallButton>
+        <ExportModal firehose={firehose} />
+      </>
+    );
+    return [renderHeading, renderButtons];
+  })();
+
+  return (
+    <Flex align="center" justify="center" gap={2}>
+      {renderHeading()}
+      {renderButtons()}
     </Flex>
   );
 }
