@@ -1,5 +1,5 @@
 import { Timeslot, Event } from "./activity";
-import { ColorScheme, fallbackColor, formatNumber } from "./utils";
+import { TColorScheme, fallbackColor, formatNumber } from "./utils";
 
 /** Raw timeslot format: [start slot, length of timeslot]. */
 export type RawTimeslot = [number, number];
@@ -180,12 +180,17 @@ export class Section {
   }
 }
 
-export enum LockOption {
-  Auto,
-  None
-}
+/** The non-section options for a manual section time. */
+export const LockOption = {
+  Auto: "Auto",
+  None: "None",
+} as const;
 
-export type SectionLockOption = Section | LockOption;
+/** The type of {@link LockOption}. */
+type TLockOption = typeof LockOption[keyof typeof LockOption];
+
+/** All section options for a manual section time. */
+export type SectionLockOption = Section | TLockOption;
 
 /**
  * A group of {@link Section}s, all the same kind (like lec, rec, or lab). At
@@ -282,7 +287,7 @@ export class Class {
   /** Is the color set by the user (as opposed to chosen automatically?) */
   manualColor: boolean = false;
 
-  constructor(rawClass: RawClass, colorScheme: ColorScheme) {
+  constructor(rawClass: RawClass, colorScheme: TColorScheme) {
     this.rawClass = rawClass;
     this.sections = rawClass.s
       .map((kind) =>

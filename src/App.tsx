@@ -111,7 +111,10 @@ export function App() {
               viewedActivity={state.viewedActivity}
               firehose={firehose}
             />
-            <LeftFooter />
+            <LeftFooter
+              colorScheme={state.colorScheme}
+              firehose={firehose}
+            />
           </Flex>
           <Flex direction="column" w={{ base: "100%", lg: "50%" }} gap={6}>
             <ScheduleSwitcher

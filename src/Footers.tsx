@@ -1,13 +1,34 @@
-import { Flex, Link, Text } from "@chakra-ui/react";
+import { Flex, Link, Radio, Text, useColorMode } from "@chakra-ui/react";
 import { Firehose } from "./firehose";
+import { ColorScheme, TColorScheme } from "./utils";
 
 /**
  * The footer on the bottom of the calendar.
  *
- * TODO: implement functionality
- * TODO: make years independent
+ * TODO: add gcal export
+ * TODO: add text form?
  */
-export function LeftFooter() {
+export function LeftFooter(props: {
+  colorScheme: TColorScheme;
+  firehose: Firehose;
+}) {
+  const { colorScheme, firehose } = props;
+  const year = new Date().getFullYear();
+
+  const { colorMode, toggleColorMode } = useColorMode();
+  const onSetColorScheme = (scheme: string) => {
+    const isColorScheme = (s: string): s is TColorScheme =>
+      (Object.values(ColorScheme) as Array<string>).includes(s);
+    if (!isColorScheme(scheme)) return;
+    if (
+      (colorMode === "light" && scheme === ColorScheme.Dark) ||
+      (colorMode === "dark" && scheme !== ColorScheme.Dark)
+    ) {
+      toggleColorMode();
+    }
+    firehose.setColorScheme(scheme);
+  };
+
   return (
     <Flex
       direction="column"
@@ -17,35 +38,32 @@ export function LeftFooter() {
       _hover={{ opacity: 1 }}
       transition="0.5s opacity"
     >
-      {/* <span id="prereg-link">Preregister these classes!</span>
-        <span id="clipboard-link">Text form</span> |{" "}
-        <span id="toggle-css">Toggle high-contrast</span> |{" "}
-        <span id="toggle-dark-mode">Toggle dark-mode</span> |{" "}
-        <span id="clear-all">Clear all</span>
-        <br />
-        <span
-          id="calendar-link"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="Make sure popups are enabled!"
-          data-trigger="hover"
-        >
-          <img src="img/calendar-button.svg" alt="" />
-        </span> */}
+      <Flex gap={4}>
+        Color scheme:
+        {Object.values(ColorScheme).map((scheme) => (
+          <Radio
+            key={scheme}
+            isChecked={scheme === colorScheme}
+            onChange={() => onSetColorScheme(scheme)}
+          >
+            {scheme}
+          </Radio>
+        ))}
+      </Flex>
       <Text>
         Beta by{" "}
         <Link href="mailto:cjq@mit.edu" color="inherit">
           CJ Quines
         </Link>
-        . Firehose &copy;2022{" "}
+        . Firehose &copy;{year}{" "}
         <Link href="mailto:edwardf@alum.mit.edu" color="inherit">
           Edward Fan
         </Link>
         .
       </Text>
       <Text>
-        Subject descriptions and evaluations &copy;2022 Massachusetts Institute
-        of Technology.
+        Subject descriptions and evaluations &copy;{year} Massachusetts
+        Institute of Technology.
       </Text>
     </Flex>
   );

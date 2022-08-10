@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 
 import { Class, RawTimeslot } from "./class";
 import {
-  ColorScheme,
+  TColorScheme,
   fallbackColor,
   slotToDayString,
   slotToTimeString,
@@ -132,7 +132,7 @@ export class NonClass {
   manualColor: boolean = false;
   timeslots: Array<Timeslot> = [];
 
-  constructor(colorScheme: ColorScheme) {
+  constructor(colorScheme: TColorScheme) {
     this.id = nanoid(8);
     this.backgroundColor = fallbackColor(colorScheme);
   }

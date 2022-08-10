@@ -10,6 +10,7 @@ import {
   sum,
   urldecode,
   urlencode,
+  TColorScheme,
 } from "./utils";
 
 /** A save has an ID and a name. */
@@ -29,7 +30,7 @@ export type FirehoseState = {
   warnings: Array<string>;
   saveId: string;
   saves: Array<Save>;
-  colorScheme: ColorScheme;
+  colorScheme: TColorScheme;
 };
 
 /**
@@ -66,7 +67,7 @@ export class Firehose {
   /** Names of each save slot. */
   private saves: Array<Save> = [];
   /** Current color scheme. */
-  private colorScheme: ColorScheme = ColorScheme.Light;
+  private colorScheme: TColorScheme = ColorScheme.Light;
 
   /** React callback to update state. */
   callback: ((state: FirehoseState) => void) | undefined;
@@ -261,6 +262,12 @@ export class Firehose {
     );
   }
 
+  /** Set the color scheme. */
+  setColorScheme(colorScheme: TColorScheme): void {
+    this.colorScheme = colorScheme;
+    this.updateState();
+  }
+
   //========================================================================
   // Loading and saving
 
@@ -390,7 +397,7 @@ export class Firehose {
     }
     const colorScheme = localStorage.getItem("firehose-color-scheme");
     if (colorScheme) {
-      this.colorScheme = JSON.parse(colorScheme) as ColorScheme;
+      this.colorScheme = JSON.parse(colorScheme) as TColorScheme;
     }
   }
 }

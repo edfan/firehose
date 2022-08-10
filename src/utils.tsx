@@ -126,19 +126,22 @@ export function dayStringToSlot(day: string, time: string): number {
 // Color utilities:
 
 /** The possible color schemes. */
-export enum ColorScheme {
-  Light,
-  Dark,
-  Classic,
-}
+export const ColorScheme = {
+  Light: "Light",
+  Dark: "Dark",
+  Classic: "Classic",
+} as const;
+
+/** The type of {@link ColorScheme}. */
+export type TColorScheme = typeof ColorScheme[keyof typeof ColorScheme];
 
 /** The default background color for a color scheme. */
-export function fallbackColor(colorScheme: ColorScheme): string {
+export function fallbackColor(colorScheme: TColorScheme): string {
   return "#4A4A4A";
 }
 
 /** The set of activity background colors for a color scheme. */
-function backgroundColors(colorScheme: ColorScheme): Array<string> {
+function backgroundColors(colorScheme: TColorScheme): Array<string> {
   return [
     "#D32F2F",
     "#2E7D32",
@@ -171,7 +174,7 @@ function murmur3(str: string): () => number {
  */
 export function chooseColors(
   activities: Array<Activity>,
-  colorScheme: ColorScheme
+  colorScheme: TColorScheme
 ): void {
   // above this length, we give up trying to be nice:
   const colorLen = backgroundColors(colorScheme).length;
