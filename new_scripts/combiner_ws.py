@@ -11,10 +11,6 @@ with open('sublist') as f:
 with open('evaluations') as f:
     evals = json.load(f)
 
-with open("course_six_renumbering.json") as f:
-    course_six_renumbering = json.loads(f.read())
-    course_six_renumbering_inv = {v: k for k, v in course_six_renumbering.items()}
-
     # Special case 6.871 evals.
     # evals['6.871'] = evals['HST.956']
 
@@ -86,7 +82,7 @@ for c in ws:
         classes[c]['u'] = ''
         classes[c]['f'] = False
 
-    old_c = classes[c].get('old_num', None)
+    old_c = classes[c].get('on', None)
     if c in evals or (old_c and old_c in evals):
         total_rating = 0
         total_hours = 0
@@ -115,6 +111,13 @@ for c in ws:
 # Special case 2.008 schedule.
 # classes['2.008']['s'] = ['l', 'b']
 # classes['2.008']['r'] = []
+
+# Special case 6.S977.
+classes['6.S977']['u1'] = 3
+classes['6.S977']['u2'] = 0
+classes['6.S977']['u3'] = 9
+classes['6.S977']['n'] = 'The Sum of Squares Methods'
+classes['6.S977']['d'] = 'Study of algorithms and computational complexity through the lens of the Sum of Squares method (SoS), a powerful approach to algorithm design generalizing linear programming and spectral methods. Specific sub-topics vary and are chosen with student input, potentially including algorithms for combinatorial and continuous optimization (graphs, constraint satisfaction problems, unique games conjecture), applications to high-dimensional algorithmic statistics (robustness, privacy, method of moments), applications to quantum information, and an SoS perspective on computational complexity (of NP-hard problems and/or of statistical inference).'
 
 """ try:
     # Special case 14.01/14.02 rec-only sections.
@@ -146,9 +149,10 @@ except Exception as e:
 classes['22.05']['l'] = [[[[33,3],[93,3]],"24-121"]]
 classes['22.05']['r'] = [[[[124,2]],"24-121"]]
 
+last_update = datetime.datetime.now().strftime('%Y-%m-%d %l:%M %p')
+
 with open('full.json', 'w') as f:
-    out = {
-        "last_update": datetime.datetime.now().strftime('%Y-%m-%d %l:%M %p'),
-        "classes": classes,
-    }
-    json.dump(out, f, separators=(',', ':'))
+    obj = {}
+    obj["lastUpdated"] = last_update
+    obj["classes"] = classes
+    json.dump(obj, f, separators=(',', ':'))
