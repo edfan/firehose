@@ -83,7 +83,7 @@ export function App() {
   return (
     <ChakraProvider theme={theme}>
       <Box
-        w="100vw"
+        w="100%"
         p={4}
         fontSize="sm"
         textAlign="center"
@@ -96,11 +96,11 @@ export function App() {
         </Link>
       </Box>
       {!firehose ? (
-        <Flex w="100vw" h="100vh" align="center" justify="center">
+        <Flex w="100%" h="100vh" align="center" justify="center">
           <Spinner />
         </Flex>
       ) : (
-        <Flex w="100vw" direction={{ base: "column", lg: "row" }} p={4} gap={8}>
+        <Flex w="100%" direction={{ base: "column", lg: "row" }} p={4} gap={8}>
           <Flex direction="column" w={{ base: "100%", lg: "50%" }} gap={6}>
             <Header />
             <ScheduleOption
