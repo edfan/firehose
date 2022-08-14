@@ -16,12 +16,12 @@ import { HexColorPicker } from "react-colorful";
 
 import { Activity, NonClass, Timeslot } from "../lib/activity";
 import { Class, LockOption, SectionLockOption, Sections } from "../lib/class";
-import { Firehose } from "../lib/firehose";
 import {
   WEEKDAY_STRINGS,
   TIMESLOT_STRINGS,
-  dayStringToSlot,
-} from "../lib/utils";
+  Slot,
+} from "../lib/dates";
+import { Firehose } from "../lib/firehose";
 
 import { ColorButton } from "./SelectedActivities";
 
@@ -191,8 +191,8 @@ function NonClassAddTime(props: { activity: NonClass; firehose: Firehose }) {
       firehose.addTimeslot(
         activity,
         Timeslot.fromStartEnd(
-          dayStringToSlot(day, times.start),
-          dayStringToSlot(day, times.end)
+          Slot.fromDayString(day, times.start),
+          Slot.fromDayString(day, times.end)
         )
       );
     }

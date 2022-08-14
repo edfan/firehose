@@ -3,6 +3,7 @@ import { nanoid } from "nanoid";
 import { Timeslot, NonClass, Activity } from "./activity";
 import { scheduleSlots } from "./calendarSlots";
 import { Class, Section, SectionLockOption, Sections } from "./class";
+import { Term } from "./dates";
 import {
   ColorScheme,
   TColorScheme,
@@ -75,8 +76,8 @@ export class Firehose {
 
   constructor(
     rawClasses: Map<string, RawClass>,
-    /** The term, e.g. f22, i19. */
-    public readonly term: string,
+    /** The current term object. Okay if not in state; it's constant. */
+    public readonly term: Term,
     /** String representing last update time. */
     public readonly lastUpdated: string
   ) {

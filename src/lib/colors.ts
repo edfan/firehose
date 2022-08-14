@@ -121,3 +121,6 @@ export function textColor(color: string): string {
   const brightness = (r * 299 + g * 587 + b * 114) / 1000;
   return brightness > 128 ? "#000000" : "#ffffff";
 }
+
+/** The Google calendar background color. */
+export const CALENDAR_COLOR = "#DB5E45";

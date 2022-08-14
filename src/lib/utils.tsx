@@ -77,68 +77,6 @@ export function linkClasses(firehose: Firehose, str: string): JSX.Element {
 }
 
 //========================================================================
-// Date utilities:
-// TODO: rename these
-
-/**
- * Converts a slot number (as in {@link Timeslot}) to a date in the week of
- * 2001-01-01, which is the week the calendar shows.
- */
-export function toDate(slot: number): Date {
-  const day = Math.floor(slot / 30) + 1;
-  const hour = Math.floor((slot % 30) / 2) + 8;
-  const minute = (slot % 2) * 30;
-  return new Date(2001, 0, day, hour, minute);
-}
-
-/** Converts date (within 8 AM to 9 PM) to a slot number. */
-export function toSlot(date: Date): number {
-  return (
-    30 * (date.getDay() - 1) +
-    2 * (date.getHours() - 8) +
-    Math.floor(date.getMinutes() / 30)
-  );
-}
-
-/** Strings for each weekday. */
-export const WEEKDAY_STRINGS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-
-/** See {@link TIMESLOT_STRINGS}. */
-function generateTimeslotStrings(): Array<string> {
-  const res = [];
-  for (let i = 8; i <= 11; i++) {
-    res.push(`${i}:00 AM`);
-    res.push(`${i}:30 AM`);
-  }
-  res.push("12:00 PM");
-  res.push("12:30 PM");
-  for (let i = 1; i <= 9; i++) {
-    res.push(`${i}:00 PM`);
-    res.push(`${i}:30 PM`);
-  }
-  res.push(`10:00 PM`);
-  return res;
-}
-
-/** Strings for each slot number, in order. */
-export const TIMESLOT_STRINGS = generateTimeslotStrings();
-
-/** Convert a slot number to a day string. */
-export function slotToDayString(slot: number): string {
-  return WEEKDAY_STRINGS[Math.floor(slot / 30)]!;
-}
-
-/** Convert a slot number to a time string. */
-export function slotToTimeString(slot: number): string {
-  return TIMESLOT_STRINGS[slot % 30]!;
-}
-
-/** Converts a day and time stirng to a slot number. */
-export function dayStringToSlot(day: string, time: string): number {
-  return 30 * WEEKDAY_STRINGS.indexOf(day) + TIMESLOT_STRINGS.indexOf(time);
-}
-
-//========================================================================
 // Other utilities:
 
 /** Takes the sum of an array. */

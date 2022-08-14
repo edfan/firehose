@@ -5,8 +5,8 @@ import interactionPlugin from "@fullcalendar/interaction";
 
 import { Activity, NonClass, Timeslot } from "../lib/activity";
 import { textColor } from "../lib/colors";
+import { Slot } from "../lib/dates";
 import { Firehose } from "../lib/firehose";
-import { toSlot } from "../lib/utils";
 
 import "./Calendar.scss";
 
@@ -74,7 +74,10 @@ export function Calendar(props: {
         viewedActivity instanceof NonClass &&
           firehose.addTimeslot(
             viewedActivity,
-            Timeslot.fromStartEnd(toSlot(e.start), toSlot(e.end))
+            Timeslot.fromStartEnd(
+              Slot.fromStartDate(e.start),
+              Slot.fromStartDate(e.end)
+            )
           );
       }}
     />

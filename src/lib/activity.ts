@@ -3,50 +3,38 @@ import { nanoid } from "nanoid";
 
 import { Class } from "./class";
 import { TColorScheme, fallbackColor } from "./colors";
+import { Slot } from "./dates";
 import { RawTimeslot } from "./rawClass";
-import { slotToDayString, slotToTimeString, sum, toDate } from "./utils";
+import { sum } from "./utils";
 
-/**
- * A timeslot is a period of time, spanning several thirty-minute slots. Each
- * day has 30 thirty-minute slots from 8 AM to 11 PM, times five days a week.
- *
- * Each slot is assigned a slot number. Monday slots are 0 to 29, Tuesday are
- * 30 to 59, etc., slot number 0 is Monday 8 AM to 8:30 AM, etc.
- *
- * Note that 8:30 AM is the ending time of slot number 0 and starting time of
- * slot number 1. Most timeslot utilities will convert a time to the slot
- * number that it starts, so 8:30 AM will be converted to 1.
- *
- * The interface ends at 9 PM, so we don't need to worry about the fencepost
- * problem with respect to ending slots.
- */
+/** A period of time, spanning several Slots. */
 export class Timeslot {
-  startSlot: number;
+  startSlot: Slot;
   numSlots: number;
 
   constructor(startSlot: number, numSlots: number) {
-    this.startSlot = startSlot;
+    this.startSlot = Slot.fromSlotNumber(startSlot);
     this.numSlots = numSlots;
   }
 
   /** Construct a timeslot from [startSlot, endSlot). */
-  static fromStartEnd(startSlot: number, endSlot: number): Timeslot {
-    return new Timeslot(startSlot, endSlot - startSlot);
+  static fromStartEnd(startSlot: Slot, endSlot: Slot): Timeslot {
+    return new Timeslot(startSlot.slot, endSlot.slot - startSlot.slot);
   }
 
-  /** Ending slot, inclusive. */
-  get endSlot(): number {
-    return this.startSlot + this.numSlots - 1;
+  /** The first slot after this Timeslot, or the exclusive end slot. */
+  get endSlot(): Slot {
+    return this.startSlot.add(this.numSlots);
   }
 
   /** The start time, on the week of 2001-01-01. */
   get startTime(): Date {
-    return toDate(this.startSlot);
+    return this.startSlot.startDate;
   }
 
   /** The end time, on the week of 2001-01-01. */
   get endTime(): Date {
-    return toDate(this.endSlot + 1);
+    return this.endSlot.startDate;
   }
 
   /** The number of hours this timeslot spans. */
@@ -59,14 +47,15 @@ export class Timeslot {
    * @returns True if this timeslot conflicts with the other timeslot
    */
   conflicts(other: Timeslot): boolean {
-    return this.startSlot <= other.endSlot && other.startSlot <= this.endSlot;
+    return (
+      this.startSlot.slot <= other.endSlot.slot &&
+      other.startSlot.slot <= this.endSlot.slot
+    );
   }
 
   /** Convert to string of the form "Mon, 9:30 AM – 11:00 AM". */
   toString(): string {
-    return `${slotToDayString(this.startSlot)}, ${slotToTimeString(
-      this.startSlot
-    )} – ${slotToTimeString(this.endSlot + 1)}`;
+    return `${this.startSlot.dayString}, ${this.startSlot.timeString} – ${this.endSlot.timeString}`;
   }
 
   /** @returns True if this timeslot is equal to other timeslot */
@@ -101,7 +90,7 @@ export class Event {
     this.room = room;
   }
 
-  /** @returns List of events that can be directly given to FullCalendar. */
+  /** List of events that can be directly given to FullCalendar. */
   get eventInputs(): Array<EventInput> {
     const color = this.activity.backgroundColor;
     return this.slots.map((slot) => ({
@@ -170,7 +159,7 @@ export class NonClass {
   deflate(): Array<Array<RawTimeslot> | string> {
     const res = [
       this.timeslots.map<RawTimeslot>((slot) => [
-        slot.startSlot,
+        slot.startSlot.slot,
         slot.numSlots,
       ]),
       this.name,

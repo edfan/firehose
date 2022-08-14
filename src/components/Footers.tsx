@@ -1,7 +1,16 @@
-import { Flex, Link, Radio, Text, useColorMode } from "@chakra-ui/react";
+import {
+  Flex,
+  Image,
+  Link,
+  Radio,
+  Text,
+  Tooltip,
+  useColorMode,
+} from "@chakra-ui/react";
 
 import { ColorScheme, TColorScheme, colorModeFor } from "../lib/colors";
 import { Firehose } from "../lib/firehose";
+import { useCalendarExport } from "../lib/gapi";
 
 /**
  * The footer on the bottom of the calendar.
@@ -27,6 +36,8 @@ export function LeftFooter(props: {
     firehose.setColorScheme(scheme);
   };
 
+  const onCalendarExport = useCalendarExport(firehose);
+
   return (
     <Flex
       direction="column"
@@ -48,7 +59,15 @@ export function LeftFooter(props: {
           </Radio>
         ))}
       </Flex>
-      <Text>
+      <Tooltip label={"Make sure popups are enabled!"}>
+        <Image
+          src="img/calendar-button.svg"
+          alt="Export to Google Calendar"
+          onClick={() => onCalendarExport()}
+          style={{ cursor: "pointer" }}
+        />
+      </Tooltip>
+      <Text mt={2} fontSize="sm">
         Beta by{" "}
         <Link href="mailto:cjq@mit.edu" color="inherit">
           CJ Quines
@@ -59,7 +78,7 @@ export function LeftFooter(props: {
         </Link>
         .
       </Text>
-      <Text>
+      <Text fontSize="sm">
         Subject descriptions and evaluations &copy;{year} Massachusetts
         Institute of Technology.
       </Text>
