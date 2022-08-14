@@ -202,18 +202,6 @@ export class Term {
     return `20${this.year}`;
   }
 
-  /** The year that the school year ends in, e.g. "2023" */
-  get fullSchoolYear(): string {
-    return this.semester === "f"
-      ? (parseInt(this.fullRealYear, 10) + 1).toString()
-      : this.fullRealYear;
-  }
-
-  /** e.g. "FA" */
-  get semesterCatalog(): string {
-    return SEMESTER_NAMES[this.semester].catalog;
-  }
-
   /** e.g. "fall" */
   get semesterFull(): string {
     return SEMESTER_NAMES[this.semester].full;
@@ -222,11 +210,6 @@ export class Term {
   /** e.g. "Fall" */
   get semesterFullCaps(): string {
     return SEMESTER_NAMES[this.semester].fullCaps;
-  }
-
-  /** e.g. "2023FA" */
-  get catalogName(): string {
-    return `${this.fullSchoolYear}${this.semesterCatalog}`;
   }
 
   /** e.g. "Fall 2022" */

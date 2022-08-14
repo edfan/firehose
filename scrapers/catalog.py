@@ -1,3 +1,4 @@
-from scrapers.coursews import test
+# TODO: rewrite from sublist_ws.py
 
-test()
+def run():
+    ...

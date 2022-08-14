@@ -10,6 +10,9 @@ old_scripts/professors.json
 debug.log
 .DS_Store
 
+# python
+__pycache__
+
 # node
 /node_modules
 /build
