@@ -76,10 +76,12 @@ export class Firehose {
 
   constructor(
     rawClasses: Map<string, RawClass>,
-    /** The current term object. Okay if not in state; it's constant. */
+    /** The current term object. */
     public readonly term: Term,
     /** String representing last update time. */
-    public readonly lastUpdated: string
+    public readonly lastUpdated: string,
+    /** The latest term urlName, e.g. "f22". */
+    public readonly latestTerm: string,
   ) {
     this.classes = new Map();
     rawClasses.forEach((cls, number) => {

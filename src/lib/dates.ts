@@ -1,5 +1,5 @@
 /** Dictionary of semester-name related constants. */
-const SEMESTER = {
+const SEMESTER_NAMES = {
   f: {
     catalog: "FA",
     full: "fall",
@@ -16,6 +16,9 @@ const SEMESTER = {
     fullCaps: "IAP",
   },
 } as const;
+
+/** Type of semester abbreviations. */
+type TSemester = keyof typeof SEMESTER_NAMES;
 
 /** Strings for each weekday. */
 export const WEEKDAY_STRINGS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
@@ -127,6 +130,16 @@ export class Slot {
   }
 }
 
+/** Parse a urlName like "f22". */
+export function parseUrlName(
+  urlName: string
+): { year: string; semester: TSemester } {
+  return {
+    year: urlName.substring(1),
+    semester: urlName[0] as TSemester,
+  };
+}
+
 /**
  * A term object, containing all information about non-class, term-specific
  * information.
@@ -135,7 +148,7 @@ export class Term {
   /** Term real year as a two-digit string, e.g. "22" */
   public year: string;
   /** Semester as a character, e.g. "f" */
-  public semester: keyof typeof SEMESTER;
+  public semester: TSemester;
   /** First day of classes, inclusive. */
   public start: Date;
   /** Last day of H1 classes, inclusive. */
@@ -151,24 +164,25 @@ export class Term {
 
   constructor({
     urlName,
-    startDate,
-    h1EndDate,
-    h2StartDate,
-    endDate,
+    startDate = "",
+    h1EndDate = "",
+    h2StartDate = "",
+    endDate = "",
     mondayScheduleDate,
-    holidayDates,
+    holidayDates = [],
   }: {
     urlName: string;
-    startDate: string;
-    h1EndDate: string;
-    h2StartDate: string;
-    endDate: string;
+    startDate?: string;
+    h1EndDate?: string;
+    h2StartDate?: string;
+    endDate?: string;
     mondayScheduleDate?: string;
-    holidayDates: Array<string>;
+    holidayDates?: Array<string>;
   }) {
     const midnight = (date: string) => new Date(`${date}T00:00:00`);
-    this.year = urlName.substring(1);
-    this.semester = urlName[0] as keyof typeof SEMESTER;
+    const { year, semester } = parseUrlName(urlName);
+    this.year = year;
+    this.semester = semester;
     this.start = midnight(startDate);
     this.h1End = midnight(h1EndDate);
     this.h2Start = midnight(h2StartDate);
@@ -194,17 +208,17 @@ export class Term {
 
   /** e.g. "FA" */
   get semesterCatalog(): string {
-    return SEMESTER[this.semester].catalog;
+    return SEMESTER_NAMES[this.semester].catalog;
   }
 
   /** e.g. "fall" */
   get semesterFull(): string {
-    return SEMESTER[this.semester].full;
+    return SEMESTER_NAMES[this.semester].full;
   }
 
   /** e.g. "Fall" */
   get semesterFullCaps(): string {
-    return SEMESTER[this.semester].fullCaps;
+    return SEMESTER_NAMES[this.semester].fullCaps;
   }
 
   /** e.g. "2023FA" */

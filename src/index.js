@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { App } from "./components/App";
 import { Term } from "./lib/dates";
 
+// TODO: move to full.json
 const term = new Term({
   urlName: "f22",
   startDate: "2022-09-07",

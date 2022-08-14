@@ -1,38 +1,74 @@
 import { Flex, Image, Select } from "@chakra-ui/react";
 
-/**
- * Header above the left column, with logo and semester selection.
- *
- * TODO: make years independent
- */
-export function Header() {
+import { Term } from "../lib/dates";
+import { Firehose } from "../lib/firehose";
+
+/** Given a urlName like i22, return its corresponding URL. */
+function toUrl(urlName: string, latestUrlName: string): string {
+  if (urlName === latestUrlName) {
+    return "index.html";
+  }
+  const { semesterFull } = new Term({ urlName });
+  return `semesters/${urlName}/${semesterFull}.html`;
+}
+
+/** Given a urlName like "i22", return the previous one, "f21". */
+function getLastUrlName(urlName: string): string {
+  const { semester, year } = new Term({ urlName });
+  if (semester === "f") {
+    return `s${year}`;
+  } else if (semester === "s") {
+    return `i${year}`;
+  } else {
+    return `f${parseInt(year, 10) - 1}`;
+  }
+}
+
+/** urlNames that don't have a Firehose */
+const EXCLUDED_URLS = ["i21", "i20"];
+
+/** Earliest urlName we have a Firehose for. */
+const EARLIEST_URL = "f17";
+
+/** Return all urlNames before the given one. */
+function getUrlNames(latestTerm: string): Array<string> {
+  let urlName = latestTerm;
+  const res = [];
+  while (urlName !== EARLIEST_URL) {
+    res.push(urlName);
+    do {
+      urlName = getLastUrlName(urlName);
+    } while (EXCLUDED_URLS.includes(urlName));
+  }
+  res.push(EARLIEST_URL);
+  return res;
+}
+
+/** Header above the left column, with logo and semester selection. */
+export function Header(props: { firehose: Firehose }) {
+  const { firehose } = props;
+  const defaultValue = toUrl(firehose.term.urlName, firehose.latestTerm);
+
   return (
     <Flex align="end">
       <Image src="img/logo.png" alt="Firehose logo" h="40px" />
       <Select
         size="sm"
         w="fit-content"
-        defaultValue="index.html"
+        defaultValue={defaultValue}
         onChange={(e) => {
           const elt = e.target;
           window.location.href = elt.options[elt.selectedIndex].value;
         }}
       >
-        <option value="index.html">Fall 2022</option>
-        <option value="semesters/s22/spring.html">Spring 2022</option>
-        <option value="semesters/i22/iap.html">IAP 2022</option>
-        <option value="semesters/f21/fall.html">Fall 2021</option>
-        <option value="semesters/s21/spring.html">Spring 2021</option>
-        <option value="semesters/f20/fall.html">Fall 2020</option>
-        <option value="semesters/s20/spring.html">Spring 2020</option>
-        {/* <option value="semesters/i20/iap.html">IAP 2020</option> */}
-        <option value="semesters/f19/fall.html">Fall 2019</option>
-        <option value="semesters/s19/spring.html">Spring 2019</option>
-        <option value="semesters/i19/iap.html">IAP 2019</option>
-        <option value="semesters/f18/fall.html">Fall 2018</option>
-        <option value="semesters/s18/spring.html">Spring 2018</option>
-        <option value="semesters/i18/iap.html">IAP 2018</option>
-        <option value="semesters/f17/fall.html">Fall 2017</option>
+        {getUrlNames(firehose.latestTerm).map((urlName) => {
+          const { niceName } = new Term({ urlName });
+          return (
+            <option key={urlName} value={toUrl(urlName, firehose.latestTerm)}>
+              {niceName}
+            </option>
+          );
+        })}
       </Select>
     </Flex>
   );

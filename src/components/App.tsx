@@ -26,6 +26,15 @@ import { SelectedActivities } from "./SelectedActivities";
 import "@fontsource/inter/variable.css";
 import "./App.scss";
 
+type SemesterData = {
+  classes: { [cls: string]: RawClass };
+  lastUpdated: string;
+};
+
+type LatestTermData = {
+  latestTerm: string;
+};
+
 /** The main application. */
 export function App(props: { term: Term }) {
   const { term } = props;
@@ -47,24 +56,21 @@ export function App(props: { term: Term }) {
   });
 
   useEffect(() => {
-    // TODO: rename this per semester
-    fetch("full.json")
-      .then(
-        (res) =>
-          res.json() as Promise<{
-            classes: { [cls: string]: RawClass };
-            lastUpdated: string;
-          }>
-      )
-      .then((data) => {
-        const classesMap = new Map(Object.entries(data.classes));
-        const firehoseObj = new Firehose(classesMap, term, data.lastUpdated);
-        firehoseObj.callback = setState;
-        firehoseObj.updateState();
-        firehoseRef.current = firehoseObj;
-        // @ts-ignore
-        window.firehose = firehoseObj;
-      });
+    Promise.all([
+      fetch("/latestTerm.json").then(
+        (res) => res.json() as Promise<LatestTermData>
+      ),
+      // TODO: rename json per semester
+      fetch("full.json").then((res) => res.json() as Promise<SemesterData>),
+    ]).then(([{ latestTerm }, { classes, lastUpdated }]) => {
+      const classesMap = new Map(Object.entries(classes));
+      const firehoseObj = new Firehose(classesMap, term, lastUpdated, latestTerm);
+      firehoseObj.callback = setState;
+      firehoseObj.updateState();
+      firehoseRef.current = firehoseObj;
+      // @ts-ignore
+      window.firehose = firehoseObj;
+    });
   }, [term]);
 
   const theme = extendTheme({
@@ -112,7 +118,7 @@ export function App(props: { term: Term }) {
             gap={8}
           >
             <Flex direction="column" w={{ base: "100%", lg: "50%" }} gap={6}>
-              <Header />
+              <Header firehose={firehose} />
               <ScheduleOption
                 selectedOption={state.selectedOption}
                 totalOptions={state.totalOptions}

@@ -253,11 +253,7 @@ function ClassFlags(props: {
   );
 }
 
-/**
- * The table of all classes, along with searching and filtering with flags.
- *
- * TODO: test performance in build
- */
+/** The table of all classes, along with searching and filtering with flags. */
 export function ClassTable(props: {
   classes: Map<string, Class>;
   firehose: Firehose;
