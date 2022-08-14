@@ -140,6 +140,17 @@ export function parseUrlName(
   };
 }
 
+/** Type of object passed to Term constructor. */
+export type TermInfo = {
+  urlName: string;
+  startDate?: string;
+  h1EndDate?: string;
+  h2StartDate?: string;
+  endDate?: string;
+  mondayScheduleDate?: string;
+  holidayDates?: Array<string>;
+};
+
 /**
  * A term object, containing all information about non-class, term-specific
  * information.
@@ -170,15 +181,7 @@ export class Term {
     endDate = "",
     mondayScheduleDate,
     holidayDates = [],
-  }: {
-    urlName: string;
-    startDate?: string;
-    h1EndDate?: string;
-    h2StartDate?: string;
-    endDate?: string;
-    mondayScheduleDate?: string;
-    holidayDates?: Array<string>;
-  }) {
+  }: TermInfo) {
     const midnight = (date: string) => new Date(`${date}T00:00:00`);
     const { year, semester } = parseUrlName(urlName);
     this.year = year;

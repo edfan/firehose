@@ -80,8 +80,8 @@ export class Firehose {
     public readonly term: Term,
     /** String representing last update time. */
     public readonly lastUpdated: string,
-    /** The latest term urlName, e.g. "f22". */
-    public readonly latestTerm: string,
+    /** The latest term object. */
+    public readonly latestTerm: Term,
   ) {
     this.classes = new Map();
     rawClasses.forEach((cls, number) => {

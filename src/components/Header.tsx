@@ -4,7 +4,7 @@ import { Term } from "../lib/dates";
 import { Firehose } from "../lib/firehose";
 
 /** Given a urlName like i22, return its corresponding URL. */
-function toUrl(urlName: string, latestUrlName: string): string {
+function toFullUrl(urlName: string, latestUrlName: string): string {
   if (urlName === latestUrlName) {
     return "index.html";
   }
@@ -47,7 +47,9 @@ function getUrlNames(latestTerm: string): Array<string> {
 /** Header above the left column, with logo and semester selection. */
 export function Header(props: { firehose: Firehose }) {
   const { firehose } = props;
-  const defaultValue = toUrl(firehose.term.urlName, firehose.latestTerm);
+  const toUrl = (urlName: string) =>
+    toFullUrl(urlName, firehose.latestTerm.urlName);
+  const defaultValue = toUrl(firehose.term.urlName);
 
   return (
     <Flex align="end">
@@ -61,10 +63,10 @@ export function Header(props: { firehose: Firehose }) {
           window.location.href = elt.options[elt.selectedIndex].value;
         }}
       >
-        {getUrlNames(firehose.latestTerm).map((urlName) => {
+        {getUrlNames(firehose.latestTerm.urlName).map((urlName) => {
           const { niceName } = new Term({ urlName });
           return (
-            <option key={urlName} value={toUrl(urlName, firehose.latestTerm)}>
+            <option key={urlName} value={toUrl(urlName)}>
               {niceName}
             </option>
           );

@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 
 import { ColorScheme } from "../lib/colors";
-import { Term } from "../lib/dates";
+import { Term, TermInfo } from "../lib/dates";
 import { Firehose, FirehoseState } from "../lib/firehose";
 import { RawClass } from "../lib/rawClass";
 
@@ -29,16 +29,11 @@ import "./App.scss";
 type SemesterData = {
   classes: { [cls: string]: RawClass };
   lastUpdated: string;
-};
-
-type LatestTermData = {
-  latestTerm: string;
+  termInfo: TermInfo;
 };
 
 /** The main application. */
-export function App(props: { term: Term }) {
-  const { term } = props;
-
+export function App() {
   const firehoseRef = useRef<Firehose>();
   const firehose = firehoseRef.current;
 
@@ -57,21 +52,24 @@ export function App(props: { term: Term }) {
 
   useEffect(() => {
     Promise.all([
-      fetch("/latestTerm.json").then(
-        (res) => res.json() as Promise<LatestTermData>
-      ),
-      // TODO: rename json per semester
+      // TODO update url name: path might be wrong
+      fetch("latestTerm.json").then((res) => res.json() as Promise<TermInfo>),
       fetch("full.json").then((res) => res.json() as Promise<SemesterData>),
-    ]).then(([{ latestTerm }, { classes, lastUpdated }]) => {
+    ]).then(([latestTerm, { classes, lastUpdated, termInfo }]) => {
       const classesMap = new Map(Object.entries(classes));
-      const firehoseObj = new Firehose(classesMap, term, lastUpdated, latestTerm);
+      const firehoseObj = new Firehose(
+        classesMap,
+        new Term(termInfo),
+        lastUpdated,
+        new Term(latestTerm),
+      );
       firehoseObj.callback = setState;
       firehoseObj.updateState();
       firehoseRef.current = firehoseObj;
       // @ts-ignore
       window.firehose = firehoseObj;
     });
-  }, [term]);
+  }, []);
 
   const theme = extendTheme({
     components: {
