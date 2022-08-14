@@ -18,7 +18,7 @@ import { linkClasses } from "../lib/utils";
 
 import { ClassButtons, NonClassButtons } from "./ActivityButtons";
 
-const DARK_IMAGES = ["cih", "cih1", "iap", "repeat", "rest"];
+const DARK_IMAGES = ["cih", "iap", "repeat", "rest"];
 
 /** A small image indicating a flag, like Spring or CI-H. */
 function TypeSpan(props: { flag?: string; title: string }) {
