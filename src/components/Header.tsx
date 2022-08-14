@@ -1,4 +1,4 @@
-import { Flex, Image, Select } from "@chakra-ui/react";
+import { Flex, Image, Link, Select } from "@chakra-ui/react";
 
 import { Term } from "../lib/dates";
 import { Firehose } from "../lib/firehose";
@@ -57,6 +57,7 @@ export function Header(props: { firehose: Firehose }) {
       <Select
         size="sm"
         w="fit-content"
+        mr={3}
         defaultValue={defaultValue}
         onChange={(e) => {
           const elt = e.target;
@@ -72,6 +73,7 @@ export function Header(props: { firehose: Firehose }) {
           );
         })}
       </Select>
+      <Link href="https://mit.turbovote.org/">Register to vote!</Link>
     </Flex>
   );
 }

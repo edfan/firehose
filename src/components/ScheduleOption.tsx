@@ -12,7 +12,7 @@ export function ScheduleOption(props: {
   const [tooManyOptions, setTooManyOptions] = useState(true);
 
   return (
-    <Flex direction="column" align="end" gap={2} mt={-10}>
+    <Flex direction="column" align="end" gap={2} mt={-5}>
       <Flex gap={2}>
         <Button
           onClick={() => firehose.selectOption(selectedOption - 1)}
