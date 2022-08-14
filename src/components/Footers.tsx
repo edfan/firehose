@@ -3,10 +3,12 @@ import {
   Image,
   Link,
   Radio,
+  Spinner,
   Text,
   Tooltip,
   useColorMode,
 } from "@chakra-ui/react";
+import { useState } from "react";
 
 import { ColorScheme, TColorScheme, colorModeFor } from "../lib/colors";
 import { Firehose } from "../lib/firehose";
@@ -15,7 +17,6 @@ import { useCalendarExport } from "../lib/gapi";
 /**
  * The footer on the bottom of the calendar.
  *
- * TODO: add gcal export
  * TODO: add text form?
  */
 export function LeftFooter(props: {
@@ -36,7 +37,12 @@ export function LeftFooter(props: {
     firehose.setColorScheme(scheme);
   };
 
-  const onCalendarExport = useCalendarExport(firehose);
+  const [isExporting, setIsExporting] = useState(false);
+  const onCalendarExport = useCalendarExport(
+    firehose,
+    () => setIsExporting(false),
+    () => setIsExporting(false)
+  );
 
   return (
     <Flex
@@ -59,13 +65,22 @@ export function LeftFooter(props: {
           </Radio>
         ))}
       </Flex>
-      <Tooltip label={"Make sure popups are enabled!"}>
-        <Image
-          src="img/calendar-button.svg"
-          alt="Export to Google Calendar"
-          onClick={() => onCalendarExport()}
-          style={{ cursor: "pointer" }}
-        />
+      <Tooltip
+        label={isExporting ? "Loading..." : "Make sure popups are enabled!"}
+      >
+        {isExporting ? (
+          <Spinner m={3} />
+        ) : (
+          <Image
+            src="img/calendar-button.svg"
+            alt="Export to Google Calendar"
+            onClick={() => {
+              setIsExporting(true);
+              onCalendarExport();
+            }}
+            style={{ cursor: "pointer" }}
+          />
+        )}
       </Tooltip>
       <Text mt={2} fontSize="sm">
         Beta by{" "}

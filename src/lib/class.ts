@@ -34,7 +34,7 @@ export type Flags = {
   final: boolean;
   nofinal: boolean;
   le9units: boolean;
-  half: number | boolean;
+  half: number | false;
   limited: boolean;
 };
 
@@ -149,7 +149,8 @@ export class Sections {
           this.cls,
           `${this.cls.number} ${this.shortName}`,
           this.selected.timeslots,
-          this.selected.room
+          this.selected.room,
+          this.cls.half
         )
       : null;
   }
@@ -236,6 +237,11 @@ export class Class {
   /** Hours per week, taking from evals if exists, or units if not. */
   get hours(): number {
     return this.rawClass.h || this.totalUnits;
+  }
+
+  /** The half the class lies in; 1 if first, 2 if second, else undefined. */
+  get half(): number | undefined {
+    return this.rawClass.hf ? this.rawClass.hf : undefined;
   }
 
   /** Get all calendar events corresponding to this class. */

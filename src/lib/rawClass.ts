@@ -90,7 +90,7 @@ export type RawClass = {
   /** True if has final */
   f: boolean;
   /** 1 or 2 if first / second half */
-  hf: number | boolean;
+  hf: number | false;
   /** True if limited enrollment */
   lm: boolean;
 

@@ -316,9 +316,29 @@ export class Firehose {
     this.updateActivities(false);
   }
 
+  /** Wrapper over localStorage. */
+  getStore(
+    toKey?: (key: string) => string
+  ): {
+    get: (key: string) => string | null;
+    set: (key: string, value: string) => void;
+  } {
+    const toStorageKey = toKey ?? ((key: string) => `firehose-${key}`);
+    return {
+      get: (key) => localStorage.getItem(toStorageKey(key)),
+      set: (key, value) => localStorage.setItem(toStorageKey(key), value),
+    };
+  }
+
+  /** Wrapper over term-specific localStorage. */
+  getTermStore() {
+    return this.getStore((key) => `firehose-${this.term.toString()}-${key}`);
+  }
+
   /** Attempt to load from a slot. Return whether it succeeds. */
   loadSave(id: string): void {
-    const storage = localStorage.getItem(`firehose-${this.term}-${id}`);
+    const { get } = this.getTermStore();
+    const storage = get(id);
     if (!storage) return;
     this.inflate(JSON.parse(storage));
     this.saveId = id;
@@ -327,17 +347,13 @@ export class Firehose {
 
   /** Store state as a save in localStorage, and store save metadata. */
   storeSave(id?: string, update: boolean = true): void {
+    const { set: globalSet } = this.getStore();
+    const { set: termSet } = this.getTermStore();
     if (id) {
-      localStorage.setItem(
-        `firehose-${this.term}-${id}`,
-        JSON.stringify(this.deflate())
-      );
+      termSet(id, JSON.stringify(this.deflate()));
     }
-    localStorage.setItem(`firehose-${this.term}`, JSON.stringify(this.saves));
-    localStorage.setItem(
-      "firehose-color-scheme",
-      JSON.stringify(this.colorScheme)
-    );
+    termSet("saves", JSON.stringify(this.saves));
+    globalSet("color-scheme", JSON.stringify(this.colorScheme));
     if (update) {
       this.updateState(false);
     }
@@ -381,13 +397,15 @@ export class Firehose {
 
   /** Initialize the state from either the URL or localStorage. */
   initState(): void {
-    const colorScheme = localStorage.getItem("firehose-color-scheme");
+    const { get: globalGet } = this.getStore();
+    const { get: termGet } = this.getTermStore();
+    const colorScheme = globalGet("color-scheme");
     if (colorScheme) {
       this.colorScheme = JSON.parse(colorScheme) as TColorScheme;
     }
     const params = new URLSearchParams(document.location.search);
     const param = params.get("s");
-    const saves = localStorage.getItem(`firehose-${this.term}`);
+    const saves = termGet("saves");
     if (saves) {
       this.saves = JSON.parse(saves) as Array<Save>;
     }

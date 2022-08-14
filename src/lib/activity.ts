@@ -77,17 +77,21 @@ export class Event {
   slots: Array<Timeslot>;
   /** The room of the event. */
   room: string | undefined;
+  /** If defined, 1 -> first half; 2 -> second half. */
+  half: number | undefined;
 
   constructor(
     activity: Activity,
     name: string,
     slots: Array<Timeslot>,
-    room: string | undefined
+    room: string | undefined = undefined,
+    half: number | undefined = undefined,
   ) {
     this.activity = activity;
     this.name = name;
     this.slots = slots;
     this.room = room;
+    this.half = half;
   }
 
   /** List of events that can be directly given to FullCalendar. */
@@ -133,7 +137,7 @@ export class NonClass {
 
   /** Get all calendar events corresponding to this activity. */
   get events(): Array<Event> {
-    return [new Event(this, this.name, this.timeslots, undefined)];
+    return [new Event(this, this.name, this.timeslots)];
   }
 
   /**

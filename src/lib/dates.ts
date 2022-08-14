@@ -45,7 +45,7 @@ const SLOT_OBJECTS: { [slot: number]: Slot } = {};
 
 /**
  * A thirty-minute slot. Each day has 30 slots from 8 AM to 11 PM, times five
- * days a week.
+ * days a week. When treated as an instant, a slot represents its start time.
  *
  * Each slot is assigned a slot number. Monday slots are 0 to 29, Tuesday are
  * 30 to 59, etc., slot number 0 is Monday 8 AM to 8:30 AM, etc.
@@ -84,12 +84,26 @@ export class Slot {
     return Slot.fromSlotNumber(this.slot + slots);
   }
 
-  /** The date in the week of 2001-01-01 that this starts in. */
-  get startDate(): Date {
-    const day = Math.floor(this.slot / 30) + 1;
+  /**
+   * The (local timezone) date on the day of date that this starts in. Assumes
+   * that date is the right day of the week.
+   */
+  onDate(date: Date): Date {
     const hour = Math.floor((this.slot % 30) / 2) + 8;
     const minute = (this.slot % 2) * 30;
-    return new Date(2001, 0, day, hour, minute);
+    return new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      hour,
+      minute
+    );
+  }
+
+  /** The date in the week of 2001-01-01 that this starts in. */
+  get startDate(): Date {
+    // conveniently enough, 2001-01-01 is a Monday:
+    return this.onDate(new Date(2001, 0, this.weekday));
   }
 
   /** The date in the week of 2001-01-01 that this ends in. */
@@ -97,14 +111,14 @@ export class Slot {
     return this.add(1).startDate;
   }
 
-  /** The day of the week this slot falls in, as a number from 0 to 4 */
+  /** The day of the week this slot falls in, as a number from 1 to 5. */
   get weekday(): number {
-    return Math.floor(this.slot / 30);
+    return Math.floor(this.slot / 30) + 1;
   }
 
   /** Convert a slot number to a day string. */
   get dayString(): string {
-    return WEEKDAY_STRINGS[this.weekday];
+    return WEEKDAY_STRINGS[this.weekday - 1];
   }
 
   /** Convert a slot number to a time string. */
@@ -152,17 +166,18 @@ export class Term {
     mondayScheduleDate?: string;
     holidayDates: Array<string>;
   }) {
+    const midnight = (date: string) => new Date(`${date}T00:00:00`);
     this.year = urlName.substring(1);
     this.semester = urlName[0] as keyof typeof SEMESTER;
-    this.start = new Date(startDate);
-    this.h1End = new Date(h1EndDate);
-    this.h2Start = new Date(h2StartDate);
-    this.end = new Date(endDate);
+    this.start = midnight(startDate);
+    this.h1End = midnight(h1EndDate);
+    this.h2Start = midnight(h2StartDate);
+    this.end = midnight(endDate);
     this.mondaySchedule =
       mondayScheduleDate === undefined
         ? undefined
-        : new Date(mondayScheduleDate);
-    this.holidays = holidayDates.map((date) => new Date(date));
+        : midnight(mondayScheduleDate);
+    this.holidays = holidayDates.map((date) => midnight(date));
   }
 
   /** e.g. "2022" */
@@ -210,5 +225,40 @@ export class Term {
   /** e.g. "f22" */
   toString(): string {
     return this.urlName;
+  }
+
+  /** The date a slot starts on. */
+  startDateFor(slot: Slot, secondHalf: boolean = false): Date {
+    let date = new Date((secondHalf ? this.h2Start : this.start).getTime());
+    while (date.getDay() !== slot.weekday) {
+      date.setDate(date.getDate() + 1);
+    }
+    return slot.onDate(date);
+  }
+
+  /** The date a slot ends on, plus an extra day. */
+  endDateFor(slot: Slot, firstHalf: boolean = false): Date {
+    let date = new Date((firstHalf ? this.h1End : this.end).getTime());
+    while (date.getDay() !== slot.weekday) {
+      date.setDate(date.getDate() - 1);
+    }
+    // plus an extra day, for inclusivity issues
+    date.setDate(date.getDate() + 1);
+    return slot.onDate(date);
+  }
+
+  /** Dates that a given slot *doesn't* run on. */
+  exDatesFor(slot: Slot): Array<Date> {
+    const res = this.holidays.filter((date) => date.getDay() === slot.weekday);
+    // ex dates can't be empty, so add an extra one:
+    res.push(new Date("2000-01-01"));
+    return res.map((date) => slot.onDate(date));
+  }
+
+  /** An extra date a given slot would fall on, if it exists. */
+  rDateFor(slot: Slot): Date | undefined {
+    return slot.weekday === 1 && this.mondaySchedule
+      ? slot.onDate(this.mondaySchedule)
+      : undefined;
   }
 }
