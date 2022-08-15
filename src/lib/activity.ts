@@ -48,8 +48,8 @@ export class Timeslot {
    */
   conflicts(other: Timeslot): boolean {
     return (
-      this.startSlot.slot <= other.endSlot.slot &&
-      other.startSlot.slot <= this.endSlot.slot
+      this.startSlot.slot < other.endSlot.slot &&
+      other.startSlot.slot < this.endSlot.slot
     );
   }
 

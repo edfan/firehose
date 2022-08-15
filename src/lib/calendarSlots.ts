@@ -34,14 +34,14 @@ function selectHelper(
 
   for (const sec of secs.sections) {
     const newConflicts = sec.countConflicts(filledSlots);
-    if (curConflicts + newConflicts > foundMinConflicts) continue;
+    if (curConflicts + newConflicts > minConflicts) continue;
 
     const { options: newOptions, minConflicts: newMinConflicts } = selectHelper(
       remainingSections,
       filledSlots.concat(sec.timeslots),
       foundOptions.concat(sec),
       curConflicts + newConflicts,
-      foundMinConflicts
+      minConflicts
     );
 
     if (newMinConflicts < minConflicts) {
@@ -70,7 +70,7 @@ function selectHelper(
  */
 export function scheduleSlots(
   selectedClasses: Array<Class>,
-  selectedNonClasses: Array<NonClass>,
+  selectedNonClasses: Array<NonClass>
 ): {
   options: Array<Array<Section>>;
   conflicts: number;
