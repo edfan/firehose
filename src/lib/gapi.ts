@@ -69,7 +69,7 @@ export function useCalendarExport(
 ): () => void {
   /** Insert a new calendar for this semester. */
   const insertCalendar = async (): Promise<string> => {
-    const calendarName = `Firehose ${firehose.term.niceName}`;
+    const calendarName = `Firehose: ${firehose.term.niceName}`;
     const resp = await gapi.client.calendar.calendars.insert(
       {},
       { summary: calendarName }
@@ -95,10 +95,12 @@ export function useCalendarExport(
     firehose.selectedActivities
       .flatMap((activity) => toEvents(activity, firehose.term))
       .forEach((resource) =>
-        gapi.client.calendar.events.insert({
-          calendarId,
-          resource,
-        })
+        batch.add(
+          gapi.client.calendar.events.insert({
+            calendarId,
+            resource,
+          })
+        )
       );
     await batch.then();
   };
