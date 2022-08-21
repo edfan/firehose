@@ -53,15 +53,19 @@ export function App() {
   useEffect(() => {
     Promise.all([
       // TODO update url name: path might be wrong
-      fetch("latestTerm.json").then((res) => res.json() as Promise<TermInfo>),
-      fetch("full.json").then((res) => res.json() as Promise<SemesterData>),
+      fetch("latestTerm.json", { cache: "no-cache" }).then(
+        (res) => res.json() as Promise<TermInfo>
+      ),
+      fetch("full.json", { cache: "no-cache" }).then(
+        (res) => res.json() as Promise<SemesterData>
+      ),
     ]).then(([latestTerm, { classes, lastUpdated, termInfo }]) => {
       const classesMap = new Map(Object.entries(classes));
       const firehoseObj = new Firehose(
         classesMap,
         new Term(termInfo),
         lastUpdated,
-        new Term(latestTerm),
+        new Term(latestTerm)
       );
       firehoseObj.callback = setState;
       firehoseObj.updateState();
@@ -100,7 +104,7 @@ export function App() {
           borderBottomColor="gray.400"
         >
           This version is in beta. Saved info may disappear without warning.{" "}
-          <Link href="https://forms.gle/6BQ8wMXCiHQBajGx7">
+          <Link href="https://forms.gle/Fh1N3Uy1Kcjf5hnQ9">
             Share your feedback!
           </Link>
         </Box>
