@@ -63,11 +63,11 @@ export function classNumberMatch(
 export function linkClasses(firehose: Firehose, str: string): JSX.Element {
   return (
     <>
-      {str.split(/([0-9]*[A-Z]*\.[0-9A-Z]+)/).map((text) => {
+      {str.split(/([0-9]*[A-Z]*\.[0-9A-Z]+)/).map((text, i) => {
         const cls = firehose.classes.get(text);
         if (!cls) return text;
         return (
-          <Link key={text} onClick={() => firehose.setViewedActivity(cls)}>
+          <Link key={i} onClick={() => firehose.setViewedActivity(cls)}>
             {text}
           </Link>
         );
