@@ -167,10 +167,8 @@ export class NonClass {
         slot.numSlots,
       ]),
       this.name,
+      this.backgroundColor,
     ];
-    if (this.manualColor) {
-      res.push(this.backgroundColor);
-    }
     return res;
   }
 
@@ -181,9 +179,8 @@ export class NonClass {
       (slot) => new Timeslot(...slot)
     );
     this.name = name as string;
-    if (backgroundColor) {
-      this.backgroundColor = backgroundColor as string;
-    }
+    this.manualColor = true;
+    this.backgroundColor = backgroundColor as string;
   }
 }
 
