@@ -119,6 +119,8 @@ classes['6.S977']['u3'] = 9
 classes['6.S977']['n'] = 'The Sum of Squares Methods'
 classes['6.S977']['d'] = 'Study of algorithms and computational complexity through the lens of the Sum of Squares method (SoS), a powerful approach to algorithm design generalizing linear programming and spectral methods. Specific sub-topics vary and are chosen with student input, potentially including algorithms for combinatorial and continuous optimization (graphs, constraint satisfaction problems, unique games conjecture), applications to high-dimensional algorithmic statistics (robustness, privacy, method of moments), applications to quantum information, and an SoS perspective on computational complexity (of NP-hard problems and/or of statistical inference).'
 
+classes['21M.707']['d'] = 'Explore performance and cultural production of Black intellectuals and artists on Broadway and in local communities. Engage with intersections of race, class, gender, sexuality, abilities, and social justice. Class discussions, diverse readings, creative assignments, live performances, exhibits, and guest artists enrich our study. Everyone is welcome. No prerequisites.'
+
 """ try:
     # Special case 14.01/14.02 rec-only sections.
     classes['14.01R'] = copy.deepcopy(classes['14.01'])
