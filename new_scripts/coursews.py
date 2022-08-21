@@ -145,10 +145,6 @@ def parse_joint(joint):
 
 instructors = 'fall_instructors' if term[-2:] == 'FA' else 'spring_instructors'
 
-with open("course_six_renumbering.json") as f:
-    course_six_renumbering = json.loads(f.read())
-    course_six_renumbering_inv = {v: k for k, v in course_six_renumbering.items()}
-
 for c in raw_classes:
     if c['type'] == 'Class':
         number = c['id']
