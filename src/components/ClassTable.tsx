@@ -96,6 +96,7 @@ function ClassInput(props: {
   };
 
   const onEnter = () => {
+    // first check if the first result matches
     const { numbers, class: cls } = searchResults.current?.[0] ?? {};
     if (
       searchResults.current?.length === 1 ||
@@ -103,6 +104,11 @@ function ClassInput(props: {
     ) {
       firehose.toggleActivity(cls);
       onClassInputChange("");
+    }
+    // else check if this number exists exactly
+    if (firehose.classes.has(classInput)) {
+      const cls = firehose.classes.get(classInput);
+      firehose.toggleActivity(cls);
     }
   };
 

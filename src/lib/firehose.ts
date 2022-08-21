@@ -98,9 +98,9 @@ export class Firehose {
   //========================================================================
   // Activity handlers
 
-  /** Set the current class description being viewed. */
-  setViewedActivity(cls: Activity | undefined): void {
-    this.viewedActivity = cls;
+  /** Set the current activity being viewed. */
+  setViewedActivity(activity: Activity | undefined): void {
+    this.viewedActivity = activity;
     this.updateState();
   }
 
@@ -159,6 +159,12 @@ export class Firehose {
     this.updateActivities();
   }
 
+  /** Lock a specific section of a class. */
+  lockSection(secs: Sections, sec: SectionLockOption): void {
+    secs.lockSection(sec);
+    this.updateActivities();
+  }
+
   //========================================================================
   // NonClass handlers
 
@@ -180,12 +186,6 @@ export class Firehose {
   /** Remove all equal timeslots from currently viewed activity. */
   removeTimeslot(nonClass: NonClass, slot: Timeslot): void {
     nonClass.removeTimeslot(slot);
-    this.updateActivities();
-  }
-
-  /** Lock a specific section of a class. */
-  lockSection(secs: Sections, sec: SectionLockOption): void {
-    secs.lockSection(sec);
     this.updateActivities();
   }
 

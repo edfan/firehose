@@ -31,7 +31,7 @@ export function ScheduleOption(props: {
       {tooManyOptions && totalOptions > 15 && (
         <Flex
           align="center"
-          bg="gray.50"
+          bg="whiteAlpha.50"
           gap={1}
           px={2}
           py={1}

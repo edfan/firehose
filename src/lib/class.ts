@@ -219,6 +219,11 @@ export class Class {
     return this.rawClass.no;
   }
 
+  /** Old number, e.g. "6.036" for 6.3900. May or may not exist. */
+  get oldNumber(): string | undefined {
+    return /^\[(.*)\]/.exec(this.name)?.[1];
+  }
+
   /** Course, e.g. "6". */
   get course(): string {
     return this.rawClass.co;
@@ -363,6 +368,15 @@ export class Class {
         url: `https://sisapp.mit.edu/ose-rpt/subjectEvaluationSearch.htm?search=Search&subjectCode=${this.number}`,
       },
     ];
+
+    if (this.oldNumber) {
+      // TODO: show evals for old numbers?
+      extraUrls.at(-1)!.label = `Class Evaluations (for ${this.number})`;
+      extraUrls.push({
+        label: `Class Evaluations (for ${this.oldNumber})`,
+        url: `https://sisapp.mit.edu/ose-rpt/subjectEvaluationSearch.htm?search=Search&subjectCode=${this.oldNumber}`,
+      });
+    }
 
     if (this.rawClass.u) {
       extraUrls.unshift({ label: "More Info", url: this.rawClass.u });

@@ -11,16 +11,12 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react";
-import { ComponentProps, FormEvent, useState } from "react";
+import { ComponentProps, FormEvent, useEffect, useState } from "react";
 import { HexColorPicker } from "react-colorful";
 
 import { Activity, NonClass, Timeslot } from "../lib/activity";
 import { Class, LockOption, SectionLockOption, Sections } from "../lib/class";
-import {
-  WEEKDAY_STRINGS,
-  TIMESLOT_STRINGS,
-  Slot,
-} from "../lib/dates";
+import { WEEKDAY_STRINGS, TIMESLOT_STRINGS, Slot } from "../lib/dates";
 import { Firehose } from "../lib/firehose";
 
 import { ColorButton } from "./SelectedActivities";
@@ -268,7 +264,6 @@ export function NonClassButtons(props: {
         setIsRenaming(false);
       };
       const onCancel = () => {
-        setName(activity.name);
         setIsRenaming(false);
       };
       const renderButtons = () => (
@@ -281,12 +276,16 @@ export function NonClassButtons(props: {
     }
 
     const renderHeading = () => <Heading size="sm">{activity.name}</Heading>;
+    const onRename = () => {
+      setName(activity.name);
+      setIsRenaming(true);
+    };
     const renderButtons = () => (
       <>
         <Button onClick={() => firehose.toggleActivity(activity)}>
           {isSelected ? "Remove activity" : "Add activity"}
         </Button>
-        <Button onClick={() => setIsRenaming(true)}>Rename activity</Button>
+        <Button onClick={onRename}>Rename activity</Button>
         {isSelected && (
           <ToggleButton active={showColors} setActive={setShowColors}>
             Edit color

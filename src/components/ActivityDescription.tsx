@@ -159,7 +159,7 @@ function ClassBody(props: { cls: Class; firehose: Firehose }) {
       {extraUrls.length > 0 && (
         <Flex gap={4}>
           {extraUrls.map<ReactNode>(({ label, url }) => (
-            <Link key={label} href={url}>
+            <Link key={label} href={url} target="_blank">
               {label}
             </Link>
           ))}

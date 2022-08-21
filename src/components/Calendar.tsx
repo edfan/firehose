@@ -23,7 +23,12 @@ export function Calendar(props: {
 
   const renderEvent = ({ event }: { event: EventApi; timeText: string }) => {
     return (
-      <Box color={textColor(event.backgroundColor)} p={0.5} lineHeight={1.3}>
+      <Box
+        color={textColor(event.backgroundColor)}
+        p={0.5}
+        lineHeight={1.3}
+        cursor="pointer"
+      >
         <Text
           fontSize="sm"
           fontWeight={500}
