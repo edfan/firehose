@@ -11,7 +11,7 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react";
-import { ComponentProps, FormEvent, useEffect, useState } from "react";
+import { ComponentProps, FormEvent, useState } from "react";
 import { HexColorPicker } from "react-colorful";
 
 import { Activity, NonClass, Timeslot } from "../lib/activity";

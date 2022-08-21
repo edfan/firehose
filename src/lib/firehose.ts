@@ -81,7 +81,7 @@ export class Firehose {
     /** String representing last update time. */
     public readonly lastUpdated: string,
     /** The latest term object. */
-    public readonly latestTerm: Term,
+    public readonly latestTerm: Term
   ) {
     this.classes = new Map();
     rawClasses.forEach((cls, number) => {
@@ -339,6 +339,12 @@ export class Firehose {
 
   /** Attempt to load from a slot. Return whether it succeeds. */
   loadSave(id: string): void {
+    // if we loaded from a url, clear the ?s= first
+    const url = new URL(window.location.href);
+    if (url.searchParams.has("s")) {
+      url.searchParams.delete("s");
+      window.history.pushState({}, "", url);
+    }
     const { get } = this.getTermStore();
     const storage = get(id);
     if (!storage) return;
