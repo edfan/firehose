@@ -14,11 +14,7 @@ import { ColorScheme, TColorScheme, colorModeFor } from "../lib/colors";
 import { Firehose } from "../lib/firehose";
 import { useCalendarExport } from "../lib/gapi";
 
-/**
- * The footer on the bottom of the calendar.
- *
- * TODO: add text form?
- */
+/** The footer on the bottom of the calendar. */
 export function LeftFooter(props: {
   colorScheme: TColorScheme;
   firehose: Firehose;

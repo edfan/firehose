@@ -41,11 +41,7 @@ function ActivityButton(props: { activity: Activity; firehose: Firehose }) {
   );
 }
 
-/**
- * List of selected activities; one button for each activity.
- *
- * TODO: make buttons draggable
- */
+/** List of selected activities; one button for each activity. */
 export function SelectedActivities(props: {
   selectedActivities: Array<Activity>;
   units: number;

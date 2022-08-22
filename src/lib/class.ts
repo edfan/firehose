@@ -169,12 +169,7 @@ export class Sections {
   }
 }
 
-/**
- * An entire class, e.g. 6.036, and its selected sections.
- *
- * TODO: should we allow users to add their own custom sections? and if so,
- * should they go here or Sections?
- */
+/** An entire class, e.g. 6.036, and its selected sections. */
 export class Class {
   /** The RawClass being wrapped around. */
   readonly rawClass: RawClass;
@@ -370,7 +365,6 @@ export class Class {
     ];
 
     if (this.oldNumber) {
-      // TODO: show evals for old numbers?
       extraUrls.at(-1)!.label = `Class Evaluations (for ${this.number})`;
       extraUrls.push({
         label: `Class Evaluations (for ${this.oldNumber})`,
@@ -422,12 +416,7 @@ export class Class {
     ];
   }
 
-  /**
-   * Inflate a class with info from the output of deflate.
-   *
-   * TODO: it's possible that sections change between when this class was
-   * serialized and when it becomes parsed; we currently don't guard that.
-   */
+  /** Inflate a class with info from the output of deflate. */
   inflate(parsed: any): void {
     if (typeof parsed === "string") {
       // just the class number, ignore

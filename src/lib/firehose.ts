@@ -11,6 +11,7 @@ import {
   fallbackColor,
 } from "./colors";
 import { RawClass } from "./rawClass";
+import { Store } from "./store";
 import { sum, urldecode, urlencode } from "./utils";
 
 /** A save has an ID and a name. */
@@ -44,6 +45,8 @@ export class Firehose {
   options: Array<Array<Section>> = [[]];
   /** Current number of schedule conflicts. */
   conflicts: number = 0;
+  /** Browser-specific saved state. */
+  store: Store;
 
   // The following are React state, so should be private. Even if we pass the
   // Firehose object to React components, they shouldn't be looking at these
@@ -84,6 +87,7 @@ export class Firehose {
     public readonly latestTerm: Term
   ) {
     this.classes = new Map();
+    this.store = new Store(term.toString());
     rawClasses.forEach((cls, number) => {
       this.classes.set(number, new Class(cls, this.colorScheme));
     });
@@ -231,9 +235,6 @@ export class Firehose {
   /**
    * Update selected activities: reschedule them and assign colors. Call after
    * every update of this.selectedClasses or this.selectedActivities.
-   *
-   * TODO: measure performance; if it takes a hit, then add option to only
-   *    reschedule slash recolor.
    */
   updateActivities(save: boolean = true): void {
     chooseColors(this.selectedActivities, this.colorScheme);
@@ -249,8 +250,6 @@ export class Firehose {
    * Does {@param cls} fit into current schedule without increasing conflicts?
    * Used for the "fits schedule" filter in ClassTable. Might be slow; careful
    * with using this too frequently.
-   *
-   * TODO: measure performance
    */
   fitsSchedule(cls: Class): boolean {
     return (
@@ -318,25 +317,6 @@ export class Firehose {
     this.updateActivities(false);
   }
 
-  /** Wrapper over localStorage. */
-  getStore(
-    toKey?: (key: string) => string
-  ): {
-    get: (key: string) => string | null;
-    set: (key: string, value: string) => void;
-  } {
-    const toStorageKey = toKey ?? ((key: string) => `firehose-${key}`);
-    return {
-      get: (key) => localStorage.getItem(toStorageKey(key)),
-      set: (key, value) => localStorage.setItem(toStorageKey(key), value),
-    };
-  }
-
-  /** Wrapper over term-specific localStorage. */
-  getTermStore() {
-    return this.getStore((key) => `firehose-${this.term.toString()}-${key}`);
-  }
-
   /** Attempt to load from a slot. Return whether it succeeds. */
   loadSave(id: string): void {
     // if we loaded from a url, clear the ?s= first
@@ -345,8 +325,7 @@ export class Firehose {
       url.searchParams.delete("s");
       window.history.pushState({}, "", url);
     }
-    const { get } = this.getTermStore();
-    const storage = get(id);
+    const storage = this.store.get(id);
     if (!storage) return;
     this.inflate(JSON.parse(storage));
     this.saveId = id;
@@ -355,13 +334,11 @@ export class Firehose {
 
   /** Store state as a save in localStorage, and store save metadata. */
   storeSave(id?: string, update: boolean = true): void {
-    const { set: globalSet } = this.getStore();
-    const { set: termSet } = this.getTermStore();
     if (id) {
-      termSet(id, JSON.stringify(this.deflate()));
+      this.store.set(id, JSON.stringify(this.deflate()));
     }
-    termSet("saves", JSON.stringify(this.saves));
-    globalSet("color-scheme", JSON.stringify(this.colorScheme));
+    this.store.set("saves", JSON.stringify(this.saves));
+    this.store.globalSet("color-scheme", JSON.stringify(this.colorScheme));
     if (update) {
       this.updateState(false);
     }
@@ -405,15 +382,13 @@ export class Firehose {
 
   /** Initialize the state from either the URL or localStorage. */
   initState(): void {
-    const { get: globalGet } = this.getStore();
-    const { get: termGet } = this.getTermStore();
-    const colorScheme = globalGet("color-scheme");
+    const colorScheme = this.store.globalGet("color-scheme");
     if (colorScheme) {
       this.colorScheme = JSON.parse(colorScheme) as TColorScheme;
     }
     const params = new URLSearchParams(document.location.search);
     const param = params.get("s");
-    const saves = termGet("saves");
+    const saves = this.store.get("saves");
     if (saves) {
       this.saves = JSON.parse(saves) as Array<Save>;
     }
