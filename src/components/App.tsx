@@ -33,12 +33,15 @@ type SemesterData = {
   termInfo: TermInfo;
 };
 
-/** The main application. */
-export function App() {
+/** Hook to fetch data and initialize Firehose object. */
+function useFirehose(): {
+  firehose?: Firehose;
+  state: FirehoseState;
+} {
+  const [loading, setLoading] = useState(true);
   const firehoseRef = useRef<Firehose>();
   const firehose = firehoseRef.current;
 
-  const [loading, setLoading] = useState(true);
   const [state, setState] = useState<FirehoseState>({
     selectedActivities: [],
     viewedActivity: undefined,
@@ -52,15 +55,17 @@ export function App() {
     colorScheme: colorSchemePresets[0],
   });
 
+  /** Fetch from the url, which is JSON of type T. */
+  const fetchNoCache = async <T,>(url: string): Promise<T> => {
+    const res = await fetch(url, { cache: "no-cache" });
+    return res.json() as Promise<T>;
+  };
+
   useEffect(() => {
+    // TODO update fetch url name: path might be wrong
     Promise.all([
-      // TODO update url name: path might be wrong
-      fetch("latestTerm.json", { cache: "no-cache" }).then(
-        (res) => res.json() as Promise<TermInfo>
-      ),
-      fetch("full.json", { cache: "no-cache" }).then(
-        (res) => res.json() as Promise<SemesterData>
-      ),
+      fetchNoCache<TermInfo>("latestTerm.json"),
+      fetchNoCache<SemesterData>("full.json"),
     ]).then(([latestTerm, { classes, lastUpdated, termInfo }]) => {
       const classesMap = new Map(Object.entries(classes));
       const firehoseObj = new Firehose(
@@ -79,6 +84,7 @@ export function App() {
   const { colorMode, toggleColorMode } = useColorMode();
   useEffect(() => {
     if (loading || !firehose) return;
+    // if colorScheme changes, change colorMode to match
     firehose.callback = (newState: FirehoseState) => {
       setState(newState);
       if (colorMode !== newState.colorScheme.colorMode) {
@@ -87,6 +93,13 @@ export function App() {
     };
     firehose?.updateState();
   }, [colorMode, firehose, loading, toggleColorMode]);
+
+  return { firehose, state };
+}
+
+/** The main application. */
+export function App() {
+  const { firehose, state } = useFirehose();
 
   const theme = extendTheme({
     components: {
