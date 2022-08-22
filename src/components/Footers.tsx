@@ -6,32 +6,20 @@ import {
   Spinner,
   Text,
   Tooltip,
-  useColorMode,
 } from "@chakra-ui/react";
 import { useState } from "react";
 
-import { ColorScheme, TColorScheme, colorModeFor } from "../lib/colors";
+import { ColorScheme, colorSchemePresets } from "../lib/colors";
 import { Firehose } from "../lib/firehose";
 import { useCalendarExport } from "../lib/gapi";
 
 /** The footer on the bottom of the calendar. */
 export function LeftFooter(props: {
-  colorScheme: TColorScheme;
+  colorScheme: ColorScheme;
   firehose: Firehose;
 }) {
   const { colorScheme, firehose } = props;
   const year = new Date().getFullYear();
-
-  const { colorMode, toggleColorMode } = useColorMode();
-  const onSetColorScheme = (scheme: string) => {
-    const isColorScheme = (s: string): s is TColorScheme =>
-      (Object.values(ColorScheme) as Array<string>).includes(s);
-    if (!isColorScheme(scheme)) return;
-    if (colorMode !== colorModeFor(scheme)) {
-      toggleColorMode();
-    }
-    firehose.setColorScheme(scheme);
-  };
 
   const [isExporting, setIsExporting] = useState(false);
   const onCalendarExport = useCalendarExport(
@@ -51,13 +39,13 @@ export function LeftFooter(props: {
     >
       <Flex gap={4}>
         Color scheme:
-        {Object.values(ColorScheme).map((scheme) => (
+        {colorSchemePresets.map((scheme) => (
           <Radio
-            key={scheme}
-            isChecked={scheme === colorScheme}
-            onChange={() => onSetColorScheme(scheme)}
+            key={scheme.name}
+            isChecked={scheme.name === colorScheme.name}
+            onChange={() => firehose.setColorScheme(scheme)}
           >
-            {scheme}
+            {scheme.name}
           </Radio>
         ))}
       </Flex>

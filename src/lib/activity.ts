@@ -2,7 +2,7 @@ import { EventInput } from "@fullcalendar/core";
 import { nanoid } from "nanoid";
 
 import { Class } from "./class";
-import { TColorScheme, fallbackColor } from "./colors";
+import { ColorScheme, fallbackColor } from "./colors";
 import { Slot } from "./dates";
 import { RawTimeslot } from "./rawClass";
 import { sum } from "./utils";
@@ -120,7 +120,7 @@ export class NonClass {
   manualColor: boolean = false;
   timeslots: Array<Timeslot> = [];
 
-  constructor(colorScheme: TColorScheme) {
+  constructor(colorScheme: ColorScheme) {
     this.id = nanoid(8);
     this.backgroundColor = fallbackColor(colorScheme);
   }

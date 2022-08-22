@@ -1,5 +1,5 @@
 import { Timeslot, Event } from "./activity";
-import { TColorScheme, fallbackColor } from "./colors";
+import { ColorScheme, fallbackColor } from "./colors";
 import { RawClass, RawSection } from "./rawClass";
 
 // This isn't exported intentionally. Instead of using this, can you use
@@ -180,7 +180,7 @@ export class Class {
   /** Is the color set by the user (as opposed to chosen automatically?) */
   manualColor: boolean = false;
 
-  constructor(rawClass: RawClass, colorScheme: TColorScheme) {
+  constructor(rawClass: RawClass, colorScheme: ColorScheme) {
     this.rawClass = rawClass;
     this.sections = rawClass.s
       .map((kind) =>

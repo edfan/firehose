@@ -6,9 +6,9 @@ import { Class, Section, SectionLockOption, Sections } from "./class";
 import { Term } from "./dates";
 import {
   ColorScheme,
-  TColorScheme,
   chooseColors,
   fallbackColor,
+  colorSchemePresets,
 } from "./colors";
 import { RawClass } from "./rawClass";
 import { Store } from "./store";
@@ -31,7 +31,7 @@ export type FirehoseState = {
   warnings: Array<string>;
   saveId: string;
   saves: Array<Save>;
-  colorScheme: TColorScheme;
+  colorScheme: ColorScheme;
 };
 
 /**
@@ -70,7 +70,7 @@ export class Firehose {
   /** Names of each save slot. */
   private saves: Array<Save> = [];
   /** Current color scheme. */
-  private colorScheme: TColorScheme = ColorScheme.Light;
+  private colorScheme: ColorScheme = colorSchemePresets[0];
 
   /** React callback to update state. */
   callback: ((state: FirehoseState) => void) | undefined;
@@ -264,7 +264,7 @@ export class Firehose {
   }
 
   /** Set the color scheme. */
-  setColorScheme(colorScheme: TColorScheme): void {
+  setColorScheme(colorScheme: ColorScheme): void {
     this.colorScheme = colorScheme;
     chooseColors(this.selectedActivities, this.colorScheme);
     this.updateState();
@@ -338,7 +338,7 @@ export class Firehose {
       this.store.set(id, JSON.stringify(this.deflate()));
     }
     this.store.set("saves", JSON.stringify(this.saves));
-    this.store.globalSet("color-scheme", JSON.stringify(this.colorScheme));
+    this.store.globalSet("colorScheme", JSON.stringify(this.colorScheme));
     if (update) {
       this.updateState(false);
     }
@@ -382,9 +382,9 @@ export class Firehose {
 
   /** Initialize the state from either the URL or localStorage. */
   initState(): void {
-    const colorScheme = this.store.globalGet("color-scheme");
+    const colorScheme = this.store.globalGet("colorScheme");
     if (colorScheme) {
-      this.colorScheme = JSON.parse(colorScheme) as TColorScheme;
+      this.colorScheme = JSON.parse(colorScheme) as ColorScheme;
     }
     const params = new URLSearchParams(document.location.search);
     const param = params.get("s");

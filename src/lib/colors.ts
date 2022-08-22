@@ -1,39 +1,16 @@
 import { Activity } from "./activity";
 
-/** The possible color schemes. */
-export const ColorScheme = {
-  Light: "Light",
-  Dark: "Dark",
-  Classic: "Classic",
-  ClassicDark: "Classic Dark"
-} as const;
+/** The type of color schemes. */
+export type ColorScheme = {
+  name: string;
+  colorMode: "light" | "dark";
+  backgroundColors: Array<string>;
+};
 
-/** The type of {@link ColorScheme}. */
-export type TColorScheme = typeof ColorScheme[keyof typeof ColorScheme];
-
-/** The set of activity background colors for a color scheme. */
-const BACKGROUND_COLORS = {
-  [ColorScheme.Light]: [
-    "#D32F2F",
-    "#2E7D32",
-    "#1565C0",
-    "#BF360C",
-    "#00838f",
-    "#AD1457",
-    "#827717",
-    "#795548",
-  ],
-  [ColorScheme.Dark]: [
-    "#D47777",
-    "#7BC77F",
-    "#8AA3BF",
-    "#E68E73",
-    "#9BC6C9",
-    "#CC9DB1",
-    "#F5EA87",
-    "#DE9D85",
-  ],
-  [ColorScheme.Classic]: [
+const classic: ColorScheme = {
+  name: "Classic",
+  colorMode: "light",
+  backgroundColors: [
     "#23AF83",
     "#3E9ED1",
     "#AE7CB4",
@@ -45,7 +22,12 @@ const BACKGROUND_COLORS = {
     "#8FBDD9",
     "#A2ACB0",
   ],
-  [ColorScheme.ClassicDark]: [
+};
+
+const classicDark: ColorScheme = {
+  name: "Classic (Dark)",
+  colorMode: "dark",
+  backgroundColors: [
     "#36C0A5",
     "#5EBEF1",
     "#CE9CD4",
@@ -57,21 +39,51 @@ const BACKGROUND_COLORS = {
     "#AFDDF9",
     "#C2CCD0",
   ],
-} as const;
+};
 
-/** Whether a color scheme is UI light or UI dark. */
-export function colorModeFor(colorScheme: TColorScheme): "light" | "dark" {
-  switch (colorScheme) {
-    case ColorScheme.Light: return 'light';
-    case ColorScheme.Dark: return 'dark';
-    case ColorScheme.Classic: return 'light';
-    case ColorScheme.ClassicDark: return 'dark';
-  }
-}
+const highContrast: ColorScheme = {
+  name: "High Contrast",
+  colorMode: "light",
+  backgroundColors: [
+    "#D32F2F",
+    "#2E7D32",
+    "#1565C0",
+    "#BF360C",
+    "#00838f",
+    "#AD1457",
+    "#827717",
+    "#795548",
+  ],
+};
+
+const highContrastDark: ColorScheme = {
+  name: "High Contrast (Dark)",
+  colorMode: "dark",
+  backgroundColors: [
+    "#36C0A5",
+    "#5EBEF1",
+    "#CE9CD4",
+    "#EA636B",
+    "#FF995C",
+    "#F7CD20",
+    "#47CE80",
+    "#FFAEB4",
+    "#AFDDF9",
+    "#C2CCD0",
+  ],
+};
+
+/** The default color schemes. */
+export const colorSchemePresets: Array<ColorScheme> = [
+  classic,
+  classicDark,
+  highContrast,
+  highContrastDark,
+];
 
 /** The default background color for a color scheme. */
-export function fallbackColor(colorScheme: TColorScheme): string {
-  return colorModeFor(colorScheme) === 'light' ? '#4A5568' : '#CBD5E0';
+export function fallbackColor(colorScheme: ColorScheme): string {
+  return colorScheme.colorMode === "light" ? "#4A5568" : "#CBD5E0";
 }
 
 /** MurmurHash3, seeded with a string. */
@@ -94,10 +106,10 @@ function murmur3(str: string): () => number {
  */
 export function chooseColors(
   activities: Array<Activity>,
-  colorScheme: TColorScheme
+  colorScheme: ColorScheme
 ): void {
   // above this length, we give up trying to be nice:
-  const colorLen = BACKGROUND_COLORS[colorScheme].length;
+  const colorLen = colorScheme.backgroundColors.length;
   const indices: Array<number> = [];
   for (const activity of activities) {
     if (activity.manualColor) continue;
@@ -109,7 +121,7 @@ export function chooseColors(
       index = hash() % colorLen;
     }
     indices.push(index);
-    activity.backgroundColor = BACKGROUND_COLORS[colorScheme][index];
+    activity.backgroundColor = colorScheme.backgroundColors[index];
   }
 }
 

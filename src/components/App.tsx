@@ -7,9 +7,10 @@ import {
   Link,
   Spinner,
   extendTheme,
+  useColorMode,
 } from "@chakra-ui/react";
 
-import { ColorScheme } from "../lib/colors";
+import { colorSchemePresets } from "../lib/colors";
 import { Term, TermInfo } from "../lib/dates";
 import { Firehose, FirehoseState } from "../lib/firehose";
 import { RawClass } from "../lib/rawClass";
@@ -37,6 +38,7 @@ export function App() {
   const firehoseRef = useRef<Firehose>();
   const firehose = firehoseRef.current;
 
+  const [loading, setLoading] = useState(true);
   const [state, setState] = useState<FirehoseState>({
     selectedActivities: [],
     viewedActivity: undefined,
@@ -47,7 +49,7 @@ export function App() {
     warnings: [],
     saveId: "",
     saves: [],
-    colorScheme: ColorScheme.Light,
+    colorScheme: colorSchemePresets[0],
   });
 
   useEffect(() => {
@@ -67,13 +69,24 @@ export function App() {
         lastUpdated,
         new Term(latestTerm)
       );
-      firehoseObj.callback = setState;
-      firehoseObj.updateState();
       firehoseRef.current = firehoseObj;
+      setLoading(false);
       // @ts-ignore
       window.firehose = firehoseObj;
     });
   }, []);
+
+  const { colorMode, toggleColorMode } = useColorMode();
+  useEffect(() => {
+    if (loading || !firehose) return;
+    firehose.callback = (newState: FirehoseState) => {
+      setState(newState);
+      if (colorMode !== newState.colorScheme.colorMode) {
+        toggleColorMode?.();
+      }
+    };
+    firehose?.updateState();
+  }, [colorMode, firehose, loading, toggleColorMode]);
 
   const theme = extendTheme({
     components: {
