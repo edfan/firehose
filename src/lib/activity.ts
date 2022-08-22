@@ -179,8 +179,10 @@ export class NonClass {
       (slot) => new Timeslot(...slot)
     );
     this.name = name as string;
-    this.manualColor = true;
-    this.backgroundColor = backgroundColor as string;
+    if (backgroundColor) {
+      this.manualColor = true;
+      this.backgroundColor = backgroundColor as string;
+    }
   }
 }
 
