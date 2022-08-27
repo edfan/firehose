@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 
-import { ColorScheme, colorSchemePresets } from "../lib/colors";
+import { ColorScheme, COLOR_SCHEME_PRESETS } from "../lib/colors";
 import { Firehose } from "../lib/firehose";
 import { useCalendarExport } from "../lib/gapi";
 
@@ -39,7 +39,7 @@ export function LeftFooter(props: {
     >
       <Flex gap={4}>
         Color scheme:
-        {colorSchemePresets.map((scheme) => (
+        {COLOR_SCHEME_PRESETS.map((scheme) => (
           <Radio
             key={scheme.name}
             isChecked={scheme.name === colorScheme.name}

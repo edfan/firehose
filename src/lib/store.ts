@@ -1,5 +1,15 @@
-/** Generic storage. */
+import { Preferences, Save } from "./state";
 
+export type TermStore = {
+  saves: Save[];
+  [saveId: string]: any[];
+};
+
+export type GlobalStore = {
+  preferences: Preferences;
+};
+
+/** Generic storage. */
 export class Store {
   /** The current term. */
   readonly term: string;
@@ -14,22 +24,30 @@ export class Store {
   }
 
   /** Return the corresponding, term-specific saved value. */
-  get(key: string): string | null {
-    return localStorage.getItem(this.toKey(key, false));
+  get<T extends keyof TermStore>(key: T): TermStore[T] | null {
+    const result = localStorage.getItem(this.toKey(key.toString(), false));
+    return result !== null ? (JSON.parse(result) as TermStore[T]) : null;
   }
 
   /** Return the corresponding global saved value. */
-  globalGet(key: string): string | null {
-    return localStorage.getItem(this.toKey(key, true));
+  globalGet<T extends keyof GlobalStore>(key: T): GlobalStore[T] | null {
+    const result = localStorage.getItem(this.toKey(key.toString(), true));
+    return result !== null ? (JSON.parse(result) as GlobalStore[T]) : null;
   }
 
   /** Set the corresponding term-specific value. */
-  set(key: string, value: string): void {
-    localStorage.setItem(this.toKey(key, false), value);
+  set<T extends keyof TermStore>(key: T, value: TermStore[T]): void {
+    localStorage.setItem(
+      this.toKey(key.toString(), false),
+      JSON.stringify(value)
+    );
   }
 
   /** Set the corresponding global saved value. */
-  globalSet(key: string, value: string): void {
-    localStorage.setItem(this.toKey(key, true), value);
+  globalSet<T extends keyof GlobalStore>(key: T, value: GlobalStore[T]): void {
+    localStorage.setItem(
+      this.toKey(key.toString(), true),
+      JSON.stringify(value)
+    );
   }
 }

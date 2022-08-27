@@ -10,10 +10,10 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 
-import { colorSchemePresets } from "../lib/colors";
 import { Term, TermInfo } from "../lib/dates";
-import { Firehose, FirehoseState } from "../lib/firehose";
+import { Firehose } from "../lib/firehose";
 import { RawClass } from "../lib/rawClass";
+import { DEFAULT_STATE, FirehoseState } from "../lib/state";
 
 import { ActivityDescription } from "./ActivityDescription";
 import { Calendar } from "./Calendar";
@@ -42,18 +42,7 @@ function useFirehose(): {
   const firehoseRef = useRef<Firehose>();
   const firehose = firehoseRef.current;
 
-  const [state, setState] = useState<FirehoseState>({
-    selectedActivities: [],
-    viewedActivity: undefined,
-    selectedOption: 0,
-    totalOptions: 0,
-    units: 0,
-    hours: 0,
-    warnings: [],
-    saveId: "",
-    saves: [],
-    colorScheme: colorSchemePresets[0],
-  });
+  const [state, setState] = useState<FirehoseState>(DEFAULT_STATE);
 
   /** Fetch from the url, which is JSON of type T. */
   const fetchNoCache = async <T,>(url: string): Promise<T> => {
@@ -87,7 +76,7 @@ function useFirehose(): {
     // if colorScheme changes, change colorMode to match
     firehose.callback = (newState: FirehoseState) => {
       setState(newState);
-      if (colorMode !== newState.colorScheme.colorMode) {
+      if (colorMode !== newState.preferences.colorScheme.colorMode) {
         toggleColorMode?.();
       }
     };
@@ -157,13 +146,16 @@ export function App() {
                 viewedActivity={state.viewedActivity}
                 firehose={firehose}
               />
-              <LeftFooter colorScheme={state.colorScheme} firehose={firehose} />
+              <LeftFooter
+                colorScheme={state.preferences.colorScheme}
+                firehose={firehose}
+              />
             </Flex>
             <Flex direction="column" w={{ base: "100%", lg: "50%" }} gap={6}>
               <ScheduleSwitcher
-                firehose={firehose}
                 saveId={state.saveId}
                 saves={state.saves}
+                firehose={firehose}
               />
               <SelectedActivities
                 selectedActivities={state.selectedActivities}

@@ -4,35 +4,11 @@ import { Timeslot, NonClass, Activity } from "./activity";
 import { scheduleSlots } from "./calendarSlots";
 import { Class, Section, SectionLockOption, Sections } from "./class";
 import { Term } from "./dates";
-import {
-  ColorScheme,
-  chooseColors,
-  fallbackColor,
-  colorSchemePresets,
-} from "./colors";
+import { ColorScheme, chooseColors, fallbackColor } from "./colors";
 import { RawClass } from "./rawClass";
 import { Store } from "./store";
 import { sum, urldecode, urlencode } from "./utils";
-
-/** A save has an ID and a name. */
-export type Save = {
-  id: string;
-  name: string;
-};
-
-/** React / localStorage state. */
-export type FirehoseState = {
-  selectedActivities: Array<Activity>;
-  viewedActivity: Activity | undefined;
-  selectedOption: number;
-  totalOptions: number;
-  units: number;
-  hours: number;
-  warnings: Array<string>;
-  saveId: string;
-  saves: Array<Save>;
-  colorScheme: ColorScheme;
-};
+import { DEFAULT_PREFERENCES, FirehoseState, Preferences, Save } from "./state";
 
 /**
  * Global Firehose object. Maintains global program state (selected classes,
@@ -69,8 +45,8 @@ export class Firehose {
   private saveId: string = "";
   /** Names of each save slot. */
   private saves: Array<Save> = [];
-  /** Current color scheme. */
-  private colorScheme: ColorScheme = colorSchemePresets[0];
+  /** Current preferences. */
+  private preferences: Preferences = DEFAULT_PREFERENCES;
 
   /** React callback to update state. */
   callback: ((state: FirehoseState) => void) | undefined;
@@ -97,6 +73,11 @@ export class Firehose {
   /** All activities. */
   get selectedActivities(): Array<Activity> {
     return [...this.selectedClasses, ...this.selectedNonClasses];
+  }
+
+  /** The color scheme. */
+  get colorScheme(): ColorScheme {
+    return this.preferences.colorScheme;
   }
 
   //========================================================================
@@ -213,7 +194,7 @@ export class Firehose {
       ),
       saveId: this.saveId,
       saves: this.saves,
-      colorScheme: this.colorScheme,
+      preferences: this.preferences,
     });
     if (save) {
       this.storeSave(this.saveId, false);
@@ -265,7 +246,7 @@ export class Firehose {
 
   /** Set the color scheme. */
   setColorScheme(colorScheme: ColorScheme): void {
-    this.colorScheme = colorScheme;
+    this.preferences.colorScheme = colorScheme;
     chooseColors(this.selectedActivities, this.colorScheme);
     this.updateState();
   }
@@ -327,7 +308,7 @@ export class Firehose {
     }
     const storage = this.store.get(id);
     if (!storage) return;
-    this.inflate(JSON.parse(storage));
+    this.inflate(storage);
     this.saveId = id;
     this.updateState(false);
   }
@@ -335,10 +316,10 @@ export class Firehose {
   /** Store state as a save in localStorage, and store save metadata. */
   storeSave(id?: string, update: boolean = true): void {
     if (id) {
-      this.store.set(id, JSON.stringify(this.deflate()));
+      this.store.set(id, this.deflate());
     }
-    this.store.set("saves", JSON.stringify(this.saves));
-    this.store.globalSet("colorScheme", JSON.stringify(this.colorScheme));
+    this.store.set("saves", this.saves);
+    this.store.globalSet("preferences", this.preferences);
     if (update) {
       this.updateState(false);
     }
@@ -382,15 +363,15 @@ export class Firehose {
 
   /** Initialize the state from either the URL or localStorage. */
   initState(): void {
-    const colorScheme = this.store.globalGet("colorScheme");
-    if (colorScheme) {
-      this.colorScheme = JSON.parse(colorScheme) as ColorScheme;
+    const preferences = this.store.globalGet("preferences");
+    if (preferences) {
+      this.preferences = preferences;
     }
     const params = new URLSearchParams(document.location.search);
     const param = params.get("s");
     const saves = this.store.get("saves");
     if (saves) {
-      this.saves = JSON.parse(saves) as Array<Save>;
+      this.saves = saves;
     }
     if (!this.saves || !this.saves.length) {
       this.saves = [];

@@ -74,7 +74,7 @@ const highContrastDark: ColorScheme = {
 };
 
 /** The default color schemes. */
-export const colorSchemePresets: Array<ColorScheme> = [
+export const COLOR_SCHEME_PRESETS: Array<ColorScheme> = [
   classic,
   classicDark,
   highContrast,

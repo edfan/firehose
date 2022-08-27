@@ -13,7 +13,8 @@ import {
 } from "@chakra-ui/react";
 import { ComponentProps, useState } from "react";
 
-import { Firehose, Save } from "../lib/firehose";
+import { Firehose } from "../lib/firehose";
+import { Save } from "../lib/state";
 
 function SmallButton(props: ComponentProps<"button">) {
   const { children, ...otherProps } = props;
@@ -151,11 +152,11 @@ function ExportModal(props: { firehose: Firehose }) {
 }
 
 export function ScheduleSwitcher(props: {
-  firehose: Firehose;
   saveId: string;
   saves: Array<Save>;
+  firehose: Firehose;
 }) {
-  const { firehose, saveId, saves } = props;
+  const { saveId, saves, firehose } = props;
 
   const currentName = saves.find((save) => save.id === saveId)?.name!;
   const [isRenaming, setIsRenaming] = useState(false);
