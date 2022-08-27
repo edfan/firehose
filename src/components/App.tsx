@@ -86,10 +86,81 @@ function useFirehose(): {
   return { firehose, state };
 }
 
-/** The main application. */
-export function App() {
+/** The application entry. */
+function FirehoseApp() {
   const { firehose, state } = useFirehose();
 
+  return (
+    <>
+      <Box
+        w="100%"
+        p={4}
+        fontSize="sm"
+        textAlign="center"
+        borderBottom="1px"
+        borderBottomColor="gray.400"
+      >
+        This version is in beta. Saved info may disappear without warning.{" "}
+        <Link href="https://forms.gle/Fh1N3Uy1Kcjf5hnQ9">
+          Share your feedback!
+        </Link>
+      </Box>
+      {!firehose ? (
+        <Flex w="100%" h="100vh" align="center" justify="center">
+          <Spinner />
+        </Flex>
+      ) : (
+        <Flex w="100%" direction={{ base: "column", lg: "row" }} p={4} gap={8}>
+          <Flex direction="column" w={{ base: "100%", lg: "50%" }} gap={6}>
+            <Header firehose={firehose} />
+            <ScheduleOption
+              selectedOption={state.selectedOption}
+              totalOptions={state.totalOptions}
+              firehose={firehose}
+            />
+            <Calendar
+              selectedActivities={state.selectedActivities}
+              viewedActivity={state.viewedActivity}
+              firehose={firehose}
+            />
+            <LeftFooter
+              colorScheme={state.preferences.colorScheme}
+              firehose={firehose}
+            />
+          </Flex>
+          <Flex direction="column" w={{ base: "100%", lg: "50%" }} gap={6}>
+            <ScheduleSwitcher
+              saveId={state.saveId}
+              saves={state.saves}
+              firehose={firehose}
+            />
+            <SelectedActivities
+              selectedActivities={state.selectedActivities}
+              units={state.units}
+              hours={state.hours}
+              warnings={state.warnings}
+              firehose={firehose}
+            />
+            <ClassTable
+              classes={firehose.classes} // this is a constant; no need to add to state
+              firehose={firehose}
+            />
+            {state.viewedActivity ? (
+              <ActivityDescription
+                activity={state.viewedActivity}
+                firehose={firehose}
+              />
+            ) : null}
+            <RightFooter firehose={firehose} />
+          </Flex>
+        </Flex>
+      )}
+    </>
+  );
+}
+
+/** The main application. */
+export function App() {
   const theme = extendTheme({
     components: {
       Link: {
@@ -110,74 +181,7 @@ export function App() {
   return (
     <ChakraProvider theme={theme}>
       <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID!}>
-        <Box
-          w="100%"
-          p={4}
-          fontSize="sm"
-          textAlign="center"
-          borderBottom="1px"
-          borderBottomColor="gray.400"
-        >
-          This version is in beta. Saved info may disappear without warning.{" "}
-          <Link href="https://forms.gle/Fh1N3Uy1Kcjf5hnQ9">
-            Share your feedback!
-          </Link>
-        </Box>
-        {!firehose ? (
-          <Flex w="100%" h="100vh" align="center" justify="center">
-            <Spinner />
-          </Flex>
-        ) : (
-          <Flex
-            w="100%"
-            direction={{ base: "column", lg: "row" }}
-            p={4}
-            gap={8}
-          >
-            <Flex direction="column" w={{ base: "100%", lg: "50%" }} gap={6}>
-              <Header firehose={firehose} />
-              <ScheduleOption
-                selectedOption={state.selectedOption}
-                totalOptions={state.totalOptions}
-                firehose={firehose}
-              />
-              <Calendar
-                selectedActivities={state.selectedActivities}
-                viewedActivity={state.viewedActivity}
-                firehose={firehose}
-              />
-              <LeftFooter
-                colorScheme={state.preferences.colorScheme}
-                firehose={firehose}
-              />
-            </Flex>
-            <Flex direction="column" w={{ base: "100%", lg: "50%" }} gap={6}>
-              <ScheduleSwitcher
-                saveId={state.saveId}
-                saves={state.saves}
-                firehose={firehose}
-              />
-              <SelectedActivities
-                selectedActivities={state.selectedActivities}
-                units={state.units}
-                hours={state.hours}
-                warnings={state.warnings}
-                firehose={firehose}
-              />
-              <ClassTable
-                classes={firehose.classes} // this is a constant; no need to add to state
-                firehose={firehose}
-              />
-              {state.viewedActivity ? (
-                <ActivityDescription
-                  activity={state.viewedActivity}
-                  firehose={firehose}
-                />
-              ) : null}
-              <RightFooter firehose={firehose} />
-            </Flex>
-          </Flex>
-        )}
+        <FirehoseApp />
       </GoogleOAuthProvider>
     </ChakraProvider>
   );
