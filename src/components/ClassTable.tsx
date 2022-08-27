@@ -96,17 +96,16 @@ function ClassInput(props: {
   };
 
   const onEnter = () => {
-    // first check if the first result matches
     const { numbers, class: cls } = searchResults.current?.[0] ?? {};
     if (
       searchResults.current?.length === 1 ||
       numbers?.some((number) => classNumberMatch(number, classInput, true))
     ) {
+      // first check if the first result matches
       firehose.toggleActivity(cls);
       onClassInputChange("");
-    }
-    // else check if this number exists exactly
-    if (firehose.classes.has(classInput)) {
+    } else if (firehose.classes.has(classInput)) {
+      // else check if this number exists exactly
       const cls = firehose.classes.get(classInput);
       firehose.toggleActivity(cls);
     }
