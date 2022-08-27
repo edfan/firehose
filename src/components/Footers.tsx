@@ -1,24 +1,104 @@
 import {
+  Button,
   Flex,
   Image,
   Link,
-  Radio,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Select,
   Spinner,
   Text,
   Tooltip,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
-import { ColorScheme, COLOR_SCHEME_PRESETS } from "../lib/colors";
+import { COLOR_SCHEME_PRESETS } from "../lib/colors";
 import { Firehose } from "../lib/firehose";
 import { useCalendarExport } from "../lib/gapi";
+import { DEFAULT_PREFERENCES, Preferences } from "../lib/state";
+
+function PreferencesModal(props: {
+  firehose: Firehose;
+  preferences: Preferences;
+}) {
+  const { preferences: originalPreferences, firehose } = props;
+  const [visible, setVisible] = useState(false);
+  const [preferences, setPreferences] = useState(DEFAULT_PREFERENCES);
+  const initialPreferencesRef = useRef(DEFAULT_PREFERENCES);
+  const initialPreferences = initialPreferencesRef.current;
+
+  const onOpen = () => {
+    initialPreferencesRef.current = originalPreferences;
+    setPreferences(originalPreferences);
+    setVisible(true);
+  };
+
+  const previewPreferences = (newPreferences: Preferences) => {
+    setPreferences(newPreferences);
+    firehose.setPreferences(newPreferences, false);
+  };
+
+  const onCancel = () => {
+    setPreferences(initialPreferences);
+    firehose.setPreferences(initialPreferences);
+    setVisible(false);
+  };
+
+  const onConfirm = () => {
+    firehose.setPreferences(preferences);
+    setVisible(false);
+  };
+
+  return (
+    <>
+      <Button onClick={onOpen}>Preferences</Button>
+      <Modal isOpen={visible} onClose={onCancel}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Preferences</ModalHeader>
+          <ModalBody>
+            <Flex gap={4}>
+              Color scheme:
+              <Select
+                value={preferences.colorScheme.name}
+                onChange={(e) => {
+                  const colorScheme = COLOR_SCHEME_PRESETS.find(
+                    ({ name }) => name === e.target.value
+                  );
+                  if (!colorScheme) return;
+                  previewPreferences({ ...preferences, colorScheme });
+                }}
+              >
+                {COLOR_SCHEME_PRESETS.map(({ name }) => (
+                  <option key={name} value={name}>
+                    {name}
+                  </option>
+                ))}
+              </Select>
+            </Flex>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={onCancel} mr={2}>
+              Cancel
+            </Button>
+            <Button onClick={onConfirm}>Save</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+}
 
 /** The footer on the bottom of the calendar. */
 export function LeftFooter(props: {
-  colorScheme: ColorScheme;
+  preferences: Preferences;
   firehose: Firehose;
 }) {
-  const { colorScheme, firehose } = props;
+  const { preferences, firehose } = props;
   const year = new Date().getFullYear();
 
   const [isExporting, setIsExporting] = useState(false);
@@ -37,35 +117,26 @@ export function LeftFooter(props: {
       _hover={{ opacity: 1 }}
       transition="0.5s opacity"
     >
-      <Flex gap={4}>
-        Color scheme:
-        {COLOR_SCHEME_PRESETS.map((scheme) => (
-          <Radio
-            key={scheme.name}
-            isChecked={scheme.name === colorScheme.name}
-            onChange={() => firehose.setColorScheme(scheme)}
-          >
-            {scheme.name}
-          </Radio>
-        ))}
+      <Flex gap={2} align="center">
+        <PreferencesModal preferences={preferences} firehose={firehose} />
+        <Tooltip
+          label={isExporting ? "Loading..." : "Make sure popups are enabled!"}
+        >
+          {isExporting ? (
+            <Spinner m={3} />
+          ) : (
+            <Image
+              src="img/calendar-button.svg"
+              alt="Export to Google Calendar"
+              onClick={() => {
+                setIsExporting(true);
+                onCalendarExport();
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          )}
+        </Tooltip>
       </Flex>
-      <Tooltip
-        label={isExporting ? "Loading..." : "Make sure popups are enabled!"}
-      >
-        {isExporting ? (
-          <Spinner m={3} />
-        ) : (
-          <Image
-            src="img/calendar-button.svg"
-            alt="Export to Google Calendar"
-            onClick={() => {
-              setIsExporting(true);
-              onCalendarExport();
-            }}
-            style={{ cursor: "pointer" }}
-          />
-        )}
-      </Tooltip>
       <Text mt={2} fontSize="sm">
         Beta by{" "}
         <Link href="mailto:cjq@mit.edu" color="inherit">

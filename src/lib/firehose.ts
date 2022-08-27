@@ -245,11 +245,11 @@ export class Firehose {
     );
   }
 
-  /** Set the color scheme. */
-  setColorScheme(colorScheme: ColorScheme): void {
-    this.preferences.colorScheme = colorScheme;
+  /** Set the preferences. */
+  setPreferences(preferences: Preferences, save: boolean = true): void {
+    this.preferences = preferences;
     chooseColors(this.selectedActivities, this.colorScheme);
-    this.updateState();
+    this.updateState(save);
   }
 
   //========================================================================

@@ -124,7 +124,7 @@ function FirehoseApp() {
               firehose={firehose}
             />
             <LeftFooter
-              colorScheme={state.preferences.colorScheme}
+              preferences={state.preferences}
               firehose={firehose}
             />
           </Flex>
