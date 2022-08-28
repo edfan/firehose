@@ -2,18 +2,30 @@
 <head>
   <title>Firehose</title>
   <meta charset="UTF-8" />
-  <meta name="description" content="Firehose is a class-picking guide for MIT students." />
+  <meta
+    name="description"
+    content="Firehose is a class-picking guide for MIT students."
+  />
   <link rel="shortcut icon" type="image/x-icon" href="favicon.png" />
 </head>
 
 <body>
   <p>
-    Firehose does not store any of your data outside of your browser. No data is
-    ever transmitted upstream to the server.
+    Firehose does not store any of your data outside of your browser. Data is
+    only transmitted upstream in one of two cases:
   </p>
+  <ol>
+    <li>Google Analytics is enabled, which sends data on every page load.</li>
+    <li>
+      When you export to Google Calendar, Firehose sends calendar information to
+      Google to place into your calendar.
+    </li>
+  </ol>
   <p>
-    Google Analytics is enabled, but you can disable it via any blocking method
-    without impacting your use of the site.
+    No data is transmitted otherwise. That means that our servers do not store
+    your class or calendar information. You can disable Google Analytics without
+    imapcting your use of the site, and if you never export to Google Calendar
+    we never send your data anywhere else.
   </p>
   <p><a href="/">Back to Firehose</a></p>
 </body>
