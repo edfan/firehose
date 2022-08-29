@@ -120,14 +120,14 @@ export function LeftFooter(props: {
       <Flex gap={2} align="center">
         <PreferencesModal preferences={preferences} firehose={firehose} />
         <Tooltip
-          label={isExporting ? "Loading..." : "Make sure popups are enabled!"}
+          label={isExporting ? "Loading..." : "Sign in with Google and export to Google Calendar."}
         >
           {isExporting ? (
             <Spinner m={3} />
           ) : (
             <Image
-              src="img/calendar-button.svg"
-              alt="Export to Google Calendar"
+              src="img/calendar-button.png"
+              alt="Sign in with Google"
               onClick={() => {
                 setIsExporting(true);
                 onCalendarExport();
